@@ -1,0 +1,10 @@
+MySQL-python
+pymongo
+tornado==2.4.1
+msgpack-python
+Flop
+redis
+ujson
+mmhash
+requests
+paramiko

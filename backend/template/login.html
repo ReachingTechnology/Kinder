@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <link href="{{static_url("css/bootstrap/bootstrap_v3.0.3.css")}}" rel="stylesheet"/>
+    <style type="text/css">
+		#login_box{
+			width: 500px;
+			margin:	10% auto 0 auto;
+			.center {text-align:center;}
+		}
+		.logo{
+			margin-bottom:30px;
+		}
+    </style>
+</head>
+<body>
+<div id="wraper">
+    <div id="login_box">
+        <form class="form-horizontal" id="sign-in-form" method="post" action="/login">
+            {% module xsrf_form_html() %}
+            <div class="form-group">
+                <label class="control-label col-md-3" for="username">用户名</label>
+                <div class="col-md-6">
+                    <input class="form-control" name="name" id="username" type="text">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-3" for="userpassword">密码</label>
+                <div class="col-md-6">
+                    <input name="pwd" id="userpassword" class="form-control" type="password">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="登录" id="submit_in" name="submit_in"
+                       class="btn btn-primary col-md-2 col-md-offset-4">
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

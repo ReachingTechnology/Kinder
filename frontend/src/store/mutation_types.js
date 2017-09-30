@@ -1,0 +1,39 @@
+/**
+ * Created by HOZ on 28/08/2017.
+ */
+export const GET_ALL_DATA = 'GET_ALL_DATA'
+
+// user login/logout
+export const USER_LOGIN = 'USER_LOGIN'
+export const USER_LOGOUT = 'USER_LOGOUT'
+
+// user account
+export const UPSERT_USER_ACCOUNT = 'UPSERT_USER_ACCOUNT'
+export const GET_ALL_USER_ACCOUNT = 'GET_ALL_USER_ACCOUNT'
+export const REMOVE_USERS = 'REMOVE_USERS'
+
+// role
+export const GET_ALL_ROLE = 'GET_ALL_ROLE'
+export const UPSERT_ROLE = 'UPSERT_ROLE'
+export const REMOVE_ROLES = 'REMOVE_ROLES'
+
+// permission role
+export const GET_ALL_PERMISSION_ROLE = 'GET_ALL_PERMISSION_ROLE'
+export const UPSERT_PERMISSION_ROLE = 'UPSERT_PERMISSION_ROLE'
+export const GET_ALL_PERMISSION = 'GET_ALL_PERMISSION'
+export const REMOVE_PERMISSION_ROLES = 'REMOVE_PERMISSION_ROLES'
+
+// duty
+export const GET_ALL_DUTY = 'GET_ALL_DUTY'
+export const GET_DUTY_BY_USER = 'GET_DUTY_BY_USER'
+export const UPSERT_DUTY = 'UPSERT_DUTY'
+export const REMOVE_DUTIES = 'REMOVE_DUTIES'
+
+// task
+export const GET_ALL_TASK = 'GET_ALL_TASK'
+export const UPSERT_TASK = 'UPSERT_TASK'
+export const COMMIT_TASK_EXEC_INFO = 'COMMIT_TASK_EXEC_INFO'
+export const GET_TASK_EXEC_DATA_BY_DATE = 'GET_TASK_EXEC_DATA_BY_DATE'
+export const GET_USER_TASK_EXEC_DATA_BY_DATERANGE = 'GET_USER_TASK_EXEC_DATA_BY_DATERANGE'
+export const GET_ONE_TASK_EXEC_DATA_BY_DATERANGE = 'GET_ONE_TASK_EXEC_DATA_BY_DATERANGE'
+
