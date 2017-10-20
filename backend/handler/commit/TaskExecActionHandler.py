@@ -7,6 +7,7 @@ import datetime
 from backend.handler.async_handler import AsynchronousHandler
 from backend.common.consts import Const
 import ujson
+from backend.handler.util.ArrayUtil import ArrayUtil
 
 class TaskExecActionHandler(AsynchronousHandler):
     QUERY_FIELDS = {"_id": 1, "description": 1}
@@ -27,13 +28,13 @@ class TaskExecActionHandler(AsynchronousHandler):
             allUserDuties = []
             user = self._user_info_coll.find_one({'_id': userid})
             if user:
-                userRole = user['role']
+                userRoles = user['role']
                 allDuties = self._duty_info_coll.find().sort('starttime', 1)
 
                 if allDuties:
                     for duty in allDuties:
                         roles = duty['roles']
-                        if userRole in roles:
+                        if ArrayUtil.isIntersect(userRoles, roles):
                             allUserDuties.append(duty)
 
             result = []
@@ -72,13 +73,13 @@ class TaskExecActionHandler(AsynchronousHandler):
             allUserDuties = []
             user = self._user_info_coll.find_one({'_id': userid})
             if user:
-                userRole = user['role']
+                userRoles = user['role']
                 allDuties = self._duty_info_coll.find().sort('starttime', 1)
 
                 if allDuties:
                     for duty in allDuties:
                         roles = duty['roles']
-                        if userRole in roles:
+                        if ArrayUtil.isIntersect(userRoles, roles):
                             allUserDuties.append(duty)
 
             result = []

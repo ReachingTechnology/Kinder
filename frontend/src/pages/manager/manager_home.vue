@@ -13,7 +13,7 @@
 
 <script>
   import UserLogin from '../../components/user_login.vue'
-  import TableManageStatisticData from '../../components/table_manage_statistic.vue'
+  import TableManageStatisticData from '../../components/table_all_user_task_exec_stat.vue'
   import NavMenu from '../../components/nav_menu.vue'
   import TableUserList from '../../components/table_user_list.vue'
   import TableRoleList from '../../components/table_role_list.vue'

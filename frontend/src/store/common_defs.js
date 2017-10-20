@@ -45,3 +45,8 @@ export const PERMISSION_CATEGORIES = {
   'PERMISSION_CATEGORY_TASK': 'C_003',
   'PERMISSION_CATEGORY_PERMISSIONROLE': 'C_004'
 }
+
+export const DATETYPE_DAY = 'date'
+export const DATETYPE_MONTH = 'month'
+
+export const ROOT_ROLE = '_ROLE_$_0000'

@@ -3,6 +3,7 @@
  */
 import { PERMISSIONS, PERMISSION_CATEGORIES } from './common_defs'
 import state from './state'
+import ArrayUtil from '../utils/ArrayUtil'
 
 function _Util () {
 }
@@ -22,10 +23,10 @@ _Util.prototype.getRoleName = function (roleId) {
   }
   return ''
 }
-_Util.prototype.getRoleId = function (roleName, allRole) {
-  for (var i = 0, len = allRole.length; i < len; i++) {
-    if (allRole[i].name === roleName) {
-      return allRole[i]._id
+_Util.prototype.getRoleId = function (roleName) {
+  for (var i = 0, len = state.allRole.length; i < len; i++) {
+    if (state.allRole[i].name === roleName) {
+      return state.allRole[i]._id
     }
   }
   return ''
@@ -60,10 +61,10 @@ _Util.prototype.getPermissionRoleById = function (id) {
 }
 _Util.prototype.hasPermission = function (permission) {
   var permissionid = PERMISSIONS[permission]
-  var roleid = state.user.role
+  var roleids = state.user.role
   for (var i = 0; i < state.allRole.length; i++) {
     var role = state.allRole[i]
-    if (role._id === roleid) {
+    if (ArrayUtil.in_array(role._id, roleids)) {
       var permissionRoles = role.permissionRoles
       for (var j = 0; j < permissionRoles.length; j++) {
         var permissionRole = this.getPermissionRoleById(permissionRoles[j])
@@ -83,11 +84,11 @@ _Util.prototype.hasPermission = function (permission) {
 }
 _Util.prototype.hasCategoryPermission = function (categoryname) {
   var categoryid = PERMISSION_CATEGORIES[categoryname]
-  var roleid = state.user.role
+  var roleids = state.user.role
   var permissionList = state.allPermission[categoryid] === undefined ? [] : state.allPermission[categoryid].permissions
   for (var i = 0; i < state.allRole.length; i++) {
     var role = state.allRole[i]
-    if (role._id === roleid) {
+    if (ArrayUtil.in_array(role._id, roleids)) {
       var permissionRoles = role.permissionRoles
       for (var j = 0; j < permissionRoles.length; j++) {
         var permissionRole = this.getPermissionRoleById(permissionRoles[j])

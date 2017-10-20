@@ -17,10 +17,11 @@
         </el-select>
       </el-form-item>
       <el-form-item label="员工岗位" prop="role">
-        <el-select v-model="edited_user.role" placeholder="选择岗位" :disabled="!Util.hasCategoryPermission('PERMISSION_CATEGORY_USER')">
-          <el-option v-for="item in allRole" :label="item.name" :value="item._id"/>
-        </el-select>
+        <el-checkbox-group v-model="checkedRoleNames" @change="handleCheckedRoleChange" :disabled="!Util.hasCategoryPermission('PERMISSION_CATEGORY_USER')">
+          <el-checkbox v-for="role in allRole" :name="role.name" :label="role.name"></el-checkbox>
+        </el-checkbox-group>
       </el-form-item>
+      <el-button @click="editDuty">编辑职责</el-button>
       <el-form-item label="出生日期">
         <el-date-picker
           v-model="edited_user.birthday"
@@ -49,12 +50,23 @@
       tableRowClassName (row, index) {
         return ''
       },
+      handleCheckedRoleChange (value) {
+        console.log('handleCheckedRoleChange, value:')
+        console.log(value)
+        this.checkedRoleNames = value
+      },
       commitEdit () {
         this.$refs['userForm'].validate((valid) => {
           console.log('validation')
           console.log(valid)
           if (valid) {
             console.log('call upsert: edit user:')
+            this.edited_user.checkedRoleNames = this.checkedRoleNames
+            this.edited_user.role = []
+            for (var j = 0; j < this.checkedRoleNames.length; j++) {
+              var roleid = Util.getRoleId(this.checkedRoleNames[j])
+              this.edited_user.role.push(roleid)
+            }
             console.log(this.edited_user)
             this.UPSERT_USER_ACCOUNT(this.edited_user)
             this.$emit('showEdit', false)
@@ -62,8 +74,23 @@
         })
       },
       cancelEdit () {
+//        if (this.isCreating) {
+//          this.edited_user = {
+//            '_id': '',
+//            'name': '',
+//            'cellphone': '',
+//            'sex': 'Male',
+//            'role': [],
+//            'checkedRoleNames': [],
+//            'birthday': '',
+//            'password': ''
+//          }
+//        }
 //        this.$refs['userForm'].resetFields()
         this.$emit('showEdit', false)
+      },
+      editDuty () {
+
       },
       handleClose () {
         this.cancelEdit()
@@ -77,7 +104,12 @@
       }
     },
     props: ['edited_user', 'dialogVisible', 'isCreating'],
-    created: function () {
+    watch: {
+      dialogVisible: function (val, oldval) {
+        if (val === true) {
+          this.checkedRoleNames = this.edited_user.checkedRoleNames
+        }
+      }
     },
     data: () => {
       return {
@@ -95,9 +127,10 @@
             { min: 11, max: 11, message: '手机号必须是11位数字', trigger: 'blur' }
           ],
           role: [
-            { required: true, message: '请选择员工岗位', trigger: 'blur' }
+            { type: 'array', required: true, message: '请选择员工岗位', trigger: 'blur' }
           ]
-        }
+        },
+        checkedRoleNames: []
       }
     }
   }

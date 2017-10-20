@@ -175,7 +175,6 @@ const mutations = {
     state.allTask = data
   },
   SET_ALL_DUTY (state, data) {
-    console.log('set all duties')
     state.allDuty = data
     for (var index = 0, lenDuty = state.allDuty.length; index < lenDuty; index++) {
       let item = state.allDuty[index]
@@ -194,7 +193,6 @@ const mutations = {
       }
       state.dutyForRoles[role._id] = roleDuties
     }
-    console.log(state.dutyForRoles)
   }
 }
 export default mutations

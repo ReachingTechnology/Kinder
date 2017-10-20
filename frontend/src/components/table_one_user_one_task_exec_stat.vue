@@ -1,6 +1,5 @@
 <template>
   <div>
-  <el-dialog @close="handleClose" :visible.sync="dialogVisible" :close-on-click-modal="false">
     <div>
       <h2 style="margin-top: 0px">用户任务 {{ selectedData.taskname }} 统计</h2>
       <h3>用户姓名 {{ queryUser }}</h3>
@@ -51,7 +50,6 @@
         </el-table-column>
       </el-table>
     </div>
-  </el-dialog>
   <edit-panel-user-day-task @showEdit="showEditOver" :dialogVisible="showEdit" :edited_task="selectedTask" :selectedDay="selectedDay"></edit-panel-user-day-task>
 </div>
 </template>
@@ -70,7 +68,7 @@
 </style>
 <script>
   import {mapActions, mapGetters} from 'vuex'
-  import {GET_USER_TASK_EXEC_DATA_BY_DATERANGE} from '../store/mutation_types'
+  import {GET_ONE_TASK_EXEC_DATA_BY_DATERANGE} from '../store/mutation_types'
   import Moment from 'moment'
   import EditPanelUserDayTask from './edit_panel_user_day_task.vue'
   import {
@@ -89,12 +87,10 @@
         }
         return ''
       },
-      ...mapActions([GET_USER_TASK_EXEC_DATA_BY_DATERANGE]),
+      ...mapActions([GET_ONE_TASK_EXEC_DATA_BY_DATERANGE]),
       handleEdit (index, row) {
         this.selectedDay = new Date(row.startofday * 1000)
         this.selectedTask = row
-        console.log('((((((((((((((((((((((((((')
-        console.log(this.selectedTask)
         this.selectedTask.name = row.taskname
         this.showEdit = true
       },
@@ -112,7 +108,6 @@
       },
       tasks () {
         var data = []
-        console.log('PPPPPPPPPPPPPPPPPPPPPPPPP')
         console.log(this.selectedData)
         console.log(this.taskExecDaterangeData)
         for (var i = 0, len = this.taskExecDaterangeData.length; i < len; i++) {
@@ -136,14 +131,16 @@
       }
     },
     mounted: function () {
+      this.GET_ONE_TASK_EXEC_DATA_BY_DATERANGE(this.selectedTask)
     },
-    props: ['selectedData', 'dialogVisible'],
-    data: () => {
+    props: [],
+    data: function () {
       return {
         selectedDay: new Date(),
         selectedUser: '000001',
         showEdit: false,
-        selectedTask: {}
+        selectedTask: {},
+        selectedData: this.$route.params.selectedData
       }
     },
     components: {

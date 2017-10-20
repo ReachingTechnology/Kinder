@@ -53,7 +53,6 @@
         </template>
       </el-table-column>
     </el-table>
-    <table-user-datarange-task-stat @showEdit="showEditOver" :dialogVisible="showEdit" :selectedData="selectedData" ></table-user-datarange-task-stat>
   </div>
 </template>
 <style>
@@ -69,8 +68,9 @@
   import { mapActions, mapGetters } from 'vuex'
   import { GET_ALL_DATA, GET_USER_TASK_EXEC_DATA_BY_DATERANGE } from '../store/mutation_types'
   import DateRangePicker from './date_rrange_picker'
-  import TableUserDatarangeTaskStat from './table_user_daterange_task_stat'
   import dateUtil from '../utils/DateUtil'
+  import { DATETYPE_DAY, DATETYPE_MONTH } from '../store/common_defs'
+
   export default {
     name: 'table_manage_unfinished_data',
     methods: {
@@ -97,16 +97,11 @@
           this.selectedData.startofday = dateUtil.getStartOfTheday(this.selectedDay)
           this.selectedData.endofday = this.selectedData.startofday + 3600 * 24
         }
-        let params = {}
-        params.userid = this.selectedData.userid
-        params.startofday = this.selectedData.startofday
-        params.endofday = this.selectedData.endofday
-        this.GET_USER_TASK_EXEC_DATA_BY_DATERANGE(params)
-        this.showEdit = true
+        this.$router.push({name: 'OneUserAllTaskExecStat', params: {selectedData: this.selectedData}})
       },
       handleDaySelected () {
         let params = {
-          'starttime': this.datetime_type === 'month' ? dateUtil.getStartofMonthofTheDay(this.selectedDay) : dateUtil.getStartOfTheday(this.selectedDay),
+          'starttime': this.datetime_type === DATETYPE_MONTH ? dateUtil.getStartofMonthofTheDay(this.selectedDay) : dateUtil.getStartOfTheday(this.selectedDay),
           'datetime_type': this.datetime_type
         }
         this.GET_ALL_DATA(params)
@@ -117,12 +112,27 @@
       ...mapActions([GET_ALL_DATA, GET_USER_TASK_EXEC_DATA_BY_DATERANGE])
     },
     computed: {
-      ...mapGetters(['all_statistic_data'])
+      ...mapGetters(['datePickerOptionsDay', 'datePickerOptionsMonth', 'all_statistic_data']),
+      datePickerOption () {
+        if (this.datetime_type === DATETYPE_DAY) {
+          return this.datePickerOptionsDay
+        }
+        if (this.datetime_type === DATETYPE_MONTH) {
+          return this.datePickerOptionsMonth
+        }
+      },
+      datetime_type () {
+        return this.$route.params.datetime_type
+      },
+      starttime () {
+        return this.$route.params.starttime
+      }
     },
     mounted: function () {
+      this.handleDaySelected()
     },
-    props: ['datetime_type', 'datePickerOption'],
-    data: () => {
+    props: [],
+    data: function () {
       return {
         showEdit: false,
         selectedData: {},
@@ -130,8 +140,7 @@
       }
     },
     components: {
-      DateRangePicker,
-      TableUserDatarangeTaskStat
+      DateRangePicker
     }
   }
 </script>

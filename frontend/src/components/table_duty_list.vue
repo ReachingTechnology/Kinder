@@ -14,6 +14,7 @@
       <el-form>
       <el-form-item label="选择岗位">
         <el-select v-model="currentRoleId" >
+          <el-option label="所有" :value="ROOT_ROLE"></el-option>
           <el-option v-for="role in allRole" :label="role.name" :value="role._id"></el-option>
         </el-select>
       </el-form-item>
@@ -67,7 +68,7 @@
         width="55">
       </el-table-column>
     </el-table>
-    <duty-edit-panel @showEdit="showEidtOver" :selectedRoleNames="selectedDuty.roleNames" :dialogVisible="showEdit" :edited_duty="selectedDuty" ></duty-edit-panel>
+    <duty-edit-panel @showEdit="showEidtOver" :selectedRoleNames="selectedDuty.roleNames" :isCreating="isCreating" :dialogVisible="showEdit" :edited_duty="selectedDuty" ></duty-edit-panel>
   </div>
 </template>
 <style>
@@ -104,6 +105,9 @@
   import Util from '../store/utils'
   import Moment from 'moment'
   import dateUtil from '../utils/DateUtil'
+  import ObjUtil from '../utils/ObjUtil'
+  import { ROOT_ROLE } from '../store/common_defs'
+
   export default {
     name: 'table_duty_list',
     methods: {
@@ -115,10 +119,14 @@
       },
       getDutiesForRole (roleid) {
         this.currentDutyList = []
-        for (var i = 0, len = this.allDuty.length; i < len; i++) {
-          var rolesForDuty = this.allDuty[i].roles
-          if (rolesForDuty.indexOf(roleid) >= 0) {
-            this.currentDutyList.push(this.allDuty[i])
+        if (roleid === this.ROOT_ROLE) {
+          this.currentDutyList = this.allDuty
+        } else {
+          for (var i = 0, len = this.allDuty.length; i < len; i++) {
+            var rolesForDuty = this.allDuty[i].roles
+            if (rolesForDuty.indexOf(roleid) >= 0) {
+              this.currentDutyList.push(this.allDuty[i])
+            }
           }
         }
       },
@@ -129,10 +137,11 @@
         this.selectedDuty = {}
         for (var i = 0, len = this.allDuty.length; i < len; i++) {
           if (this.allDuty[i]._id === row._id) {
-            this.selectedDuty = this.allDuty[i]
+            this.selectedDuty = ObjUtil.clone(this.allDuty[i])
             this.selectedDuty.selectedRoleNames = this.selectedDuty.roleNames
             this.isCreating = false
             this.showEdit = true
+            console.log(this.selectedDuty)
             break
           }
         }

@@ -1,7 +1,7 @@
 <template>
   <div style="position:relative">
     <div style="width: 100%">
-  <el-menu default-active="1" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+  <el-menu :default-active="active_menu" class="el-menu-demo" mode="horizontal" @select="handleSelect">
     <el-submenu index="1" v-show="hasUserCategoryPermission || Util.hasCategoryPermission('PERMISSION_CATEGORY_ROLE') || Util.hasCategoryPermission('PERMISSION_CATEGORY_PERMISSIONROLE')">
       <template slot="title">系统管理</template>
       <el-menu-item index="1-1" v-show="Util.hasCategoryPermission('PERMISSION_CATEGORY_USER')">人员管理</el-menu-item>
@@ -33,11 +33,49 @@
 <script>
   import {mapGetters} from 'vuex'
   import Util from '../store/utils'
+  import dateUtil from '../utils/DateUtil'
+  import { DATETYPE_DAY, DATETYPE_MONTH } from '../store/common_defs'
 
   export default {
     methods: {
       handleSelect (key, keyPath) {
         console.log(key, keyPath)
+        var params = {}
+        this.active_menu = key
+        switch (key) {
+          case '1-1':
+            this.$router.push({name: 'UserList'})
+            break
+          case '1-2':
+            this.$router.push({name: 'RoleList'})
+            break
+          case '1-3':
+            this.$router.push({name: 'PermissionRoleList'})
+            break
+          case '2-1':
+            this.$router.push({name: 'DutyList'})
+            break
+          case '2-2':
+            this.$router.push({name: 'EmergencyHandle'})
+            break
+          case '4':
+            this.$router.push({name: 'UserDayTaskList'})
+            break
+          case '5-1':
+            params = {
+              'starttime': dateUtil.getStartOfToday(),
+              'datetime_type': DATETYPE_DAY
+            }
+            this.$router.push({name: 'AllUserTaskExecStat', params: params})
+            break
+          case '5-2':
+            params = {
+              'starttime': dateUtil.getStartofThisMonth(),
+              'datetime_type': DATETYPE_MONTH
+            }
+            this.$router.push({name: 'AllUserTaskExecStat', params: params})
+            break
+        }
         this.$emit('menuSelect', key)
       },
       handleOpen (key, keyPath) {
@@ -57,6 +95,16 @@
       },
       hasUserCategoryPermission () {
         return Util.hasCategoryPermission('PERMISSION_CATEGORY_USER')
+      }
+    },
+    created: function () {
+      if (this.active_menu === '4') {
+        this.$router.push({name: 'UserDayTaskList'})
+      }
+    },
+    data: function () {
+      return {
+        active_menu: '4'
       }
     }
   }

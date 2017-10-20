@@ -9,6 +9,7 @@ from backend.common.consts import Const
 import ujson
 import calendar
 import time
+from backend.handler.util.ArrayUtil import ArrayUtil
 
 class QueryHandler(AsynchronousHandler):
     QUERY_FIELDS = {"_id": 1, "description": 1}
@@ -24,6 +25,14 @@ class QueryHandler(AsynchronousHandler):
         for role in allrole:
             if role['_id'] == roleid:
                 return role['name']
+            return None
+    def getRoleNames(self, roleids, allrole):
+        rolenames = []
+        for roleid in roleids:
+            rolename = self.getRoleName(roleid, allrole)
+            if rolename:
+                rolenames.append(rolename)
+        return rolenames
     def getDuty(self, dutyId, allduties):
         for duty in allduties:
             if duty['_id'] == dutyId:
@@ -57,13 +66,13 @@ class QueryHandler(AsynchronousHandler):
                     print 'get statistic data for user:' + user['name']
                     # get all duties for this user
                     userDuties = []
-                    userRole = user['role']
-                    userRoleName = self.getRoleName(userRole, allrole)
+                    userRoles = user['role']
+                    userRoleNames = self.getRoleNames(userRoles, allrole)
 
                     if allDuties:
                         for duty in allDuties:
                             roles = duty['roles']
-                            if userRole in roles:
+                            if ArrayUtil.isIntersect(userRoles, roles):
                                 userDuties.append(duty)
                     print len(userDuties)
                     userAllDutyCount = daycount * len(userDuties)
@@ -83,14 +92,65 @@ class QueryHandler(AsynchronousHandler):
                     item = {}
                     item['userid'] = user['_id']
                     item['username'] = user['name']
-                    item['role'] = userRoleName
+                    item['role'] = ' '.join(userRoleNames)
                     item['unfinish_count'] = userAllDutyCount - finishCount
                     if item['unfinish_count'] < 0:
                         item['unfinish_count'] = 0
                     result.append(item)
 
             self.json_result = result
+        elif self._op == 'get_all_data_by_time_range':
+            print 'get all member data by time range!'
+            arguments = ujson.loads(self.request.body)
+            starttime = arguments['starttime']
+            endtime = arguments['endtime']
 
+            result = []
+            startDate = datetime.datetime.fromtimestamp(starttime)
+            endDate = datetime.datetime.fromtimestamp(endtime)
+            daycount = (endDate - startDate).days
+            print daycount
+            alluser = list(self._user_info_coll.find())
+            allrole = list(self._role_info_coll.find())
+            allDuties = list(self._duty_info_coll.find().sort('starttime', 1))
+            if alluser and allrole:
+                for user in alluser:
+                    print 'get statistic data for user:' + user['name']
+                    # get all duties for this user
+                    userDuties = []
+                    userRoles = user['role']
+                    userRoleNames = self.getRoleNames(userRoles, allrole)
+
+                    if allDuties:
+                        for duty in allDuties:
+                            roles = duty['roles']
+                            if ArrayUtil.isIntersect(userRoles, roles):
+                                userDuties.append(duty)
+                    print len(userDuties)
+                    userAllDutyCount = daycount * len(userDuties)
+                    queryStartDate = starttime
+                    queryEndDate = endtime
+                    taskExecInfo = self._task_exec_data_coll.find({'userid': user['_id'], 'startofday': {'$gte': queryStartDate, '$lt': queryEndDate}})
+                    finishCount = 0
+                    if taskExecInfo:
+                        for taskexec in taskExecInfo:
+                            realendtime = taskexec['realendtime']
+                            duty = self.getDuty(taskexec['taskid'], allDuties)
+                            taskStarttime = duty['starttime'] + taskexec['startofday']
+                            taskEndtime = duty['endtime'] + taskexec['startofday']
+                            if realendtime < taskEndtime + 600 or taskexec['approve_status'] == '1':
+                                finishCount += 1
+
+                    item = {}
+                    item['userid'] = user['_id']
+                    item['username'] = user['name']
+                    item['role'] = ' '.join(userRoleNames)
+                    item['unfinish_count'] = userAllDutyCount - finishCount
+                    if item['unfinish_count'] < 0:
+                        item['unfinish_count'] = 0
+                    result.append(item)
+
+            self.json_result = result
         super(QueryHandler, self).process_request()
 
 

@@ -3,7 +3,15 @@ import Router from 'vue-router'
 import store from '../store/store'
 
 import UserLogin from '../components/user_login.vue'
-import UserDaterangeTaskStat from '../components/table_user_daterange_task_stat.vue'
+import UserList from '../components/table_user_list.vue'
+import RoleList from '../components/table_role_list.vue'
+import PermissionRoleList from '../components/table_permission_role_list.vue'
+import DutyList from '../components/table_duty_list.vue'
+import UserDayTaskList from '../components/table_user_day_task.vue'
+import EmergencyHandle from '../components/emergency_handle.vue'
+import AllUserTaskExecStat from '../components/table_all_user_task_exec_stat.vue'
+import OneUserAllTaskExecStat from '../components/table_one_user_all_task_exec_stat.vue'
+import OneUserOneTaskExecStat from '../components/table_one_user_one_task_exec_stat.vue'
 
 Vue.use(Router)
 
@@ -15,9 +23,52 @@ const router = new Router({
       component: UserLogin
     },
     {
-      path: '/user_task_stat/:selectedData',
-      name: 'userTaskStat',
-      component: UserDaterangeTaskStat
+      path: '/user_list',
+      name: 'UserList',
+      component: UserList
+    },
+    {
+      path: '/role_list',
+      name: 'RoleList',
+      component: RoleList,
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: '/permission_role_list',
+      name: 'PermissionRoleList',
+      component: PermissionRoleList
+    },
+    {
+      path: '/duty_list',
+      name: 'DutyList',
+      component: DutyList
+    },
+    {
+      path: '/user_day_task_list',
+      name: 'UserDayTaskList',
+      component: UserDayTaskList
+    },
+    {
+      path: '/emergency_handle',
+      name: 'EmergencyHandle',
+      component: EmergencyHandle
+    },
+    {
+      path: '/all_user_task_exec_stat/:datetime_type/:starttime',
+      name: 'AllUserTaskExecStat',
+      component: AllUserTaskExecStat
+    },
+    {
+      path: '/one_user_all_task_stat/:selectedData',
+      name: 'OneUserAllTaskExecStat',
+      component: OneUserAllTaskExecStat
+    },
+    {
+      path: '/one_user_one_task_stat/:selectedData',
+      name: 'OneUserOneTaskExecStat',
+      component: OneUserOneTaskExecStat
     }
   ]
 })

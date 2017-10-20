@@ -40,6 +40,7 @@ URLS = [
     (r"/duty/query_duty_by_user", DutyHandler, {'op':'get_duty_by_user'}),
 
     (r"/manager/query_all_by_time", QueryHandler, {'op':'get_all_data_by_time'}),
+    (r"/manager/query_all_by_time_range", QueryHandler, {'op':'get_all_data_by_time_range'}),
 
     (r"/user/get_task_exec_info_by_date", TaskExecActionHandler, {'op':'get_task_exec_info_by_date'}),
     (r"/user/get_user_task_exec_info_by_daterange", TaskExecActionHandler, {'op':'get_user_task_exec_info_by_daterange'}),

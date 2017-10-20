@@ -1,8 +1,8 @@
 {
-  "name": "rc_epg_operation_cms",
+  "name": "kindergarten_safety_management",
   "version": "1.0.0",
-  "description": "remote controller operation cms",
-  "author": "zhanghao8 <zhanghao8@xiaomi.com>",
+  "description": "kindergarten safety management system",
+  "author": "zhanghao <amorzh@hotmail.com>",
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",

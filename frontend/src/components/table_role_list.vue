@@ -79,6 +79,8 @@
   import { GET_ALL_ROLE, REMOVE_ROLES } from '../store/mutation_types'
   import RoleEditPanel from './edit_panel_role.vue'
   import Util from '../store/utils'
+  import ObjUtil from '../utils/ObjUtil'
+
   export default {
     name: 'table_role_list',
     methods: {
@@ -92,7 +94,7 @@
         this.selectedRole = {}
         for (var i = 0, len = this.allRole.length; i < len; i++) {
           if (this.allRole[i]._id === row._id) {
-            this.selectedRole = this.allRole[i]
+            this.selectedRole = ObjUtil.clone(this.allRole[i])
             this.selectedRole.permissionRoleNames = []
             if (this.selectedRole.permissionRoles !== undefined) {
               for (var j = 0; j < this.selectedRole.permissionRoles.length; j++) {

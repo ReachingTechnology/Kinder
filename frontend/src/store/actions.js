@@ -9,9 +9,9 @@ import { GET_ALL_DATA, USER_LOGIN, USER_LOGOUT,
   GET_ALL_TASK, UPSERT_TASK, COMMIT_TASK_EXEC_INFO, GET_TASK_EXEC_DATA_BY_DATE, GET_USER_TASK_EXEC_DATA_BY_DATERANGE, GET_ONE_TASK_EXEC_DATA_BY_DATERANGE,
   GET_ALL_DUTY, UPSERT_DUTY, REMOVE_DUTIES } from './mutation_types'
 // import dateUtil from '../utils/DateUtil'
+import state from './state'
 
-// axios.defaults.baseURL = 'https://47.94.192.237:7070'
-axios.defaults.baseURL = 'https://127.0.0.1:7070'
+axios.defaults.baseURL = state.backend_uri
 // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 axios.defaults.headers.post['X-Requested-With'] = 'XMLHttpRequest'

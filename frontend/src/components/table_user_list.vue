@@ -101,6 +101,9 @@
   import { mapActions, mapGetters } from 'vuex'
   import { GET_ALL_USER_ACCOUNT, GET_ALL_ROLE, REMOVE_USERS } from '../store/mutation_types'
   import UserEditPanel from './edit_panel_user.vue'
+  import Utils from '../store/utils'
+  import ObjUtil from '../utils/ObjUtil'
+
   export default {
     name: 'table_user_list',
     methods: {
@@ -123,7 +126,11 @@
         this.selectedUser = {}
         for (var i = 0, len = this.allUser.length; i < len; i++) {
           if (this.allUser[i]._id === row._id) {
-            this.selectedUser = this.allUser[i]
+            this.selectedUser = ObjUtil.clone(this.allUser[i])
+            this.selectedUser.checkedRoleNames = []
+            for (var j = 0, len2 = this.allUser[i].role.length; j < len2; j++) {
+              this.selectedUser.checkedRoleNames.push(Utils.getRoleName(this.allUser[i].role[j]))
+            }
             this.showEdit = true
             this.isCreating = false
             break
@@ -136,7 +143,8 @@
           'name': '',
           'cellphone': '',
           'sex': 'Male',
-          'role': '',
+          'role': [],
+          'checkedRoleNames': [],
           'birthday': '',
           'password': ''
         }
@@ -162,9 +170,13 @@
         for (var i = 0, len = this.allUser.length; i < len; i++) {
           var item = this.allUser[i]
           item.sex_name = item.sex === 'Male' ? '男' : '女'
-          for (var j = 0, len2 = this.allRole.length; j < len2; j++) {
-            if (item.role === this.allRole[j]._id) {
-              item.role_name = this.allRole[j].name
+          item.role_name = ''
+          for (var k = 0, len1 = item.role.length; k < len1; k++) {
+            let roleid = item.role[k]
+            for (var j = 0, len2 = this.allRole.length; j < len2; j++) {
+              if (roleid === this.allRole[j]._id) {
+                item.role_name = item.role_name + this.allRole[j].name + ' '
+              }
             }
           }
           data.push(item)

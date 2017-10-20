@@ -1,6 +1,5 @@
 <template>
   <div>
-    <el-dialog @close="handleClose" :visible.sync="dialogVisible" :close-on-click-modal="false">
       <div>
         <h2 style="margin-top: 0px">用户任务统计</h2>
         <h3>用户姓名 {{ queryUser }}</h3>
@@ -44,8 +43,6 @@
           </el-table-column>
         </el-table>
       </div>
-    </el-dialog>
-    <table-one-task-daterange-exec-stat @showEdit="showEditOver" :dialogVisible="showEdit" :selectedData="selectedTask"></table-one-task-daterange-exec-stat>
   </div>
 </template>
 <style>
@@ -63,23 +60,22 @@
 </style>
 <script>
   import {mapActions, mapGetters} from 'vuex'
-  import {GET_ONE_TASK_EXEC_DATA_BY_DATERANGE} from '../store/mutation_types'
+  import {GET_USER_TASK_EXEC_DATA_BY_DATERANGE} from '../store/mutation_types'
   import Moment from 'moment'
-  import TableOneTaskDaterangeExecStat from './table_one_task_daterange_exec_stat'
+  import TableOneTaskDaterangeExecStat from './table_one_user_one_task_exec_stat'
   import Util from '../store/utils'
   export default {
-    name: 'table_user_day_task',
+    name: 'table_user_daterange_task_stat',
     methods: {
       tableRowClassName (row, index) {
         return ''
       },
-      ...mapActions([GET_ONE_TASK_EXEC_DATA_BY_DATERANGE]),
+      ...mapActions([GET_USER_TASK_EXEC_DATA_BY_DATERANGE]),
       handleEdit (index, row) {
         this.selectedTask = row
         this.selectedTask.startofday = this.selectedData.startofday
         this.selectedTask.endofday = this.selectedData.endofday
-        this.GET_ONE_TASK_EXEC_DATA_BY_DATERANGE(this.selectedTask)
-        this.showEdit = true
+        this.$router.push({name: 'OneUserOneTaskExecStat', params: {selectedTask: this.selectedTask}})
       },
       handleClose () {
         this.$emit('showEdit', false)
@@ -97,11 +93,17 @@
         return Util.getUserName(this.selectedData.userid)
       }
     },
-    mounted: function () {
+    created: function () {
+      let params = {}
+      params.userid = this.selectedData.userid
+      params.startofday = this.selectedData.startofday
+      params.endofday = this.selectedData.endofday
+      this.GET_USER_TASK_EXEC_DATA_BY_DATERANGE(params)
     },
-    props: ['selectedData', 'dialogVisible'],
-    data: () => {
+    props: [],
+    data: function () {
       return {
+        selectedData: this.$route.params.selectedData,
         selectedTask: {},
         showEdit: false
       }

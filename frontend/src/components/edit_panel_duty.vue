@@ -46,7 +46,7 @@
         console.log(value)
         this.edited_duty.roles = []
         for (var i = 0, len = value.length; i < len; i++) {
-          let id = Util.getRoleId(value[i], this.allRole)
+          let id = Util.getRoleId(value[i])
           this.edited_duty.roles.push(id)
         }
         this.edited_duty.roleNames = value
@@ -60,21 +60,38 @@
         this.edited_duty.starttime = dateUtil.getDatetimeSeconds(st) - startofyesterday
         this.edited_duty.endtime = dateUtil.getDatetimeSeconds(et) - startofyesterday
         console.log('after converting time: st:' + this.edited_duty.starttime + '; et:' + this.edited_duty.endtime)
-        console.log('call upsert: edit duty:' + this.edited_duty)
       },
       commitEdit () {
+        console.log('call upsert: edit duty:99999')
+        console.log(this.edited_duty)
         this.$refs['dutyForm'].validate((valid) => {
-          console.log('validation')
-          console.log(valid)
           if (valid) {
             this.computeDatetime()
+            console.log('call upsert: edit duty:')
+            console.log(this.edited_duty)
             this.UPSERT_DUTY(this.edited_duty)
             this.$emit('showEdit', false)
           }
         })
       },
       cancelEdit () {
-        this.$refs['dutyForm'].resetFields()
+//        if (this.isCreating) {
+//          let startofyesterday = dateUtil.getStartOfToday() - 3600 * 24
+//          let timeRangeStart = new Date((startofyesterday + 8 * 3600) * 1000)
+//          let timeRangeEnd = new Date((startofyesterday + 9 * 3600) * 1000)
+//          this.edited_duty = {
+//            '_id': '',
+//            'name': '',
+//            'descr': '',
+//            'starttime': '',
+//            'endtime': '',
+//            'timeRange': [timeRangeStart, timeRangeEnd],
+//            'roles': [],
+//            'roleNames': [],
+//            'selectedRoleNames': []
+//          }
+//        }
+//        this.$refs['dutyForm'].resetFields()
         this.$emit('showEdit', false)
       },
       handleClose () {
@@ -93,7 +110,7 @@
 //        }
 //      }
 //    },
-    props: ['edited_duty', 'dialogVisible', 'selectedRoleNames'],
+    props: ['edited_duty', 'dialogVisible', 'selectedRoleNames', 'isCreating'],
     created: function () {
     },
     data: () => {
