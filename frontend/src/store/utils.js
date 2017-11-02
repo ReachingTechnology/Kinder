@@ -23,6 +23,15 @@ _Util.prototype.getRoleName = function (roleId) {
   }
   return ''
 }
+_Util.prototype.getRoleNames = function (roleIds) {
+  var name = []
+  for (var i = 0, len = state.allRole.length; i < len; i++) {
+    if (ArrayUtil.in_array(state.allRole[i]._id, roleIds)) {
+      name.push(state.allRole[i].name)
+    }
+  }
+  return name
+}
 _Util.prototype.getRoleId = function (roleName) {
   for (var i = 0, len = state.allRole.length; i < len; i++) {
     if (state.allRole[i].name === roleName) {
@@ -30,6 +39,23 @@ _Util.prototype.getRoleId = function (roleName) {
     }
   }
   return ''
+}
+_Util.prototype.getRoleById = function (roleId) {
+  for (var i = 0, len = state.allRole.length; i < len; i++) {
+    if (state.allRole[i]._id === roleId) {
+      return state.allRole[i]
+    }
+  }
+  return null
+}
+_Util.prototype.getDutiesByRoleId = function (roleId) {
+  var duties = []
+  for (var i = 0, len = state.allDuty.length; i < len; i++) {
+    if (ArrayUtil.in_array(roleId, state.allDuty[i].roles)) {
+      duties.push(state.allDuty[i])
+    }
+  }
+  return duties
 }
 _Util.prototype.getPermissionIdByName = function (name, allPermission) {
   var keys = Object.keys(allPermission)
@@ -84,6 +110,9 @@ _Util.prototype.hasPermission = function (permission) {
 }
 _Util.prototype.hasCategoryPermission = function (categoryname) {
   var categoryid = PERMISSION_CATEGORIES[categoryname]
+  if ((categoryid === 'C_004' || categoryid === 'C_002') && state.user._id === 'admin') {
+    return true
+  }
   var roleids = state.user.role
   var permissionList = state.allPermission[categoryid] === undefined ? [] : state.allPermission[categoryid].permissions
   for (var i = 0; i < state.allRole.length; i++) {

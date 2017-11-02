@@ -68,7 +68,7 @@
         width="55">
       </el-table-column>
     </el-table>
-    <duty-edit-panel @showEdit="showEidtOver" :selectedRoleNames="selectedDuty.roleNames" :isCreating="isCreating" :dialogVisible="showEdit" :edited_duty="selectedDuty" ></duty-edit-panel>
+    <duty-edit-panel @showEdit="showEditOver" :isCreating="isCreating" :dialogVisible="showEdit" :edited_duty="selectedDuty" ></duty-edit-panel>
   </div>
 </template>
 <style>
@@ -137,8 +137,9 @@
         this.selectedDuty = {}
         for (var i = 0, len = this.allDuty.length; i < len; i++) {
           if (this.allDuty[i]._id === row._id) {
-            this.selectedDuty = ObjUtil.clone(this.allDuty[i])
-            this.selectedDuty.selectedRoleNames = this.selectedDuty.roleNames
+            this.selectedDuty = this.allDuty[i]
+            this.selectedDuty.selectedWeekDays = []
+            this.selectedDuty.selectedMonthDays = []
             this.isCreating = false
             this.showEdit = true
             console.log(this.selectedDuty)
@@ -150,16 +151,24 @@
         let startofyesterday = dateUtil.getStartOfToday() - 3600 * 24
         let timeRangeStart = new Date((startofyesterday + 8 * 3600) * 1000)
         let timeRangeEnd = new Date((startofyesterday + 9 * 3600) * 1000)
+        let dateRangeStart = new Date()
+        let dateRangeEnd = dateRangeStart
         this.selectedDuty = {
           '_id': '',
           'name': '',
           'descr': '',
+          'category': '',
           'starttime': '',
           'endtime': '',
           'timeRange': [timeRangeStart, timeRangeEnd],
+          'dateRange': [dateRangeStart, dateRangeEnd],
           'roles': [],
-          'roleNames': [],
-          'selectedRoleNames': []
+          'selectedRoleNames': [],
+          'timeType': '',
+          'periodType': '',
+          'periodDate': [],
+          'selectedWeekDays': [],
+          'selectedMonthDays': []
         }
         this.isCreating = true
         this.showEdit = true
@@ -171,7 +180,7 @@
         }
         this.REMOVE_DUTIES(duties)
       },
-      showEidtOver () {
+      showEditOver () {
         this.showEdit = false
       },
       ...mapActions([GET_ALL_DUTY, REMOVE_DUTIES])
@@ -186,18 +195,21 @@
         }
         for (var i = 0, len = data.length; i < len; i++) {
           var duty = data[i]
-          duty.roleNames = []
+          duty.selectedRoleNames = []
           for (var j = 0, len2 = duty.roles.length; j < len2; j++) {
-            var rolename = Util.getRoleName(duty.roles[j], this.allRole)
-            duty.roleNames.push(rolename)
+            var rolename = Util.getRoleName(duty.roles[j])
+            duty.selectedRoleNames.push(rolename)
           }
-          duty.roleNames_display = duty.roleNames.join(',')
+          duty.roleNames_display = duty.selectedRoleNames.join(',')
           let st = new Date(duty.starttime * 1000)
           let et = new Date(duty.endtime * 1000)
           duty.timeRange = [st, et]
           duty.timeRangeShow = Moment(duty.starttime * 1000).format('h:mm') + ' 到 ' + Moment(duty.endtime * 1000).format('h:mm')
         }
         return data
+      },
+      ROOT_ROLE () {
+        return ROOT_ROLE
       }
     },
     created: function () {

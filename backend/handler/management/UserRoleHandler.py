@@ -20,7 +20,8 @@ class UserRoleHandler(AsynchronousHandler):
     def process_request(self):
         if self._op == 'query_all_role':
             print 'query all role!'
-            roles = self._role_info_coll.find()
+            query = {"_id": {"$ne": 'admin'}}
+            roles = self._role_info_coll.find(query)
             self.json_result = roles
         elif self._op == 'remove_role':
             print 'remove role!'

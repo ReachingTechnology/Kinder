@@ -1,47 +1,61 @@
 <template>
-  <div style="position:relative">
+  <div style="position:relative; overflow: visible">
     <div style="width: 100%">
   <el-menu :default-active="active_menu" class="el-menu-demo" mode="horizontal" @select="handleSelect">
     <el-submenu index="1" v-show="hasUserCategoryPermission || Util.hasCategoryPermission('PERMISSION_CATEGORY_ROLE') || Util.hasCategoryPermission('PERMISSION_CATEGORY_PERMISSIONROLE')">
       <template slot="title">系统管理</template>
       <el-menu-item index="1-1" v-show="Util.hasCategoryPermission('PERMISSION_CATEGORY_USER')">人员管理</el-menu-item>
+      <el-menu-item index="1-4" v-show="Util.hasCategoryPermission('PERMISSION_CATEGORY_USER')">小组管理</el-menu-item>
       <el-menu-item index="1-2" v-show="Util.hasCategoryPermission('PERMISSION_CATEGORY_ROLE')">岗位管理</el-menu-item>
       <el-menu-item index="1-3" v-show="Util.hasCategoryPermission('PERMISSION_CATEGORY_PERMISSIONROLE')">角色权限管理</el-menu-item>
     </el-submenu>
     <el-submenu index="2">
-      <template slot="title">任务管理</template>
-      <el-menu-item index="2-1" v-show="Util.hasPermission('PERMISSION_TASK_EDIT_USER_TASK')">日常岗位职责列表</el-menu-item>
-      <el-menu-item index="2-2">突发事件处理流程</el-menu-item>
+      <template slot="title">职责管理</template>
+      <el-menu-item index="2-1" v-show="Util.hasPermission('PERMISSION_TASK_EDIT_USER_TASK')">职责类别列表</el-menu-item>
+      <el-menu-item index="2-2" v-show="Util.hasPermission('PERMISSION_TASK_EDIT_USER_TASK')">日常岗位职责列表</el-menu-item>
+      <el-menu-item index="2-3">突发事件处理流程</el-menu-item>
     </el-submenu>
     <el-menu-item index="3" v-show="Util.hasPermission('PERMISSION_TASK_QUERY_USER_LOCATION')">员工定位</el-menu-item>
-    <el-menu-item index="4">日常职责</el-menu-item>
+    <el-submenu index="4">
+      <template slot="title">职责列表</template>
+      <el-menu-item index="4-1" v-show="Util.hasPermission('PERMISSION_TASK_EDIT_USER_TASK')">日常职责</el-menu-item>
+      <el-menu-item index="4-2" v-show="Util.hasPermission('PERMISSION_TASK_EDIT_USER_TASK')">定期职责</el-menu-item>
+      <el-menu-item index="4-3" v-show="Util.hasPermission('PERMISSION_TASK_EDIT_USER_TASK')">安全小组职责</el-menu-item>
+    </el-submenu>
     <el-submenu index="5" v-show="Util.hasPermission('PERMISSION_TASK_QUERY_ALL')">
       <template slot="title">信息管理</template>
-      <el-menu-item index="5-1">日信息报告</el-menu-item>
-      <el-menu-item index="5-2">月信息报告</el-menu-item>
+      <el-menu-item index="5-1">信息统计</el-menu-item>
+      <el-menu-item index="5-2">工作审批</el-menu-item>
     </el-submenu>
-    <!--<el-menu-item index="6">报表输出</el-menu-item>-->
-    <el-menu-item index="7">关于我园</el-menu-item>
+    <el-submenu index="6">
+      <template slot="title">安全秘书</template>
+      <el-menu-item index="6-1">职责提醒设置</el-menu-item>
+    </el-submenu>
+    <el-submenu index="7">
+      <template slot="title">文件管理</template>
+      <el-menu-item index="7-1">文件列表</el-menu-item>
+    </el-submenu>
     <el-menu-item index="8">系统退出</el-menu-item>
   </el-menu>
     </div>
     <div style="position:absolute; top: 50%; height: 40px; right:10px; margin-top: -10px">
-    <span>当前用户 {{ user.name }} （{{ userRoleName }}）</span>
+      <span>当前用户 {{ user.name }} （{{ userRoleName }}）</span>
     </div>
   </div>
 </template>
 <script>
-  import {mapGetters} from 'vuex'
+  import {mapGetters, mapActions} from 'vuex'
   import Util from '../store/utils'
   import dateUtil from '../utils/DateUtil'
-  import { DATETYPE_DAY, DATETYPE_MONTH } from '../store/common_defs'
-
+  import { DATETYPE_DAY, DATETYPE_MONTH, DUTY_TIME_TYPE_ROUTINE, DUTY_TIME_TYPE_PERIODICAL, DUTY_TIME_TYPE_SPECIFIC } from '../store/common_defs'
+  import { SET_ACTIVE_MENU } from '../store/mutation_types'
   export default {
     methods: {
       handleSelect (key, keyPath) {
         console.log(key, keyPath)
         var params = {}
         this.active_menu = key
+        this.SET_ACTIVE_MENU({'active_menu': this.active_menu})
         switch (key) {
           case '1-1':
             this.$router.push({name: 'UserList'})
@@ -52,14 +66,26 @@
           case '1-3':
             this.$router.push({name: 'PermissionRoleList'})
             break
+          case '1-4':
+            this.$router.push({name: 'UserGroupList'})
+            break
           case '2-1':
-            this.$router.push({name: 'DutyList'})
+            this.$router.push({name: 'DutyCategoryList'})
             break
           case '2-2':
+            this.$router.push({name: 'DutyList'})
+            break
+          case '2-3':
             this.$router.push({name: 'EmergencyHandle'})
             break
-          case '4':
-            this.$router.push({name: 'UserDayTaskList'})
+          case '4-1':
+            this.$router.push({name: 'UserDayTaskList', params: {'taskType': DUTY_TIME_TYPE_ROUTINE}})
+            break
+          case '4-2':
+            this.$router.push({name: 'UserDayTaskList', params: {'taskType': DUTY_TIME_TYPE_PERIODICAL}})
+            break
+          case '4-3':
+            this.$router.push({name: 'UserDayTaskList', params: {'taskType': DUTY_TIME_TYPE_SPECIFIC}})
             break
           case '5-1':
             params = {
@@ -83,12 +109,13 @@
       },
       handleClose (key, keyPath) {
         console.log(key, keyPath)
-      }
+      },
+      ...mapActions([SET_ACTIVE_MENU])
     },
     computed: {
       ...mapGetters(['user']),
       userRoleName () {
-        return Util.getRoleName(this.user.role)
+        return Util.getRoleNames(this.user.role).join(', ')
       },
       Util () {
         return Util
@@ -98,13 +125,14 @@
       }
     },
     created: function () {
-      if (this.active_menu === '4') {
-        this.$router.push({name: 'UserDayTaskList'})
+      if (this.active_menu === '4-1') {
+        this.$router.push({name: 'UserDayTaskList', params: {'taskType': DUTY_TIME_TYPE_ROUTINE}})
+        SET_ACTIVE_MENU({'active_menu': this.active_menu})
       }
     },
     data: function () {
       return {
-        active_menu: '4'
+        active_menu: '4-1'
       }
     }
   }

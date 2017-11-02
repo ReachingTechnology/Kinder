@@ -16,6 +16,7 @@ class DutyHandler(AsynchronousHandler):
         self._op = op
         self._duty_info_coll = self.settings['kinder_mongo_pool'].get_collection('kinder', "duty_info")
         self._user_info_coll = self.settings['kinder_mongo_pool'].get_collection('kinder', "user_info")
+        self._duty_category_coll = self.settings['kinder_mongo_pool'].get_collection('kinder', "duty_category")
 
     def process_request(self):
         if self._op == 'query_all_duty':
@@ -69,10 +70,46 @@ class DutyHandler(AsynchronousHandler):
                 item['seq'] = arguments['seq']
             item['name'] = arguments["name"]
             item['descr'] = arguments["descr"]
+            item['category'] = arguments['category']
             item['starttime'] = arguments["starttime"]
             item['endtime'] = arguments["endtime"]
             item['roles'] = arguments["roles"]
+            item['timeType'] = arguments['timeType']
+            item['periodType'] = arguments['periodType']
+            item['periodDate'] = arguments['periodDate']
             self._duty_info_coll.save(item)
+            self.json_result = {'status': 0}
+        elif self._op == 'query_all_duty_category':
+            categories = self._duty_category_coll.find()
+            self.json_result = categories
+        elif self._op == 'upsert_duty_category':
+            arguments = ujson.loads(self.request.body)
+            existCategories = self._duty_category_coll.find().sort("_id", -1)
+            item = {}
+            if '_id' in arguments:
+                item['_id'] = arguments['_id']
+            else:
+                item['_id'] = ''
+            if item['_id'] == '':
+                existCount = existCategories.count()
+                if existCount == 0:
+                    newid = "DUTY_CAT_00001"
+                    newseq = 1
+                else:
+                    lastDutyCat = existCategories.next()
+                    newseq = lastDutyCat['seq'] + 1
+                    newid = "DUTY_CAT_{:0>5d}".format(newseq)
+                item['_id'] = newid
+                item['seq'] = newseq
+            else:
+                item['seq'] = arguments['seq']
+            item['name'] = arguments["name"]
+            item['descr'] = arguments["descr"]
+            self._duty_category_coll.save(item)
+            self.json_result = {'status': 0}
+        elif self._op == 'remove_duty_category':
+            arguments = ujson.loads(self.request.body)
+            self._duty_category_coll.remove({"_id": {"$in": arguments}})
             self.json_result = {'status': 0}
         super(DutyHandler, self).process_request()
 

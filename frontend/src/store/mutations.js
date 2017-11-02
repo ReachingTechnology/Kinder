@@ -152,6 +152,10 @@ const mutations = {
     console.log('set all user account:' + data.length)
     state.allUser = data
   },
+  SET_ALL_USER_GROUP (state, data) {
+    console.log('set all user group:' + data.length)
+    state.allUserGroup = data
+  },
   SET_ALL_ROLE (state, data) {
     console.log('set all roles')
     state.allRole = data
@@ -193,6 +197,9 @@ const mutations = {
       }
       state.dutyForRoles[role._id] = roleDuties
     }
+  },
+  SET_ALL_DUTY_CATEGORY (state, data) {
+    state.allDutyCategory = data
   }
 }
 export default mutations

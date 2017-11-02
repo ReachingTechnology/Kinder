@@ -1,6 +1,8 @@
 /**
  * Created by HOZ on 28/08/2017.
  */
+export const SET_ACTIVE_MENU = 'SET_ACTIVE_MENU'
+
 export const GET_ALL_DATA = 'GET_ALL_DATA'
 
 // user login/logout
@@ -11,6 +13,11 @@ export const USER_LOGOUT = 'USER_LOGOUT'
 export const UPSERT_USER_ACCOUNT = 'UPSERT_USER_ACCOUNT'
 export const GET_ALL_USER_ACCOUNT = 'GET_ALL_USER_ACCOUNT'
 export const REMOVE_USERS = 'REMOVE_USERS'
+
+// user group
+export const GET_ALL_USER_GROUP = 'GET_ALL_USER_GROUP'
+export const UPSERT_USER_GROUP = 'UPSERT_USER_GROUP'
+export const REMOVE_USER_GROUPS = 'REMOVE_USER_GROUPS'
 
 // role
 export const GET_ALL_ROLE = 'GET_ALL_ROLE'
@@ -28,6 +35,9 @@ export const GET_ALL_DUTY = 'GET_ALL_DUTY'
 export const GET_DUTY_BY_USER = 'GET_DUTY_BY_USER'
 export const UPSERT_DUTY = 'UPSERT_DUTY'
 export const REMOVE_DUTIES = 'REMOVE_DUTIES'
+export const GET_ALL_DUTY_CATEGORY = 'GET_ALL_DUTY_CATEGORY'
+export const UPSERT_DUTY_CATEGORY = 'UPSERT_DUTY_CATEGORY'
+export const REMOVE_DUTY_CATEGORIES = 'REMOVE_DUTY_CATEGORIES'
 
 // task
 export const GET_ALL_TASK = 'GET_ALL_TASK'

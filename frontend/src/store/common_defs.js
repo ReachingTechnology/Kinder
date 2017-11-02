@@ -18,13 +18,13 @@ export const TASK_STATUS = new Map([
   [TASK_STATUS_URGENT, '已完成']
 ])
 
-export const TASK_TYPE_NORMAL = '0'
-export const TASK_TYPE_ROUTINE = '1'
-
-export const TASK_TYPES = new Map([
-  [TASK_TYPE_ROUTINE, '日常任务'],
-  [TASK_TYPE_NORMAL, '一般任务']
-])
+export const DUTY_TIME_TYPE_ROUTINE = 'DUTY_TIME_TYPE_ROUTINE'
+export const DUTY_TIME_TYPE_PERIODICAL = 'DUTY_TIME_TYPE_PERIODICAL'
+export const DUTY_TIME_TYPE_SPECIFIC = 'DUTY_TIME_TYPE_SPECIFIC'
+export const DUTY_PERIOD_TYPE_WEEK = 'DUTY_PERIOD_TYPE_WEEK'
+export const DUTY_PERIOD_TYPE_MONTH = 'DUTY_PERIOD_TYPE_MONTH'
+export const DUTY_PERIOD_WEEK_PREFIX = 'DUTY_PERIOD_WEEK_'
+export const DUTY_PERIOD_MONTH_PREFIX = 'DUTY_PERIOD_DATE_'
 
 export const PERMISSIONS = {
   'PERMISSION_USER_ADD': 'C_001_P_001',
@@ -50,3 +50,15 @@ export const DATETYPE_DAY = 'date'
 export const DATETYPE_MONTH = 'month'
 
 export const ROOT_ROLE = '_ROLE_$_0000'
+
+export const WEEK_DAYS = {
+  '周一': 'DUTY_PERIOD_WEEK_0',
+  '周二': 'DUTY_PERIOD_WEEK_1',
+  '周三': 'DUTY_PERIOD_WEEK_2',
+  '周四': 'DUTY_PERIOD_WEEK_3',
+  '周五': 'DUTY_PERIOD_WEEK_4'
+}
+
+// export const MONTH_DAYS = {
+//   '1': 'DUTY_PERIOD_DATE_1'
+// }

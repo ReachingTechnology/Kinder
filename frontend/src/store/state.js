@@ -8,12 +8,15 @@ const state = {
   user: {
     _id: ''
   },
+  active_menu: '',
   allUser: [],
+  allUserGroup: [],
   allRole: [],
   allPermissionRole: [],
   allPermission: {},
   allTask: [],
   allDuty: [],
+  allDutyCategory: [],
   dutyForRoles: {},
   // 后端服务器地址
   // backend_uri: 'https://192.168.31.69:7070',

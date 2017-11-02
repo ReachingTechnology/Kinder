@@ -144,6 +144,8 @@
           'cellphone': '',
           'sex': 'Male',
           'role': [],
+          'duty': [],
+          'leader': '',
           'checkedRoleNames': [],
           'birthday': '',
           'password': ''

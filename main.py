@@ -216,6 +216,7 @@ def main():
         "keyfile": os.path.join(os.path.dirname(__file__), "backend/secure/server.key"),
     })
     http_server.listen(options.port)
+    # http_server.listen(options.port, address='0.0.0.0')
     ConfigSettings['http_server'] = http_server
     # add signal handler
     signal.signal(signal.SIGTERM, sig_handler)

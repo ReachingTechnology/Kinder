@@ -1,44 +1,38 @@
 <template>
   <div>
-    <h2>幼儿园岗位列表</h2>
+    <h2>幼儿园小组列表</h2>
     <div align="left">
       <el-button size="large"
                  @click="handleCreate()" type="success">
-        添加新岗位
+        添加新小组
       </el-button>
       <el-button size="large" class="horizontal-btn"
                  @click="handleDelete()" type="success">
-        删除选中岗位
+        删除选中小组
       </el-button>
     </div>
     <br/>
     <el-table
-      :data="roles"
+      :data="groups"
       style="width: 100%"
       :default-sort = "{prop: '_id', order: 'ascending'}"
       @selection-change="handleSelectionChange"
       :row-class-name="tableRowClassName">
       <el-table-column
-        prop="_id"
-        label="岗位编号"
-        align="center"
-        sortable>
-      </el-table-column>
-      <el-table-column
         prop="name"
-        label="岗位名称"
+        label="小组名称"
         align="center"
         sortable>
       </el-table-column>
       <el-table-column
         prop="descr"
-        label="岗位描述"
+        label="小组工作描述"
         align="center"
         sortable>
       </el-table-column>
       <el-table-column
-        prop="upper_role_name"
-        label="直接汇报岗位"
+        prop="leaderName"
+        label="小组负责人"
         align="center"
         sortable>
       </el-table-column>
@@ -58,10 +52,10 @@
         width="55">
       </el-table-column>
     </el-table>
-    <role-edit-panel @showEdit="showEditOver" :dialogVisible="showEdit" :edited_role="selectedRole" :isCreating="isCreating"></role-edit-panel>
+    <user-group-edit-panel @showEdit="showEditOver" :dialogVisible="showEdit" :edited_user_group="selectedGroup"></user-group-edit-panel>
     <br/>
     <div align="left">
-      <span>总岗位数：{{ this.allRole.length }}</span>
+      <span>总小组数：{{ this.allUserGroup.length }}</span>
     </div>
   </div>
 </template>
@@ -76,13 +70,13 @@
 </style>
 <script>
   import { mapActions, mapGetters } from 'vuex'
-  import { GET_ALL_ROLE, REMOVE_ROLES } from '../store/mutation_types'
-  import RoleEditPanel from './edit_panel_role.vue'
+  import { GET_ALL_USER_GROUP, REMOVE_USER_GROUPS } from '../store/mutation_types'
+  import UserGroupEditPanel from './edit_panel_user_group.vue'
   import Util from '../store/utils'
   import ObjUtil from '../utils/ObjUtil'
 
   export default {
-    name: 'table_role_list',
+    name: 'table_user_group_list',
     methods: {
       tableRowClassName (row, index) {
         return ''
@@ -91,33 +85,24 @@
         this.multipleSelection = val
       },
       handleEdit (index, row) {
-        this.selectedRole = {}
-        for (var i = 0, len = this.allRole.length; i < len; i++) {
-          if (this.allRole[i]._id === row._id) {
-            this.selectedRole = ObjUtil.clone(this.allRole[i])
-            this.selectedRole.permissionRoleNames = []
-            if (this.selectedRole.permissionRoles !== undefined) {
-              for (var j = 0; j < this.selectedRole.permissionRoles.length; j++) {
-                var permRole = Util.getPermissionRoleById(this.selectedRole.permissionRoles[j])
-                this.selectedRole.permissionRoleNames.push(permRole.name)
-              }
-            }
-            this.isCreating = false
+        this.selectedGroup = {}
+        for (var i = 0, len = this.allUserGroup.length; i < len; i++) {
+          if (this.allUserGroup[i]._id === row._id) {
+            this.selectedGroup = ObjUtil.clone(this.allUserGroup[i])
             this.showEdit = true
             break
           }
         }
       },
       handleCreate () {
-        this.selectedRole = {
+        this.selectedGroup = {
           '_id': '',
           'name': '',
           'descr': '',
-          'upper_role': '',
-          'permissionRoles': [],
-          'permissionRoleNames': []
+          'leader': '',
+          'leaderName': '',
+          'members': []
         }
-        this.isCreating = true
         this.showEdit = true
       },
       handleDelete () {
@@ -125,42 +110,37 @@
         for (var i = 0, len = this.multipleSelection.length; i < len; i++) {
           users.push(this.multipleSelection[i]._id)
         }
-        this.REMOVE_ROLES(users)
+        this.REMOVE_USER_GROUPS(users)
       },
       showEditOver () {
         this.showEdit = false
       },
-      ...mapActions([GET_ALL_ROLE, REMOVE_ROLES])
+      ...mapActions([GET_ALL_USER_GROUP, REMOVE_USER_GROUPS])
     },
     computed: {
-      ...mapGetters(['allRole']),
-      roles () {
+      ...mapGetters(['allUserGroup']),
+      groups () {
         var data = []
-        for (var i = 0, len = this.allRole.length; i < len; i++) {
-          var item = this.allRole[i]
-          for (var j = 0, len2 = this.allRole.length; j < len2; j++) {
-            if (item.upper_role === this.allRole[j]._id) {
-              item.upper_role_name = this.allRole[j].name
-            }
-          }
+        for (var i = 0, len = this.allUserGroup.length; i < len; i++) {
+          var item = this.allUserGroup[i]
+          item.leaderName = Util.getUserName(this.allUserGroup[i].leader)
           data.push(item)
         }
         return data
       }
     },
     created: function () {
-      this.GET_ALL_ROLE()
+      this.GET_ALL_USER_GROUP()
     },
     data: () => {
       return {
         showEdit: false,
-        selectedRole: {},
-        multipleSelection: [],
-        isCreating: false
+        selectedGroup: {},
+        multipleSelection: []
       }
     },
     components: {
-      RoleEditPanel
+      UserGroupEditPanel
     }
   }
 </script>

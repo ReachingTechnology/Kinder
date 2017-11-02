@@ -1,32 +1,32 @@
 <template>
   <div>
-    <h2>角色权限列表</h2>
-    <div align="left">
+    <h2>职责类别列表</h2>
+    <div align="left" style="width:100%">
       <el-button size="large" class="horizontal-btn"
                  @click="handleCreate()" type="success">
-        添加新角色
+        添加新类别
       </el-button>
       <el-button size="large" class="horizontal-btn"
                  @click="handleDelete()" type="success">
-        删除选中角色
+        删除选中类别
       </el-button>
     </div>
     <br/>
     <el-table
-      :data="allPermissionRole"
+      :data="allDutyCategory"
       style="width: 100%"
-      :default-sort = "{prop: 'name', order: 'ascending'}"
+      :default-sort = "{prop: '_id', order: 'ascending'}"
       @selection-change="handleSelectionChange"
-      :row-class-name="tableRowClassName">
+      >
       <el-table-column
         prop="name"
-        label="角色名称"
+        label="类别名称"
         align="center"
         sortable>
       </el-table-column>
       <el-table-column
         prop="descr"
-        label="角色描述"
+        label="类别描述"
         align="center"
         sortable>
       </el-table-column>
@@ -46,11 +46,7 @@
         width="55">
       </el-table-column>
     </el-table>
-    <permission-role-edit-panel @showEdit="showEditOver" :dialogVisible="showEdit" :edited_permission_role="selectedPermissionRole" ></permission-role-edit-panel>
-    <br/>
-    <div align="left">
-      <span>总角色数：{{ this.allPermissionRole.length }}</span>
-    </div>
+    <duty-category-edit-panel @showEdit="showEditOver" :isCreating="isCreating" :dialogVisible="showEdit" :edited_duty_category="selectedDutyCategory" ></duty-category-edit-panel>
   </div>
 </template>
 <style>
@@ -61,13 +57,32 @@
   .el-table .positive-row {
     background: #e2f0e4;
   }
+
+  .horizontal-btn {
+    display: inline-block;
+  }
+
+  .horizontal-btn-right {
+    display: inline-block;
+    float: right;
+  }
+
+  #select_role .el-form-item__label {
+    display: inline-block;
+  }
+
+  #select_role .el-form-item__content {
+    display: inline-block;
+  }
+
 </style>
 <script>
   import { mapActions, mapGetters } from 'vuex'
-  import { GET_ALL_PERMISSION_ROLE, GET_ALL_PERMISSION, REMOVE_PERMISSION_ROLES } from '../store/mutation_types'
-  import PermissionRoleEditPanel from './edit_panel_permission_role.vue'
+  import { GET_ALL_DUTY_CATEGORY, REMOVE_DUTY_CATEGORIES } from '../store/mutation_types'
+  import DutyCategoryEditPanel from './edit_panel_duty_category.vue'
+
   export default {
-    name: 'table_role_list',
+    name: 'table_duty_category_list',
     methods: {
       tableRowClassName (row, index) {
         return ''
@@ -76,56 +91,53 @@
         this.multipleSelection = val
       },
       handleEdit (index, row) {
-        this.selectedPermissionRole = {}
-        console.log(this.allPermissionRole)
-        for (var i = 0, len = this.allPermissionRole.length; i < len; i++) {
-          if (this.allPermissionRole[i].name === row.name) {
-            this.selectedPermissionRole = this.allPermissionRole[i]
-            console.log(this.selectedPermissionRole)
+        this.selectedDutyCategory = {}
+        for (var i = 0, len = this.allDutyCategory.length; i < len; i++) {
+          if (this.allDutyCategory[i]._id === row._id) {
+            this.selectedDutyCategory = this.allDutyCategory[i]
+            this.isCreating = false
             this.showEdit = true
             break
           }
         }
       },
       handleCreate () {
-        this.selectedPermissionRole = {
+        this.selectedDutyCategory = {
           '_id': '',
-          'seq': 0,
           'name': '',
-          'descr': '',
-          'permissions': []
+          'descr': ''
         }
+        this.isCreating = true
         this.showEdit = true
       },
       handleDelete () {
-        let users = []
+        let dutyCategories = []
         for (var i = 0, len = this.multipleSelection.length; i < len; i++) {
-          users.push(this.multipleSelection[i]._id)
+          dutyCategories.push(this.multipleSelection[i]._id)
         }
-        this.REMOVE_PERMISSION_ROLES(users)
+        this.REMOVE_DUTY_CATEGORIES(dutyCategories)
       },
       showEditOver () {
         this.showEdit = false
       },
-      ...mapActions([GET_ALL_PERMISSION_ROLE, GET_ALL_PERMISSION, REMOVE_PERMISSION_ROLES])
+      ...mapActions([GET_ALL_DUTY_CATEGORY, REMOVE_DUTY_CATEGORIES])
     },
     computed: {
-      ...mapGetters(['allPermissionRole', 'allPermission'])
+      ...mapGetters(['allDutyCategory'])
     },
     created: function () {
-      this.GET_ALL_PERMISSION()
-      this.GET_ALL_PERMISSION_ROLE()
+      this.GET_ALL_DUTY_CATEGORY()
     },
     data: () => {
       return {
         showEdit: false,
-        selectedPermissionRole: {},
+        selectedDutyCategory: {},
         multipleSelection: [],
-        permissionList: {}
+        isCreating: false
       }
     },
     components: {
-      PermissionRoleEditPanel
+      DutyCategoryEditPanel
     }
   }
 </script>

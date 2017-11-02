@@ -2,12 +2,13 @@
  * Created by HOZ on 28/08/2017.
  */
 import axios from 'axios'
-import { GET_ALL_DATA, USER_LOGIN, USER_LOGOUT,
+import { SET_ACTIVE_MENU, GET_ALL_DATA, USER_LOGIN, USER_LOGOUT,
   GET_DUTY_BY_USER, UPSERT_USER_ACCOUNT, GET_ALL_USER_ACCOUNT, REMOVE_USERS,
+  GET_ALL_USER_GROUP, UPSERT_USER_GROUP, REMOVE_USER_GROUPS,
   GET_ALL_ROLE, UPSERT_ROLE, REMOVE_ROLES,
   GET_ALL_PERMISSION_ROLE, UPSERT_PERMISSION_ROLE, GET_ALL_PERMISSION, REMOVE_PERMISSION_ROLES,
   GET_ALL_TASK, UPSERT_TASK, COMMIT_TASK_EXEC_INFO, GET_TASK_EXEC_DATA_BY_DATE, GET_USER_TASK_EXEC_DATA_BY_DATERANGE, GET_ONE_TASK_EXEC_DATA_BY_DATERANGE,
-  GET_ALL_DUTY, UPSERT_DUTY, REMOVE_DUTIES } from './mutation_types'
+  GET_ALL_DUTY, UPSERT_DUTY, REMOVE_DUTIES, GET_ALL_DUTY_CATEGORY, UPSERT_DUTY_CATEGORY, REMOVE_DUTY_CATEGORIES } from './mutation_types'
 // import dateUtil from '../utils/DateUtil'
 import state from './state'
 
@@ -34,6 +35,9 @@ const actions = {
     data._id = ''
     data.name = ''
     store.commit('SET_USER', data)
+  },
+  [SET_ACTIVE_MENU]: function (store, param) {
+    store.state.active_menu = param['active_menu']
   },
   [ GET_ALL_DATA ]: function (store, param) {
     'use strict'
@@ -90,6 +94,32 @@ const actions = {
           .catch(function (error) {
             console.log(error)
           })
+      })
+  },
+  [GET_ALL_USER_GROUP]: function (store, param) {
+    'use strict'
+    axios.get('/management/query_all_user_group')
+      .then(function (response) {
+        store.commit('SET_ALL_USER_GROUP', response.data)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  },
+  [ UPSERT_USER_GROUP ]: function (store, param) {
+    'use strict'
+    axios.post('/management/upsert_user_group', param)
+      .then(function (response) {
+        store.dispatch(GET_ALL_USER_GROUP)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  },
+  [ REMOVE_USER_GROUPS ]: function (store, param) {
+    axios.post('/management/remove_user_group', param)
+      .then(function (response) {
+        store.dispatch(GET_ALL_USER_GROUP)
       })
   },
   [ GET_ALL_ROLE ]: function (store, param) {
@@ -198,10 +228,17 @@ const actions = {
   },
   [ GET_ALL_DUTY ]: function (store, param) {
     'use strict'
-    axios.get('/management/query_all_duty')
+    axios.get('/management/query_all_duty_category ')
       .then(function (response) {
-        console.log('get all duty')
-        store.commit('SET_ALL_DUTY', response.data)
+        store.commit('SET_ALL_DUTY_CATEGORY', response.data)
+        axios.get('/management/query_all_duty')
+          .then(function (response) {
+            console.log('get all duty')
+            store.commit('SET_ALL_DUTY', response.data)
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
       })
       .catch(function (error) {
         console.log(error)
@@ -249,6 +286,32 @@ const actions = {
           .catch(function (error) {
             console.log(error)
           })
+      })
+  },
+  [ GET_ALL_DUTY_CATEGORY ]: function (store, param) {
+    'use strict'
+    axios.get('/management/query_all_duty_category ')
+      .then(function (response) {
+        store.commit('SET_ALL_DUTY_CATEGORY', response.data)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  },
+  [ UPSERT_DUTY_CATEGORY ]: function (store, param) {
+    'use strict'
+    axios.post('/management/upsert_duty_category', param)
+      .then(function (response) {
+        store.dispatch(GET_ALL_DUTY_CATEGORY)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  },
+  [ REMOVE_DUTY_CATEGORIES ]: function (store, param) {
+    axios.post('/management/remove_duty_category', param)
+      .then(function (response) {
+        store.dispatch(GET_ALL_DUTY_CATEGORY)
       })
   },
   [ GET_ALL_TASK ]: function (store, param) {

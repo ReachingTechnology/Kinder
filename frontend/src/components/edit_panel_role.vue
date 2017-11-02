@@ -1,18 +1,18 @@
 <template>
   <el-dialog title="编辑岗位" :visible.sync="dialogVisible" @close="handleClose" :close-on-click-modal="false">
-    <el-form :model="current_edited_role" :label-width="formLabelWidth" :label-position="labelPosition" ref="roleForm"
+    <el-form :model="edited_role" :label-width="formLabelWidth" :label-position="labelPosition" ref="roleForm"
              :rules="rules">
       <el-form-item label="岗位编号" prop="_id">
-        <el-input v-model="current_edited_role._id" auto-complete="off" :disabled="!isCreating"></el-input>
+        <el-input v-model="edited_role._id" auto-complete="off" :disabled="!isCreating"></el-input>
       </el-form-item>
       <el-form-item label="岗位名称" prop="name">
-        <el-input v-model="current_edited_role.name" auto-complete="off"></el-input>
+        <el-input v-model="edited_role.name" auto-complete="off"></el-input>
       </el-form-item>
       <el-form-item label="岗位描述" :label-width="formLabelWidth">
-        <el-input v-model="current_edited_role.descr" auto-complete="off"></el-input>
+        <el-input v-model="edited_role.descr" auto-complete="off"></el-input>
       </el-form-item>
       <el-form-item label="直接汇报岗位">
-        <el-select v-model="current_edited_role.upper_role" placeholder="选择岗位">
+        <el-select v-model="edited_role.upper_role" placeholder="选择岗位">
           <el-option label="无" :value="ROOT_ROLE"/>
           <el-option v-for="item in allRole" :label="item.name" :value="item._id"/>
         </el-select>
@@ -44,7 +44,7 @@
         return ''
       },
       commitEdit () {
-        console.log(this.current_edited_role)
+        this.current_edited_role = ObjUtil.clone(this.edited_role)
         this.$refs['roleForm'].validate((valid) => {
           if (valid) {
             this.current_edited_role.permissionRoleNames = this.checkedPermissionRoleNames
@@ -54,22 +54,13 @@
               this.current_edited_role.permissionRoles.push(permRole._id)
             }
             this.UPSERT_ROLE(this.current_edited_role)
+            this.edited_role = this.current_edited_role
             this.$emit('showEdit', false)
           }
         })
-//        this.$refs['roleForm'].resetFields()
       },
       cancelEdit () {
-//        if (this.isCreating) {
-//          this.current_edited_role = {
-//            '_id': '',
-//            'name': '',
-//            'descr': '',
-//            'upper_role': '',
-//            'permissionRoles': []
-//          }
-//        }
-//        this.$refs['roleForm'].resetFields()
+        this.$refs['roleForm'].resetFields()
         this.$emit('showEdit', false)
       },
       handleClose () {
@@ -86,12 +77,14 @@
       dialogVisible: function (val, oldval) {
         if (val === true) {
           this.checkedPermissionRoleNames = this.edited_role.permissionRoleNames
-          this.current_edited_role = ObjUtil.clone(this.edited_role)
         }
       }
     },
     computed: {
-      ...mapGetters(['allRole', 'allPermissionRole'])
+      ...mapGetters(['allRole', 'allPermissionRole']),
+      ROOT_ROLE () {
+        return ROOT_ROLE
+      }
     },
     props: ['edited_role', 'dialogVisible', 'isCreating'],
     created: function () {
@@ -109,7 +102,7 @@
             {required: true, message: '岗位名称不能为空', trigger: 'blur'}
           ]
         },
-        current_edited_role: this.edited_role
+        current_edited_role: {}
       }
     }
   }

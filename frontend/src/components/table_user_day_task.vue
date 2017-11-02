@@ -127,7 +127,7 @@
         taskFinishInfo.approve_status = row.approve_status
         taskFinishInfo.approve_user = row.approve_user
         this.COMMIT_TASK_EXEC_INFO(taskFinishInfo)
-        this.getLocation()
+//        this.getLocation()
       },
       handleDaySelected () {
         this.getTaskExecData(dateUtil.getStartOfTheday(this.selectedDay))
@@ -136,6 +136,7 @@
         var param = {}
         param['userid'] = this.user._id
         param['startofday'] = date
+        param['timetype'] = this.taskType
         this.GET_TASK_EXEC_DATA_BY_DATE(param)
       },
       showEditOver () {
@@ -157,7 +158,7 @@
       }
     },
     computed: {
-      ...mapGetters(['userDayTask', 'user', 'datePickerOptionsDay']),
+      ...mapGetters(['userDayTask', 'user', 'datePickerOptionsDay', 'active_menu']),
       dayTask () {
         var data = []
         this.unfinish_total = 0
@@ -177,17 +178,24 @@
           }
         }
         return data
+      },
+      taskType () {
+        return this.$route.params.taskType
       }
     },
     watch: {
       user: function () {
+        this.getTaskExecData(dateUtil.getStartOfTheday(this.selectedDay))
+      },
+      active_menu: function () {
+        console.log('detect active menu changed')
         this.getTaskExecData(dateUtil.getStartOfTheday(this.selectedDay))
       }
     },
     mounted: function () {
       this.getTaskExecData(dateUtil.getStartOfTheday(this.selectedDay))
     },
-    data: () => {
+    data: function () {
       return {
         selectedDay: new Date(),
         selectedTask: {},

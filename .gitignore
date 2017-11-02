@@ -9,3 +9,4 @@ index.html
 *.ntvs*
 *.njsproj
 *.sln
+access.log*

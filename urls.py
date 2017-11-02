@@ -22,6 +22,10 @@ URLS = [
     (r"/management/remove_user", UserAccountHandler, {'op':'remove_user'}),
     (r"/management/query_all_user", UserAccountHandler, {'op':'query_all_user'}),
 
+    (r"/management/upsert_user_group", UserAccountHandler, {'op':'upsert_user_group'}),
+    (r"/management/remove_user_group", UserAccountHandler, {'op':'remove_user_group'}),
+    (r"/management/query_all_user_group", UserAccountHandler, {'op':'query_all_user_group'}),
+
     (r"/management/query_all_role", UserRoleHandler, {'op':'query_all_role'}),
     (r"/management/upsert_role", UserRoleHandler, {'op':'upsert_role'}),
     (r"/management/remove_role", UserRoleHandler, {'op':'remove_role'}),
@@ -38,6 +42,9 @@ URLS = [
     (r"/management/upsert_duty", DutyHandler, {'op':'upsert_duty'}),
     (r"/management/remove_duty", DutyHandler, {'op':'remove_duty'}),
     (r"/duty/query_duty_by_user", DutyHandler, {'op':'get_duty_by_user'}),
+    (r"/management/query_all_duty_category", DutyHandler, {'op':'query_all_duty_category'}),
+    (r"/management/upsert_duty_category", DutyHandler, {'op':'upsert_duty_category'}),
+    (r"/management/remove_duty_category", DutyHandler, {'op':'remove_duty_category'}),
 
     (r"/manager/query_all_by_time", QueryHandler, {'op':'get_all_data_by_time'}),
     (r"/manager/query_all_by_time_range", QueryHandler, {'op':'get_all_data_by_time_range'}),
