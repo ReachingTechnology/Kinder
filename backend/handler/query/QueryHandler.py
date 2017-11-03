@@ -10,6 +10,7 @@ import ujson
 import calendar
 import time
 from backend.handler.util.ArrayUtil import ArrayUtil
+from backend.handler.util.Util import Util
 
 class QueryHandler(AsynchronousHandler):
     QUERY_FIELDS = {"_id": 1, "description": 1}
@@ -58,23 +59,17 @@ class QueryHandler(AsynchronousHandler):
                     daycount = currentdate.day - 1
             print 'get statistic'
             print daycount
-            alluser = list(self._user_info_coll.find())
+            alluser = list(Util.getAllUser(self._user_info_coll))
             allrole = list(self._role_info_coll.find())
             allDuties = list(self._duty_info_coll.find().sort('starttime', 1))
             if alluser and allrole:
                 for user in alluser:
                     print 'get statistic data for user:' + user['name']
                     # get all duties for this user
-                    userDuties = []
+                    userDuties = user['duty']
                     userRoles = user['role']
                     userRoleNames = self.getRoleNames(userRoles, allrole)
 
-                    if allDuties:
-                        for duty in allDuties:
-                            roles = duty['roles']
-                            if ArrayUtil.isIntersect(userRoles, roles):
-                                userDuties.append(duty)
-                    print len(userDuties)
                     userAllDutyCount = daycount * len(userDuties)
                     queryStartDate = starttime
                     queryEndDate = starttime + daycount * 3600 * 24
@@ -97,7 +92,8 @@ class QueryHandler(AsynchronousHandler):
                     if item['unfinish_count'] < 0:
                         item['unfinish_count'] = 0
                     result.append(item)
-
+            print '***************************'
+            print result
             self.json_result = result
         elif self._op == 'get_all_data_by_time_range':
             print 'get all member data by time range!'
@@ -110,23 +106,17 @@ class QueryHandler(AsynchronousHandler):
             endDate = datetime.datetime.fromtimestamp(endtime)
             daycount = (endDate - startDate).days
             print daycount
-            alluser = list(self._user_info_coll.find())
+            alluser = list(Util.getAllUser(self._user_info_coll))
             allrole = list(self._role_info_coll.find())
             allDuties = list(self._duty_info_coll.find().sort('starttime', 1))
             if alluser and allrole:
                 for user in alluser:
                     print 'get statistic data for user:' + user['name']
                     # get all duties for this user
-                    userDuties = []
+                    userDuties = user['duty']
                     userRoles = user['role']
                     userRoleNames = self.getRoleNames(userRoles, allrole)
 
-                    if allDuties:
-                        for duty in allDuties:
-                            roles = duty['roles']
-                            if ArrayUtil.isIntersect(userRoles, roles):
-                                userDuties.append(duty)
-                    print len(userDuties)
                     userAllDutyCount = daycount * len(userDuties)
                     queryStartDate = starttime
                     queryEndDate = endtime

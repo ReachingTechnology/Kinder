@@ -128,15 +128,19 @@
         return this.$route.params.starttime
       }
     },
-    mounted: function () {
-      this.handleDaySelected()
+    created: function () {
+      let params = {
+        'starttime': this.datetime_type === DATETYPE_MONTH ? dateUtil.getStartofMonthofTheDay(this.selectedDay) : dateUtil.getStartOfTheday(this.selectedDay),
+        'datetime_type': this.datetime_type === undefined ? DATETYPE_DAY : this.datetime_type
+      }
+      this.GET_ALL_DATA(params)
     },
     props: [],
     data: function () {
       return {
         showEdit: false,
         selectedData: {},
-        selectedDay: new Date()
+        selectedDay: dateUtil.getYesterday()
       }
     },
     components: {

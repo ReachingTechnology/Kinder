@@ -9,6 +9,11 @@ _DateUtil.prototype.getNow = function () {
   let miliseconds = date.getMilliseconds()
   return (date.getTime() - miliseconds) / 1000
 }
+_DateUtil.prototype.getYesterday = function () {
+  let date = new Date()
+  let miliseconds = date.getTime()
+  return new Date(miliseconds - 3600 * 24 * 1000)
+}
 _DateUtil.prototype.getStartOfToday = function () {
   let date = new Date()
   let hour = date.getHours()

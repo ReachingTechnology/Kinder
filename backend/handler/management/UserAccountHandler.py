@@ -7,6 +7,7 @@ import datetime
 from backend.handler.async_handler import AsynchronousHandler
 from backend.common.consts import Const
 import ujson
+from backend.handler.util.Util import Util
 
 class UserAccountHandler(AsynchronousHandler):
     QUERY_FIELDS = {"_id": 1, "description": 1}
@@ -61,8 +62,7 @@ class UserAccountHandler(AsynchronousHandler):
             self._user_info_coll.remove({"_id": {"$in": arguments}})
             self.json_result = {'status': 0}
         elif self._op == 'query_all_user':
-            query = {"_id": {"$ne": 'admin'}}
-            results = self._user_info_coll.find(query)
+            results = Util.getAllUser(self._user_info_coll)
             self.json_result = results
         elif self._op == 'upsert_user_group':
             print 'add user group!'

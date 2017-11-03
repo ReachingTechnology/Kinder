@@ -49,20 +49,20 @@ class TaskExecActionHandler(AsynchronousHandler):
             arguments = ujson.loads(self.request.body)
             userid = arguments['userid']
 
-            if 'timetype' in arguments:
-                timetype = arguments['timetype']
+            if 'timeType' in arguments:
+                timeType = arguments['timeType']
             else:
-                timetype = ''
+                timeType = ''
             # find out user duties
             allUserDuties = []
             user = self._user_info_coll.find_one({'_id': userid})
             if user:
                 userDuties = user['duty']
                 print userDuties
-                if timetype == '':
+                if timeType == '':
                     allUserDuties = self._duty_info_coll.find({"_id": {"$in": userDuties}}).sort('starttime', 1)
                 else:
-                    allUserDuties = self._duty_info_coll.find({"_id": {"$in": userDuties}, "timeType": timetype}).sort(
+                    allUserDuties = self._duty_info_coll.find({"_id": {"$in": userDuties}, "timeType": timeType}).sort(
                         'starttime', 1)
 
             result = []
@@ -72,7 +72,7 @@ class TaskExecActionHandler(AsynchronousHandler):
                     # 如果此职责不需要显示在查询的date的职责列表上的话，直接跳过
                     continue
                 dutyId = duty['_id']
-                if timetype == Const.DUTY_TIME_TYPE_SPECIFIC:
+                if timeType == Const.DUTY_TIME_TYPE_SPECIFIC:
                     # 对于特定时间的职责，因为是一个日期范围，所以查询时不能带startofday
                     query = {'userid': userid, 'taskid': dutyId}
                 else:
@@ -102,19 +102,19 @@ class TaskExecActionHandler(AsynchronousHandler):
             print 'get user task exec info by daterange!'
             arguments = ujson.loads(self.request.body)
             userid = arguments['userid']
-            if 'timetype' in arguments:
-                timetype = arguments['timetype']
+            if 'timeType' in arguments:
+                timeType = arguments['timeType']
             else:
-                timetype = ''
+                timeType = ''
             # find out user duties
             allUserDuties = []
             user = self._user_info_coll.find_one({'_id': userid})
             if user:
                 userDuties = user['duty']
-                if timetype == '':
+                if timeType == '':
                     allUserDuties = self._duty_info_coll.find({"_id": {"$in": userDuties}}).sort('starttime', 1)
                 else:
-                    allUserDuties = self._duty_info_coll.find({"_id": {"$in": userDuties}, "timeType": timetype}).sort(
+                    allUserDuties = self._duty_info_coll.find({"_id": {"$in": userDuties}, "timeType": timeType}).sort(
                         'starttime', 1)
 
             result = []

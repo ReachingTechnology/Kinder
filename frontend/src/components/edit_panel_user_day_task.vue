@@ -54,6 +54,7 @@
         taskFinishInfo.comment = this.edited_task.comment
         taskFinishInfo.approve_status = this.edited_task.approve_status
         taskFinishInfo.approve_user = this.edited_task.approve_user
+        taskFinishInfo.timeType = this.edited_task.timeType
         this.COMMIT_TASK_EXEC_INFO(taskFinishInfo)
         this.$emit('showEdit', false)
       },

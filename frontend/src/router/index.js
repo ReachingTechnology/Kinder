@@ -58,7 +58,7 @@ const router = new Router({
       component: DutyList
     },
     {
-      path: '/user_day_task_list/:taskType',
+      path: '/user_day_task_list/:timeType',
       name: 'UserDayTaskList',
       component: UserDayTaskList
     },
@@ -75,12 +75,18 @@ const router = new Router({
     {
       path: '/one_user_all_task_stat/:selectedData',
       name: 'OneUserAllTaskExecStat',
-      component: OneUserAllTaskExecStat
+      component: OneUserAllTaskExecStat,
+      meta: {
+        keepAlive: false
+      }
     },
     {
       path: '/one_user_one_task_stat/:selectedData',
       name: 'OneUserOneTaskExecStat',
-      component: OneUserOneTaskExecStat
+      component: OneUserOneTaskExecStat,
+      meta: {
+        keepAlive: false
+      }
     }
   ]
 })

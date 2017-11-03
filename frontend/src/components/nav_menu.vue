@@ -79,13 +79,13 @@
             this.$router.push({name: 'EmergencyHandle'})
             break
           case '4-1':
-            this.$router.push({name: 'UserDayTaskList', params: {'taskType': DUTY_TIME_TYPE_ROUTINE}})
+            this.$router.push({name: 'UserDayTaskList', params: {'timeType': DUTY_TIME_TYPE_ROUTINE}})
             break
           case '4-2':
-            this.$router.push({name: 'UserDayTaskList', params: {'taskType': DUTY_TIME_TYPE_PERIODICAL}})
+            this.$router.push({name: 'UserDayTaskList', params: {'timeType': DUTY_TIME_TYPE_PERIODICAL}})
             break
           case '4-3':
-            this.$router.push({name: 'UserDayTaskList', params: {'taskType': DUTY_TIME_TYPE_SPECIFIC}})
+            this.$router.push({name: 'UserDayTaskList', params: {'timeType': DUTY_TIME_TYPE_SPECIFIC}})
             break
           case '5-1':
             params = {
@@ -126,7 +126,7 @@
     },
     created: function () {
       if (this.active_menu === '4-1') {
-        this.$router.push({name: 'UserDayTaskList', params: {'taskType': DUTY_TIME_TYPE_ROUTINE}})
+        this.$router.push({name: 'UserDayTaskList', params: {'timeType': DUTY_TIME_TYPE_ROUTINE}})
         SET_ACTIVE_MENU({'active_menu': this.active_menu})
       }
     },

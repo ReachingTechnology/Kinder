@@ -94,7 +94,7 @@
 <script>
   import { mapActions, mapGetters } from 'vuex'
   import { GET_TASK_EXEC_DATA_BY_DATE, COMMIT_TASK_EXEC_INFO } from '../store/mutation_types'
-  import { TASK_STATUS, TASK_STATUS_UNFINISHED, TASK_STATUS_DELAYED } from '../store/common_defs'
+  import { TASK_STATUS, TASK_STATUS_UNFINISHED, TASK_STATUS_DELAYED, DUTY_TIME_TYPE_ROUTINE } from '../store/common_defs'
   import dateUtil from '../utils/DateUtil'
   import Moment from 'moment'
   import EditPanelUserDayTask from './edit_panel_user_day_task.vue'
@@ -113,6 +113,7 @@
       ...mapActions([GET_TASK_EXEC_DATA_BY_DATE, COMMIT_TASK_EXEC_INFO]),
       handleEdit (index, row) {
         this.selectedTask = row
+        this.selectedTask.timeType = this.timeType
         this.showEdit = true
       },
       handleFinish (index, row) {
@@ -126,6 +127,7 @@
         taskFinishInfo.comment = row.comment
         taskFinishInfo.approve_status = row.approve_status
         taskFinishInfo.approve_user = row.approve_user
+        taskFinishInfo.timeType = this.timeType
         this.COMMIT_TASK_EXEC_INFO(taskFinishInfo)
 //        this.getLocation()
       },
@@ -136,7 +138,7 @@
         var param = {}
         param['userid'] = this.user._id
         param['startofday'] = date
-        param['timetype'] = this.taskType
+        param['timeType'] = this.timeType
         this.GET_TASK_EXEC_DATA_BY_DATE(param)
       },
       showEditOver () {
@@ -164,13 +166,8 @@
         this.unfinish_total = 0
         for (var i = 0, len = this.userDayTask.length; i < len; i++) {
           var item = this.userDayTask[i]
-          console.log('starttime, endtime:')
-          console.log(item.starttime)
-          console.log(item.endtime)
-          console.log(item.realendtime)
           item.executetime = Moment(item.starttime * 1000).format('h:mm') + ' 到 ' + Moment(item.endtime * 1000).format('h:mm')
           item.realendtimeDisplay = item.realendtime === 0 ? '' : Moment(item.realendtime * 1000).format('M月D日 hh:mm')
-          console.log('realendtime:' + item.realendtimeDisplay)
           item.finish_status_display = TASK_STATUS.get(item.finish_status)
           data.push(item)
           if (item.finish_status === TASK_STATUS_UNFINISHED && item.approve_status !== '1') {
@@ -179,8 +176,8 @@
         }
         return data
       },
-      taskType () {
-        return this.$route.params.taskType
+      timeType () {
+        return this.$route.params.timeType
       }
     },
     watch: {
@@ -193,7 +190,15 @@
       }
     },
     mounted: function () {
-      this.getTaskExecData(dateUtil.getStartOfTheday(this.selectedDay))
+      var param = {}
+      param['userid'] = this.user._id
+      param['startofday'] = dateUtil.getStartOfTheday(new Date())
+      param['timeType'] = DUTY_TIME_TYPE_ROUTINE
+      this.GET_TASK_EXEC_DATA_BY_DATE(param)
+    },
+    beforeRouteLeave: function (to, from, next) {
+      this.$destroy()
+      next()
     },
     data: function () {
       return {

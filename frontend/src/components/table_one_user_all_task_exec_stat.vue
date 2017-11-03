@@ -75,7 +75,9 @@
         this.selectedTask = row
         this.selectedTask.startofday = this.selectedData.startofday
         this.selectedTask.endofday = this.selectedData.endofday
-        this.$router.push({name: 'OneUserOneTaskExecStat', params: {selectedTask: this.selectedTask}})
+        console.log('()*()*&*_&^*(^&**)(*)(*)')
+        console.log(this.selectedTask)
+        this.$router.push({name: 'OneUserOneTaskExecStat', params: {selectedData: this.selectedTask}})
       },
       handleClose () {
         this.$emit('showEdit', false)
@@ -99,6 +101,10 @@
       params.startofday = this.selectedData.startofday
       params.endofday = this.selectedData.endofday
       this.GET_USER_TASK_EXEC_DATA_BY_DATERANGE(params)
+    },
+    beforeRouteLeave: function (to, from, next) {
+      this.$destroy()
+      next()
     },
     props: [],
     data: function () {

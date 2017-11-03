@@ -40,7 +40,6 @@ const actions = {
     store.state.active_menu = param['active_menu']
   },
   [ GET_ALL_DATA ]: function (store, param) {
-    'use strict'
     axios.post('/manager/query_all_by_time', param)
     // axios.get('/manager/query_all_by_time?starttime=' + param['starttime'] + '&endtime=' + param['endtime'])
       .then(function (response) {
@@ -351,6 +350,7 @@ const actions = {
         let newparam = {}
         newparam.userid = param.userid
         newparam.startofday = param.startofday
+        newparam.timeType = param.timeType
         axios.post('/user/get_task_exec_info_by_date', newparam)
           .then(function (response) {
             store.commit('SET_USER_DUTY_EXEC_DATA', response.data)

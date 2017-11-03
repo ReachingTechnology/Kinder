@@ -131,7 +131,13 @@
       }
     },
     mounted: function () {
-      this.GET_ONE_TASK_EXEC_DATA_BY_DATERANGE(this.selectedTask)
+      console.log('%%%%%%%%%%%%%%^^^^^^^^^^^^^^^')
+      console.log(this.selectedData)
+      this.GET_ONE_TASK_EXEC_DATA_BY_DATERANGE(this.selectedData)
+    },
+    beforeRouteLeave: function (to, from, next) {
+      this.$destroy()
+      next()
     },
     props: [],
     data: function () {
