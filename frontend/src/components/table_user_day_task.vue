@@ -193,7 +193,7 @@
       var param = {}
       param['userid'] = this.user._id
       param['startofday'] = dateUtil.getStartOfTheday(new Date())
-      param['timeType'] = DUTY_TIME_TYPE_ROUTINE
+      param['timeType'] = this.timeType
       this.GET_TASK_EXEC_DATA_BY_DATE(param)
     },
     beforeRouteLeave: function (to, from, next) {
