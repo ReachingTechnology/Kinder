@@ -33,9 +33,9 @@
       }
     },
     created: function () {
-//      this.user._id = '000001'
-//      this.user.role = ['ROLE_0001', 'ROLE_0004']
-//      this.user.name = 'zhanghao'
+      this.user._id = '000001'
+      this.user.role = ['ROLE_0001', 'ROLE_0004']
+      this.user.name = 'zhanghao'
       this.GET_ALL_PERMISSION_ROLE()
       this.GET_ALL_PERMISSION()
       this.GET_ALL_USER_ACCOUNT()

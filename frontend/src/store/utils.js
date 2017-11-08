@@ -15,6 +15,15 @@ _Util.prototype.getUserName = function (userId) {
   }
   return ''
 }
+_Util.prototype.getUserNames = function (userIds) {
+  var name = []
+  for (var i = 0, len = state.allUser.length; i < len; i++) {
+    if (ArrayUtil.in_array(state.allUser[i]._id, userIds)) {
+      name.push(state.allUser[i].name)
+    }
+  }
+  return name
+}
 _Util.prototype.getRoleName = function (roleId) {
   for (var i = 0, len = state.allRole.length; i < len; i++) {
     if (state.allRole[i]._id === roleId) {
@@ -56,6 +65,15 @@ _Util.prototype.getDutiesByRoleId = function (roleId) {
     }
   }
   return duties
+}
+_Util.prototype.getDutyCategoryNameById = function (catId) {
+  for (var i = 0, len = state.allDutyCategory.length; i < len; i++) {
+    if (state.allDutyCategory[i]._id === catId) {
+      console.log('get name:')
+      return state.allDutyCategory[i].name
+    }
+  }
+  return ''
 }
 _Util.prototype.getPermissionIdByName = function (name, allPermission) {
   var keys = Object.keys(allPermission)

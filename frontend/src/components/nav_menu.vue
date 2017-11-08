@@ -12,7 +12,7 @@
     <el-submenu index="2">
       <template slot="title">职责管理</template>
       <el-menu-item index="2-1" v-show="Util.hasPermission('PERMISSION_TASK_EDIT_USER_TASK')">职责类别列表</el-menu-item>
-      <el-menu-item index="2-2" v-show="Util.hasPermission('PERMISSION_TASK_EDIT_USER_TASK')">日常岗位职责列表</el-menu-item>
+      <el-menu-item index="2-2" v-show="Util.hasPermission('PERMISSION_TASK_EDIT_USER_TASK')">岗位职责列表</el-menu-item>
       <el-menu-item index="2-3">突发事件处理流程</el-menu-item>
     </el-submenu>
     <el-menu-item index="3" v-show="Util.hasPermission('PERMISSION_TASK_QUERY_USER_LOCATION')">员工定位</el-menu-item>
@@ -20,7 +20,8 @@
       <template slot="title">职责列表</template>
       <el-menu-item index="4-1" v-show="Util.hasPermission('PERMISSION_TASK_EDIT_USER_TASK')">日常职责</el-menu-item>
       <el-menu-item index="4-2" v-show="Util.hasPermission('PERMISSION_TASK_EDIT_USER_TASK')">定期职责</el-menu-item>
-      <el-menu-item index="4-3" v-show="Util.hasPermission('PERMISSION_TASK_EDIT_USER_TASK')">安全小组职责</el-menu-item>
+      <el-menu-item index="4-3" v-show="Util.hasPermission('PERMISSION_TASK_EDIT_USER_TASK')">特定时间职责</el-menu-item>
+      <el-menu-item index="4-4" v-show="Util.hasPermission('PERMISSION_TASK_EDIT_USER_TASK')">小组职责</el-menu-item>
     </el-submenu>
     <el-submenu index="5" v-show="Util.hasPermission('PERMISSION_TASK_QUERY_ALL')">
       <template slot="title">信息管理</template>
@@ -47,7 +48,7 @@
   import {mapGetters, mapActions} from 'vuex'
   import Util from '../store/utils'
   import dateUtil from '../utils/DateUtil'
-  import { DATETYPE_DAY, DATETYPE_MONTH, DUTY_TIME_TYPE_ROUTINE, DUTY_TIME_TYPE_PERIODICAL, DUTY_TIME_TYPE_SPECIFIC } from '../store/common_defs'
+  import { DATETYPE_DAY, DATETYPE_MONTH, DUTY_TIME_TYPE_ROUTINE, DUTY_TIME_TYPE_PERIODICAL, DUTY_TIME_TYPE_SPECIFIC, DUTY_TIME_TYPE_GROUP } from '../store/common_defs'
   import { SET_ACTIVE_MENU } from '../store/mutation_types'
   export default {
     methods: {
@@ -86,6 +87,9 @@
             break
           case '4-3':
             this.$router.push({name: 'UserDayTaskList', params: {'timeType': DUTY_TIME_TYPE_SPECIFIC}})
+            break
+          case '4-4':
+            this.$router.push({name: 'UserDayTaskList', params: {'timeType': DUTY_TIME_TYPE_GROUP}})
             break
           case '5-1':
             params = {

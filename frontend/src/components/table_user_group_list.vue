@@ -37,6 +37,12 @@
         sortable>
       </el-table-column>
       <el-table-column
+        prop="memberName"
+        label="小组成员"
+        align="center"
+        sortable>
+      </el-table-column>
+      <el-table-column
         label="操作"
         align="center">
         <template scope="scope">
@@ -124,6 +130,7 @@
         for (var i = 0, len = this.allUserGroup.length; i < len; i++) {
           var item = this.allUserGroup[i]
           item.leaderName = Util.getUserName(this.allUserGroup[i].leader)
+          item.memberName = Util.getUserNames(this.allUserGroup[i].members).join(', ')
           data.push(item)
         }
         return data

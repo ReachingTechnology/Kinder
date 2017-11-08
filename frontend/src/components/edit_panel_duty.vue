@@ -213,10 +213,10 @@
         rules: {
           name: [
             { required: true, message: '职责名称不能为空', trigger: 'blur' }
-          ],
-          selectedRoleNames: [
-            { type: 'array', required: true, message: '请至少选择一个岗位', trigger: 'blur' }
           ]
+//          selectedRoleNames: [
+//            { type: 'array', required: true, message: '请至少选择一个岗位', trigger: 'blur' }
+//          ]
         },
         current_edited_duty: {},
         DUTY_TIME_TYPE_ROUTINE: DUTY_TIME_TYPE_ROUTINE,

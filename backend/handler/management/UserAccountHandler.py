@@ -92,6 +92,7 @@ class UserAccountHandler(AsynchronousHandler):
             item['descr'] = arguments["descr"]
             item['leader'] = arguments['leader']
             item['members'] = arguments["members"]
+            item['duty'] = arguments['duty']
             self._user_group_coll.save(item)
             self.json_result = {'status': 0}
         elif self._op == 'remove_user_group':

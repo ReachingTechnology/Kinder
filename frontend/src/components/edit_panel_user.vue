@@ -51,7 +51,7 @@
     <el-button type="primary" @click="commitEdit">提交</el-button>
   </span>
     </el-dialog>
-    <tree-duty-select @showEdit="showEditOver" :edited_user="edited_user" :dialogVisible="showDutyEdit" :userDuties="userDuties"></tree-duty-select>
+    <tree-duty-select@dutySelected="selectDutyOver" @showEdit="showEditOver" :dialogVisible="showDutyEdit" :selectedDuties="userDuties"></tree-duty-select>
     <tree-user-select @selectedUser="selectUserOver" @showEdit="showEditOver" title="选择直接汇报人" :dialogVisible="showLeaderEdit" :selectedUser="leader"></tree-user-select>
   </div>
 </template>
@@ -165,6 +165,12 @@
             this.edited_user.leader = ''
           }
           this.showLeaderEdit = false
+        }
+      },
+      selectDutyOver (duty) {
+        if (this.showDutyEdit) {
+          this.edited_user.duty = duty
+          this.showDutyEdit = false
         }
       },
       ...mapActions([ UPSERT_USER_ACCOUNT ])

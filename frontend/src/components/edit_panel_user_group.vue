@@ -21,6 +21,9 @@
         <el-form-item align="left">
           <el-button @click="editMember">选择小组成员</el-button>
         </el-form-item>
+        <el-form-item align="left">
+          <el-button @click="editDuty">编辑职责</el-button>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
     <el-button @click="cancelEdit">取消</el-button>
@@ -29,6 +32,7 @@
     </el-dialog>
     <tree-user-select @selectedUser="selectUserOver" @showEdit="showEditOver" title="选择负责人" :dialogVisible="showLeaderEdit" :selectedUser="leader"></tree-user-select>
     <tree-user-select @selectedUser="selectUserOver" @showEdit="showEditOver" title="选择小组成员" :dialogVisible="showMemberEdit" :selectedUser="members"></tree-user-select>
+    <tree-duty-select @dutySelected="selectDutyOver" @showEdit="showEditOver" :dialogVisible="showDutyEdit" :selectedDuties="userGroupDuties"></tree-duty-select>
   </div>
 </template>
 <script>
@@ -37,10 +41,11 @@
   import Util from '../store/utils'
   import ArrayUtil from '../utils/ArrayUtil'
   import TreeUserSelect from './tree_user_select.vue'
+  import TreeDutySelect from './tree_duty_select.vue'
   import ObjUtil from '../utils/ObjUtil'
 
   export default {
-    components: {TreeUserSelect},
+    components: {TreeUserSelect, TreeDutySelect},
     name: 'user_edit_panel',
     methods: {
       tableRowClassName (row, index) {
@@ -73,6 +78,13 @@
         }
         this.showMemberEdit = true
       },
+      editDuty () {
+        if (this.edited_user_group.duty === undefined) {
+          this.edited_user_group.duty = []
+        }
+        this.userGroupDuties = this.edited_user_group.duty
+        this.showDutyEdit = true
+      },
       handleClose () {
         this.cancelEdit()
       },
@@ -81,6 +93,8 @@
           this.showLeaderEdit = false
         } else if (this.showMemberEdit) {
           this.showMemberEdit = false
+        } else if (this.showDutyEdit) {
+          this.showDutyEdit = false
         }
       },
       selectUserOver (user) {
@@ -94,6 +108,12 @@
         } else if (this.showMemberEdit) {
           this.edited_user_group.members = user
           this.showMemberEdit = false
+        }
+      },
+      selectDutyOver (duty) {
+        if (this.showDutyEdit) {
+          this.edited_user_group.duty = duty
+          this.showDutyEdit = false
         }
       },
       ...mapActions([ UPSERT_USER_GROUP ])
@@ -123,9 +143,11 @@
         },
         showLeaderEdit: false,
         showMemberEdit: false,
+        showDutyEdit: false,
         current_edited_user_group: {},
         leader: [],
-        members: []
+        members: [],
+        userGroupDuties: []
       }
     }
   }

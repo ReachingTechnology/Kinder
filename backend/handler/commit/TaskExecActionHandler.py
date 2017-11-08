@@ -17,6 +17,7 @@ class TaskExecActionHandler(AsynchronousHandler):
         self._op = op
         self._task_exec_data_coll = self.settings['kinder_mongo_pool'].get_collection('kinder', "task_exec_data")
         self._user_info_coll = self.settings['kinder_mongo_pool'].get_collection('kinder', "user_info")
+        self._user_group_info_coll = self.settings['kinder_mongo_pool'].get_collection('kinder', "user_group_info")
         self._duty_info_coll = self.settings['kinder_mongo_pool'].get_collection('kinder', "duty_info")
 
     def matchWeekDay(self, weekDay, periodDate):
@@ -43,6 +44,15 @@ class TaskExecActionHandler(AsynchronousHandler):
                 return True
         return False
 
+    def getUserGroupDuty(self, userId):
+        duties = []
+        userGroups = self._user_group_info_coll.find()
+        if userGroups:
+            for group in userGroups:
+                if userId in group['members']:
+                    duties = duties + group['duty']
+        return duties
+
     def process_request(self):
         if self._op == 'get_task_exec_info_by_date':
             print 'get task exec info by date!'
@@ -58,8 +68,16 @@ class TaskExecActionHandler(AsynchronousHandler):
             user = self._user_info_coll.find_one({'_id': userid})
             if user:
                 userDuties = user['duty']
+                if timeType == Const.DUTY_TIME_TYPE_ALL or timeType == '':
+                    groupDuties = self.getUserGroupDuty(user['_id'])
+                    if len(groupDuties) > 0:
+                        userDuties = userDuties + groupDuties
+                if timeType == Const.DUTY_TIME_TYPE_GROUP:
+                    groupDuties = self.getUserGroupDuty(user['_id'])
+                    userDuties = groupDuties
                 print userDuties
-                if timeType == '':
+
+                if timeType == '' or timeType == Const.DUTY_TIME_TYPE_ALL or timeType == Const.DUTY_TIME_TYPE_GROUP:
                     allUserDuties = self._duty_info_coll.find({"_id": {"$in": userDuties}}).sort('starttime', 1)
                 else:
                     allUserDuties = self._duty_info_coll.find({"_id": {"$in": userDuties}, "timeType": timeType}).sort(
@@ -111,6 +129,10 @@ class TaskExecActionHandler(AsynchronousHandler):
             user = self._user_info_coll.find_one({'_id': userid})
             if user:
                 userDuties = user['duty']
+                groupDuties = self.getUserGroupDuty(user['_id'])
+                if len(groupDuties) > 0:
+                    userDuties = userDuties + groupDuties
+
                 if timeType == '':
                     allUserDuties = self._duty_info_coll.find({"_id": {"$in": userDuties}}).sort('starttime', 1)
                 else:

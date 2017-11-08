@@ -47,6 +47,12 @@
         sortable>
       </el-table-column>
       <el-table-column
+        prop="categoryName"
+        label="职责类别"
+        align="center"
+        sortable>
+      </el-table-column>
+      <el-table-column
         prop="roleNames_display"
         label="相关岗位"
         align="center"
@@ -205,6 +211,7 @@
           let et = new Date(duty.endtime * 1000)
           duty.timeRange = [st, et]
           duty.timeRangeShow = Moment(duty.starttime * 1000).format('h:mm') + ' 到 ' + Moment(duty.endtime * 1000).format('h:mm')
+          duty.categoryName = Util.getDutyCategoryNameById(duty.category)
         }
         return data
       },

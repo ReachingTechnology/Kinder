@@ -24,10 +24,7 @@
     name: 'duty_select_tree',
     methods: {
       commitEdit () {
-        this.edited_user.duty = this.$refs.tree.getCheckedKeys(true)
-        console.log('***************')
-        console.log(this.edited_user.duty)
-        this.$emit('showEdit', false)
+        this.$emit('dutySelected', this.$refs.tree.getCheckedKeys(true))
       },
       cancelEdit () {
         this.$emit('showEdit', false)
@@ -61,9 +58,9 @@
         return tree
       }
     },
-    props: ['userDuties', 'dialogVisible', 'edited_user'],
+    props: ['selectedDuties', 'dialogVisible'],
     updated: function () {
-      this.$refs.tree.setCheckedKeys(this.userDuties)
+      this.$refs.tree.setCheckedKeys(this.selectedDuties)
     },
     data: () => {
       return {
