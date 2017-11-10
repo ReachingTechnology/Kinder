@@ -155,5 +155,8 @@ _Util.prototype.hasCategoryPermission = function (categoryname) {
   // console.log('return false:' + categoryname)
   return false
 }
+_Util.prototype.getLocationDisplay = function (locationX, locationY) {
+  return '园内'
+}
 var Util = new _Util()
 export default Util

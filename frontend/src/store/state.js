@@ -11,6 +11,7 @@ const state = {
   active_menu: '',
   allUser: [],
   allUserGroup: [],
+  allUserLocation: [],
   allRole: [],
   allPermissionRole: [],
   allPermission: {},

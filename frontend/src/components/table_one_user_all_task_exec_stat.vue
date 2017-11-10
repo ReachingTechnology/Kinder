@@ -75,8 +75,6 @@
         this.selectedTask = row
         this.selectedTask.startofday = this.selectedData.startofday
         this.selectedTask.endofday = this.selectedData.endofday
-        console.log('()*()*&*_&^*(^&**)(*)(*)')
-        console.log(this.selectedTask)
         this.$router.push({name: 'OneUserOneTaskExecStat', params: {selectedData: this.selectedTask}})
       },
       handleClose () {

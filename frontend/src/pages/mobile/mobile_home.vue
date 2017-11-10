@@ -52,7 +52,7 @@
   import { Tabbar, TabItem, Header } from 'mint-ui'
   import MobileTableUserDayTask from '../../components/table_user_day_task.vue'
   import { mapGetters, mapActions } from 'vuex'
-  import { GET_ALL_DATA, USER_LOGOUT } from '../../store/mutation_types'
+  import { GET_ALL_USER_TASK_EXEC_DATA, USER_LOGOUT } from '../../store/mutation_types'
   import MobileUserLogin from '../../components/mobile/mobile_user_login.vue'
   export default {
     name: 'app',
@@ -68,7 +68,7 @@
       }
     },
     methods: {
-      ...mapActions([GET_ALL_DATA, USER_LOGOUT]),
+      ...mapActions([GET_ALL_USER_TASK_EXEC_DATA, USER_LOGOUT]),
       handleTabChange: function (id) {
         this.selectedTab = id
       }

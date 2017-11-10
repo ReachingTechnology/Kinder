@@ -13,6 +13,7 @@ from backend.handler.management.UserPermissionHandler import UserPermissionHandl
 from backend.handler.management.TaskHandler import TaskHandler
 from backend.handler.management.DutyHandler import DutyHandler
 from backend.handler.commit.TaskExecActionHandler import TaskExecActionHandler
+from backend.handler.management.UserLocationHandler import UserLocationHandler
 
 URLS = [
     (r"/login", LoginHandler, {'op':'login'}),
@@ -52,5 +53,8 @@ URLS = [
     (r"/user/get_task_exec_info_by_date", TaskExecActionHandler, {'op':'get_task_exec_info_by_date'}),
     (r"/user/get_user_task_exec_info_by_daterange", TaskExecActionHandler, {'op':'get_user_task_exec_info_by_daterange'}),
     (r"/user/get_one_task_exec_info_by_daterange", TaskExecActionHandler, {'op': 'get_one_task_exec_info_by_daterange'}),
-    (r"/user/commit_task_exec_info", TaskExecActionHandler, {'op':'commit_task_exec_info'})
+    (r"/user/commit_task_exec_info", TaskExecActionHandler, {'op':'commit_task_exec_info'}),
+
+    (r"/management/query_all_user_location", UserLocationHandler, {'op':'query_all_user_location'}),
+    (r"/management/upsert_user_location", UserLocationHandler, {'op':'upsert_user_location'}),
 ]

@@ -2,13 +2,14 @@
  * Created by HOZ on 28/08/2017.
  */
 import axios from 'axios'
-import { SET_ACTIVE_MENU, GET_ALL_DATA, USER_LOGIN, USER_LOGOUT,
+import { SET_ACTIVE_MENU, GET_ALL_USER_TASK_EXEC_DATA, USER_LOGIN, USER_LOGOUT,
   GET_DUTY_BY_USER, UPSERT_USER_ACCOUNT, GET_ALL_USER_ACCOUNT, REMOVE_USERS,
   GET_ALL_USER_GROUP, UPSERT_USER_GROUP, REMOVE_USER_GROUPS,
   GET_ALL_ROLE, UPSERT_ROLE, REMOVE_ROLES,
   GET_ALL_PERMISSION_ROLE, UPSERT_PERMISSION_ROLE, GET_ALL_PERMISSION, REMOVE_PERMISSION_ROLES,
-  GET_ALL_TASK, UPSERT_TASK, COMMIT_TASK_EXEC_INFO, GET_TASK_EXEC_DATA_BY_DATE, GET_USER_TASK_EXEC_DATA_BY_DATERANGE, GET_ONE_TASK_EXEC_DATA_BY_DATERANGE,
-  GET_ALL_DUTY, UPSERT_DUTY, REMOVE_DUTIES, GET_ALL_DUTY_CATEGORY, UPSERT_DUTY_CATEGORY, REMOVE_DUTY_CATEGORIES } from './mutation_types'
+  COMMIT_TASK_EXEC_INFO, GET_TASK_EXEC_DATA_BY_DATE, GET_USER_TASK_EXEC_DATA_BY_DATERANGE, GET_ONE_TASK_EXEC_DATA_BY_DATERANGE,
+  GET_ALL_DUTY, UPSERT_DUTY, REMOVE_DUTIES, GET_ALL_DUTY_CATEGORY, UPSERT_DUTY_CATEGORY, REMOVE_DUTY_CATEGORIES,
+  GET_ALL_USER_LOCATION, UPSERT_USER_LOCATION } from './mutation_types'
 // import dateUtil from '../utils/DateUtil'
 import state from './state'
 
@@ -19,6 +20,9 @@ axios.defaults.headers.post['X-Requested-With'] = 'XMLHttpRequest'
 // axios.defaults.headers.post['Content-Type'] = 'application/json'
 
 const actions = {
+  /*
+   Login/logout
+   */
   [ USER_LOGIN ]: function (store, param) {
     axios.post('/user/user_login', param)
       .then(function (response) {
@@ -36,21 +40,15 @@ const actions = {
     data.name = ''
     store.commit('SET_USER', data)
   },
+  /*
+   Navigation Menu
+   */
   [SET_ACTIVE_MENU]: function (store, param) {
     store.state.active_menu = param['active_menu']
   },
-  [ GET_ALL_DATA ]: function (store, param) {
-    axios.post('/manager/query_all_by_time', param)
-    // axios.get('/manager/query_all_by_time?starttime=' + param['starttime'] + '&endtime=' + param['endtime'])
-      .then(function (response) {
-        console.log('get all statistic data')
-        console.log(response.data)
-        store.commit('SET_ALL_STATISTIC_DATA', response.data)
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
-  },
+  /*
+   User Account
+   */
   [ UPSERT_USER_ACCOUNT ]: function (store, param) {
     'use strict'
     console.log('user birthday:' + param.birthday)
@@ -95,6 +93,9 @@ const actions = {
           })
       })
   },
+  /*
+   User Group
+   */
   [GET_ALL_USER_GROUP]: function (store, param) {
     'use strict'
     axios.get('/management/query_all_user_group')
@@ -121,6 +122,9 @@ const actions = {
         store.dispatch(GET_ALL_USER_GROUP)
       })
   },
+  /*
+   Role
+   */
   [ GET_ALL_ROLE ]: function (store, param) {
     'use strict'
     console.log('get all role!!!')
@@ -165,6 +169,9 @@ const actions = {
           })
       })
   },
+  /*
+   Permission Role
+   */
   [ GET_ALL_PERMISSION_ROLE ]: function (store, param) {
     'use strict'
     console.log('get all permission role!!!')
@@ -213,6 +220,9 @@ const actions = {
         console.log(error)
       })
   },
+  /*
+   Permission
+   */
   [ GET_ALL_PERMISSION ]: function (store, param) {
     'use strict'
     axios.get('/management/query_all_permission')
@@ -225,6 +235,9 @@ const actions = {
         console.log(error)
       })
   },
+  /*
+   Duty
+   */
   [ GET_ALL_DUTY ]: function (store, param) {
     'use strict'
     axios.get('/management/query_all_duty_category ')
@@ -287,6 +300,9 @@ const actions = {
           })
       })
   },
+  /*
+   Duty Category
+   */
   [ GET_ALL_DUTY_CATEGORY ]: function (store, param) {
     'use strict'
     axios.get('/management/query_all_duty_category ')
@@ -313,35 +329,9 @@ const actions = {
         store.dispatch(GET_ALL_DUTY_CATEGORY)
       })
   },
-  [ GET_ALL_TASK ]: function (store, param) {
-    'use strict'
-    axios.get('/management/query_all_task')
-      .then(function (response) {
-        console.log('get all tasks')
-        store.commit('SET_ALL_TASK', response.data)
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
-  },
-  [ UPSERT_TASK ]: function (store, param) {
-    'use strict'
-    axios.post('/management/upsert_task', param)
-      .then(function (response) {
-        console.log(response.data)
-        axios.get('/management/query_all_task')
-          .then(function (response) {
-            console.log('get all tasks')
-            store.commit('SET_ALL_TASK', response.data)
-          })
-          .catch(function (error) {
-            console.log(error)
-          })
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
-  },
+  /*
+   Task exec
+   */
   [ COMMIT_TASK_EXEC_INFO ]: function (store, param) {
     'use strict'
     axios.post('/user/commit_task_exec_info', param)
@@ -358,6 +348,18 @@ const actions = {
           .catch(function (error) {
             console.log(error)
           })
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  },
+  [ GET_ALL_USER_TASK_EXEC_DATA ]: function (store, param) {
+    axios.post('/manager/query_all_by_time', param)
+    // axios.get('/manager/query_all_by_time?starttime=' + param['starttime'] + '&endtime=' + param['endtime'])
+      .then(function (response) {
+        console.log('get all statistic data')
+        console.log(response.data)
+        store.commit('SET_ALL_STATISTIC_DATA', response.data)
       })
       .catch(function (error) {
         console.log(error)
@@ -397,7 +399,29 @@ const actions = {
       .catch(function (error) {
         console.log(error)
       })
-  }
+  },
+  /*
+   User Location
+   */
+  [ GET_ALL_USER_LOCATION ]: function (store, param) {
+    axios.get('/management/query_all_user_location ')
+      .then(function (response) {
+        store.commit('SET_ALL_USER_LOCATION', response.data)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  },
+  [ UPSERT_USER_LOCATION ]: function (store, param) {
+    'use strict'
+    axios.post('/management/upsert_user_location', param)
+      .then(function (response) {
+        store.dispatch(GET_ALL_USER_LOCATION)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  },
 }
 export default actions
 

@@ -13,7 +13,7 @@
   import UserLogin from './components/user_login.vue'
   import NavMenu from './components/nav_menu.vue'
   import { mapGetters, mapActions } from 'vuex'
-  import { GET_ALL_USER_ACCOUNT, GET_ALL_ROLE, GET_ALL_DUTY, GET_ALL_PERMISSION, GET_ALL_PERMISSION_ROLE, GET_ALL_DATA, USER_LOGOUT } from './store/mutation_types'
+  import { GET_ALL_USER_ACCOUNT, GET_ALL_ROLE, GET_ALL_DUTY, GET_ALL_PERMISSION, GET_ALL_PERMISSION_ROLE, GET_ALL_USER_TASK_EXEC_DATA, USER_LOGOUT } from './store/mutation_types'
   import WarningDialog from './components/warning_dialog.vue'
   export default {
     name: 'app',
@@ -43,7 +43,7 @@
       this.GET_ALL_DUTY()
     },
     methods: {
-      ...mapActions([GET_ALL_USER_ACCOUNT, GET_ALL_ROLE, GET_ALL_DUTY, GET_ALL_PERMISSION, GET_ALL_PERMISSION_ROLE, GET_ALL_DATA, USER_LOGOUT]),
+      ...mapActions([GET_ALL_USER_ACCOUNT, GET_ALL_ROLE, GET_ALL_DUTY, GET_ALL_PERMISSION, GET_ALL_PERMISSION_ROLE, GET_ALL_USER_TASK_EXEC_DATA, USER_LOGOUT]),
       menuSelected: function (key) {
         console.log('menu selected:' + key)
         this.menuKey = key

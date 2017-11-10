@@ -28,7 +28,7 @@ class TaskExecActionHandler(AsynchronousHandler):
         monthDayid = 'DUTY_PERIOD_DATE_' + str(monthDay)
         return (monthDayid in periodDate)
 
-    def shoudPickDuty(self, duty, startofday):
+    def shouldPickDuty(self, duty, startofday):
         if duty['timeType'] == Const.DUTY_TIME_TYPE_ROUTINE:
             return True
         elif duty['timeType'] == Const.DUTY_TIME_TYPE_PERIODICAL:
@@ -86,7 +86,7 @@ class TaskExecActionHandler(AsynchronousHandler):
             result = []
             startofday = arguments['startofday']
             for index, duty in enumerate(allUserDuties):
-                if not self.shoudPickDuty(duty, startofday):
+                if not self.shouldPickDuty(duty, startofday):
                     # 如果此职责不需要显示在查询的date的职责列表上的话，直接跳过
                     continue
                 dutyId = duty['_id']

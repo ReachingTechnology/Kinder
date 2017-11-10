@@ -200,6 +200,9 @@ const mutations = {
   },
   SET_ALL_DUTY_CATEGORY (state, data) {
     state.allDutyCategory = data
+  },
+  SET_ALL_USER_LOCATION (state, data) {
+    state.allUserLocation = data
   }
 }
 export default mutations

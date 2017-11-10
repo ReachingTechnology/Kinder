@@ -79,6 +79,9 @@
           case '2-3':
             this.$router.push({name: 'EmergencyHandle'})
             break
+          case '3':
+            this.$router.push({name: 'AllUserLocation'})
+            break
           case '4-1':
             this.$router.push({name: 'UserDayTaskList', params: {'timeType': DUTY_TIME_TYPE_ROUTINE}})
             break

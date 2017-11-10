@@ -8,6 +8,7 @@ const getters = {
   backend_uri: state => { return state.backend_uri },
   allUser: state => { return state.allUser },
   allUserGroup: state => { return state.allUserGroup },
+  allUserLocation: state => { return state.allUserLocation },
   allRole: state => { return state.allRole },
   allPermissionRole: state => { return state.allPermissionRole },
   allPermission: state => { return state.allPermission },

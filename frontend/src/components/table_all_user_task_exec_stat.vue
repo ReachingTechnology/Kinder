@@ -66,7 +66,7 @@
 </style>
 <script>
   import { mapActions, mapGetters } from 'vuex'
-  import { GET_ALL_DATA, GET_USER_TASK_EXEC_DATA_BY_DATERANGE } from '../store/mutation_types'
+  import { GET_ALL_USER_TASK_EXEC_DATA, GET_USER_TASK_EXEC_DATA_BY_DATERANGE } from '../store/mutation_types'
   import DateRangePicker from './date_rrange_picker'
   import dateUtil from '../utils/DateUtil'
   import { DATETYPE_DAY, DATETYPE_MONTH } from '../store/common_defs'
@@ -104,12 +104,12 @@
           'starttime': this.datetime_type === DATETYPE_MONTH ? dateUtil.getStartofMonthofTheDay(this.selectedDay) : dateUtil.getStartOfTheday(this.selectedDay),
           'datetime_type': this.datetime_type
         }
-        this.GET_ALL_DATA(params)
+        this.GET_ALL_USER_TASK_EXEC_DATA(params)
       },
       showEditOver () {
         this.showEdit = false
       },
-      ...mapActions([GET_ALL_DATA, GET_USER_TASK_EXEC_DATA_BY_DATERANGE])
+      ...mapActions([GET_ALL_USER_TASK_EXEC_DATA, GET_USER_TASK_EXEC_DATA_BY_DATERANGE])
     },
     computed: {
       ...mapGetters(['datePickerOptionsDay', 'datePickerOptionsMonth', 'all_statistic_data']),
@@ -133,7 +133,7 @@
         'starttime': this.datetime_type === DATETYPE_MONTH ? dateUtil.getStartofMonthofTheDay(this.selectedDay) : dateUtil.getStartOfTheday(this.selectedDay),
         'datetime_type': this.datetime_type === undefined ? DATETYPE_DAY : this.datetime_type
       }
-      this.GET_ALL_DATA(params)
+      this.GET_ALL_USER_TASK_EXEC_DATA(params)
     },
     props: [],
     data: function () {

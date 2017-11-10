@@ -14,6 +14,7 @@ import EmergencyHandle from '../components/emergency_handle.vue'
 import AllUserTaskExecStat from '../components/table_all_user_task_exec_stat.vue'
 import OneUserAllTaskExecStat from '../components/table_one_user_all_task_exec_stat.vue'
 import OneUserOneTaskExecStat from '../components/table_one_user_one_task_exec_stat.vue'
+import AllUserLocation from '../components/table_user_location_list.vue'
 
 Vue.use(Router)
 
@@ -84,6 +85,14 @@ const router = new Router({
       path: '/one_user_one_task_stat/:selectedData',
       name: 'OneUserOneTaskExecStat',
       component: OneUserOneTaskExecStat,
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: '/user_location',
+      name: 'AllUserLocation',
+      component: AllUserLocation,
       meta: {
         keepAlive: false
       }

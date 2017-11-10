@@ -23,7 +23,7 @@
   import EmergencyHandle from '../../components/emergency_handle.vue'
   import dateUtil from '../../utils/DateUtil'
   import { mapGetters, mapActions } from 'vuex'
-  import { GET_ALL_DATA, USER_LOGOUT } from '../../store/mutation_types'
+  import { GET_ALL_USER_TASK_EXEC_DATA, USER_LOGOUT } from '../../store/mutation_types'
   export default {
     name: 'app',
     components: {
@@ -64,7 +64,7 @@
       }
     },
     methods: {
-      ...mapActions([GET_ALL_DATA, USER_LOGOUT]),
+      ...mapActions([GET_ALL_USER_TASK_EXEC_DATA, USER_LOGOUT]),
       menuSelected: function (key) {
         console.log('menu selected:' + key)
         this.menuKey = key
@@ -75,14 +75,14 @@
               'starttime': dateUtil.getStartOfToday(),
               'datetime_type': this.datetype_day
             }
-            this.GET_ALL_DATA(params)
+            this.GET_ALL_USER_TASK_EXEC_DATA(params)
             break
           case '5-2':
             params = {
               'starttime': dateUtil.getStartofThisMonth(),
               'datetime_type': this.datetype_month
             }
-            this.GET_ALL_DATA(params)
+            this.GET_ALL_USER_TASK_EXEC_DATA(params)
             break
           case '8':
             this.USER_LOGOUT()
