@@ -2,7 +2,7 @@
  * Created by HOZ on 28/08/2017.
  */
 import axios from 'axios'
-import { SET_ACTIVE_MENU, GET_ALL_USER_TASK_EXEC_DATA, USER_LOGIN, USER_LOGOUT,
+import { SET_ACTIVE_MENU, GET_ALL_USER_TASK_EXEC_DATA, GET_ALL_USER_TASK_EXEC_DATA_BY_DATERANGE, USER_LOGIN, USER_LOGOUT,
   GET_DUTY_BY_USER, UPSERT_USER_ACCOUNT, GET_ALL_USER_ACCOUNT, REMOVE_USERS,
   GET_ALL_USER_GROUP, UPSERT_USER_GROUP, REMOVE_USER_GROUPS,
   GET_ALL_ROLE, UPSERT_ROLE, REMOVE_ROLES,
@@ -354,8 +354,19 @@ const actions = {
       })
   },
   [ GET_ALL_USER_TASK_EXEC_DATA ]: function (store, param) {
-    axios.post('/manager/query_all_by_time', param)
+    axios.post('/manager/get_all_user_task_exec_stat_by_time', param)
     // axios.get('/manager/query_all_by_time?starttime=' + param['starttime'] + '&endtime=' + param['endtime'])
+      .then(function (response) {
+        console.log('get all statistic data')
+        console.log(response.data)
+        store.commit('SET_ALL_STATISTIC_DATA', response.data)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  },
+  [ GET_ALL_USER_TASK_EXEC_DATA_BY_DATERANGE ]: function (store, param) {
+    axios.post('/manager/get_all_user_task_exec_stat_by_date_range', param)
       .then(function (response) {
         console.log('get all statistic data')
         console.log(response.data)

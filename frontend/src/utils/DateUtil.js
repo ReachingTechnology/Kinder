@@ -10,9 +10,12 @@ _DateUtil.prototype.getNow = function () {
   return (date.getTime() - miliseconds) / 1000
 }
 _DateUtil.prototype.getYesterday = function () {
-  let date = new Date()
-  let miliseconds = date.getTime()
-  return new Date(miliseconds - 3600 * 24 * 1000)
+  let startofTodayMili = this.getStartOfToday() * 1000
+  return new Date(startofTodayMili - 3600 * 24 * 1000)
+}
+_DateUtil.prototype.getToday = function () {
+  let startofTodayMili = this.getStartOfToday() * 1000
+  return new Date(startofTodayMili)
 }
 _DateUtil.prototype.getStartOfToday = function () {
   let date = new Date()

@@ -3,8 +3,8 @@
     <h2>幼儿园安保统计报表</h2>
     <div style="width: 100%; text-align: left">
       <el-date-picker
-        v-model="selectedDay"
-        :type="datetime_type"
+        v-model="dateRange"
+        type="daterange"
         align="left"
         placeholder="选择时间范围"
         @change="handleDaySelected"
@@ -66,7 +66,7 @@
 </style>
 <script>
   import { mapActions, mapGetters } from 'vuex'
-  import { GET_ALL_USER_TASK_EXEC_DATA, GET_USER_TASK_EXEC_DATA_BY_DATERANGE } from '../store/mutation_types'
+  import { GET_ALL_USER_TASK_EXEC_DATA, GET_ALL_USER_TASK_EXEC_DATA_BY_DATERANGE, GET_USER_TASK_EXEC_DATA_BY_DATERANGE } from '../store/mutation_types'
   import DateRangePicker from './date_rrange_picker'
   import dateUtil from '../utils/DateUtil'
   import { DATETYPE_DAY, DATETYPE_MONTH } from '../store/common_defs'
@@ -100,16 +100,20 @@
         this.$router.push({name: 'OneUserAllTaskExecStat', params: {selectedData: this.selectedData}})
       },
       handleDaySelected () {
-        let params = {
-          'starttime': this.datetime_type === DATETYPE_MONTH ? dateUtil.getStartofMonthofTheDay(this.selectedDay) : dateUtil.getStartOfTheday(this.selectedDay),
-          'datetime_type': this.datetime_type
-        }
-        this.GET_ALL_USER_TASK_EXEC_DATA(params)
+        var param = {dateRange: this.dateRange}
+        this.computeDatetime(param)
+        this.GET_ALL_USER_TASK_EXEC_DATA_BY_DATERANGE(param)
+      },
+      computeDatetime (param) {
+        let st = param.dateRange[0]
+        let et = param.dateRange[1]
+        param.starttime = dateUtil.getDatetimeSeconds(st)
+        param.endtime = dateUtil.getDatetimeSeconds(et)
       },
       showEditOver () {
         this.showEdit = false
       },
-      ...mapActions([GET_ALL_USER_TASK_EXEC_DATA, GET_USER_TASK_EXEC_DATA_BY_DATERANGE])
+      ...mapActions([GET_ALL_USER_TASK_EXEC_DATA, GET_ALL_USER_TASK_EXEC_DATA_BY_DATERANGE, GET_USER_TASK_EXEC_DATA_BY_DATERANGE])
     },
     computed: {
       ...mapGetters(['datePickerOptionsDay', 'datePickerOptionsMonth', 'all_statistic_data']),
@@ -129,18 +133,15 @@
       }
     },
     created: function () {
-      let params = {
-        'starttime': this.datetime_type === DATETYPE_MONTH ? dateUtil.getStartofMonthofTheDay(this.selectedDay) : dateUtil.getStartOfTheday(this.selectedDay),
-        'datetime_type': this.datetime_type === undefined ? DATETYPE_DAY : this.datetime_type
-      }
-      this.GET_ALL_USER_TASK_EXEC_DATA(params)
+      this.handleDaySelected()
     },
     props: [],
     data: function () {
       return {
         showEdit: false,
         selectedData: {},
-        selectedDay: dateUtil.getYesterday()
+        selectedDay: dateUtil.getYesterday(),
+        dateRange: [dateUtil.getYesterday(), dateUtil.getToday()]
       }
     },
     components: {

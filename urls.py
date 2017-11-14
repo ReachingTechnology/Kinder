@@ -47,8 +47,8 @@ URLS = [
     (r"/management/upsert_duty_category", DutyHandler, {'op':'upsert_duty_category'}),
     (r"/management/remove_duty_category", DutyHandler, {'op':'remove_duty_category'}),
 
-    (r"/manager/query_all_by_time", QueryHandler, {'op':'get_all_data_by_time'}),
-    (r"/manager/query_all_by_time_range", QueryHandler, {'op':'get_all_data_by_time_range'}),
+    (r"/manager/get_all_user_task_exec_stat_by_time", QueryHandler, {'op':'get_all_user_task_exec_stat_by_time'}),
+    (r"/manager/get_all_user_task_exec_stat_by_date_range", QueryHandler, {'op':'get_all_user_task_exec_stat_by_date_range'}),
 
     (r"/user/get_task_exec_info_by_date", TaskExecActionHandler, {'op':'get_task_exec_info_by_date'}),
     (r"/user/get_user_task_exec_info_by_daterange", TaskExecActionHandler, {'op':'get_user_task_exec_info_by_daterange'}),

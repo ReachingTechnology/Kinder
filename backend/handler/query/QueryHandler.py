@@ -41,7 +41,7 @@ class QueryHandler(AsynchronousHandler):
     def process_request(self):
         if self._op == 'save_item':
             result = self._user_chat_coll.find()
-        elif self._op == 'get_all_data_by_time':
+        elif self._op == 'get_all_user_task_exec_stat_by_time':
             print 'get all member data by time!'
             arguments = ujson.loads(self.request.body)
             datetime_type = arguments['datetime_type']
@@ -95,7 +95,7 @@ class QueryHandler(AsynchronousHandler):
             print '***************************'
             print result
             self.json_result = result
-        elif self._op == 'get_all_data_by_time_range':
+        elif self._op == 'get_all_user_task_exec_stat_by_date_range':
             print 'get all member data by time range!'
             arguments = ujson.loads(self.request.body)
             starttime = arguments['starttime']
