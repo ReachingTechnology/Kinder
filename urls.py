@@ -6,6 +6,7 @@
 import tornado.web
 
 from backend.handler.auth.LoginHandler import LoginHandler
+# from backend.handler.userLogin import UserLogin
 from backend.handler.query.QueryHandler import QueryHandler
 from backend.handler.management.UserAccountHandler import UserAccountHandler
 from backend.handler.management.UserRoleHandler import UserRoleHandler
@@ -16,8 +17,9 @@ from backend.handler.commit.TaskExecActionHandler import TaskExecActionHandler
 from backend.handler.management.UserLocationHandler import UserLocationHandler
 
 URLS = [
-    (r"/login", LoginHandler, {'op':'login'}),
-    (r"/user/user_login", UserAccountHandler, {'op':'login'}),
+    # (r"/user/login", LoginHandler, {'op':'login'}),
+    # (r"/login", UserLogin),
+    (r"/user/user_login", LoginHandler, {'op':'login'}),
 
     (r"/management/upsert_user", UserAccountHandler, {'op':'upsert_user'}),
     (r"/management/remove_user", UserAccountHandler, {'op':'remove_user'}),
@@ -51,6 +53,7 @@ URLS = [
     (r"/manager/get_all_user_task_exec_stat_by_date_range", QueryHandler, {'op':'get_all_user_task_exec_stat_by_date_range'}),
 
     (r"/user/get_task_exec_info_by_date", TaskExecActionHandler, {'op':'get_task_exec_info_by_date'}),
+    (r"/user/mobile_get_task_exec_info_by_date", TaskExecActionHandler, {'op':'mobile_get_task_exec_info_by_date'}),
     (r"/user/get_user_task_exec_info_by_daterange", TaskExecActionHandler, {'op':'get_user_task_exec_info_by_daterange'}),
     (r"/user/get_one_task_exec_info_by_daterange", TaskExecActionHandler, {'op': 'get_one_task_exec_info_by_daterange'}),
     (r"/user/commit_task_exec_info", TaskExecActionHandler, {'op':'commit_task_exec_info'}),

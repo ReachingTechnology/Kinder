@@ -19,6 +19,12 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 axios.defaults.headers.post['X-Requested-With'] = 'XMLHttpRequest'
 // axios.defaults.headers.post['Content-Type'] = 'application/json'
 
+function handleError (error) {
+  if (error.response.status === 401) {
+    state.user._id = ''
+  }
+}
+
 const actions = {
   /*
    Login/logout
@@ -30,9 +36,7 @@ const actions = {
         console.log(response.data)
         store.commit('SET_USER', response.data)
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(handleError)
   },
   [ USER_LOGOUT ]: function (store, param) {
     var data = {}
@@ -59,13 +63,9 @@ const actions = {
           .then(function (response) {
             store.commit('SET_ALL_USER_ACCOUNT', response.data)
           })
-          .catch(function (error) {
-            console.log(error)
-          })
+          .catch(handleError)
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(handleError)
   },
   [ GET_ALL_USER_ACCOUNT ]: function (store, param) {
     'use strict'
@@ -75,9 +75,7 @@ const actions = {
         console.log(response.data)
         store.commit('SET_ALL_USER_ACCOUNT', response.data)
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(handleError)
   },
   [ REMOVE_USERS ]: function (store, param) {
     axios.post('/management/remove_user', param)
@@ -88,9 +86,7 @@ const actions = {
           .then(function (response) {
             store.commit('SET_ALL_USER_ACCOUNT', response.data)
           })
-          .catch(function (error) {
-            console.log(error)
-          })
+          .catch(handleError)
       })
   },
   /*
@@ -102,9 +98,7 @@ const actions = {
       .then(function (response) {
         store.commit('SET_ALL_USER_GROUP', response.data)
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(handleError)
   },
   [ UPSERT_USER_GROUP ]: function (store, param) {
     'use strict'
@@ -112,15 +106,14 @@ const actions = {
       .then(function (response) {
         store.dispatch(GET_ALL_USER_GROUP)
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(handleError)
   },
   [ REMOVE_USER_GROUPS ]: function (store, param) {
     axios.post('/management/remove_user_group', param)
       .then(function (response) {
         store.dispatch(GET_ALL_USER_GROUP)
       })
+      .catch(handleError)
   },
   /*
    Role
@@ -133,9 +126,7 @@ const actions = {
         console.log('get all roles')
         store.commit('SET_ALL_ROLE', response.data)
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(handleError)
   },
   [ UPSERT_ROLE ]: function (store, param) {
     'use strict'
@@ -147,13 +138,9 @@ const actions = {
             console.log('get all roles')
             store.commit('SET_ALL_ROLE', response.data)
           })
-          .catch(function (error) {
-            console.log(error)
-          })
+          .catch(handleError)
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(handleError)
   },
   [ REMOVE_ROLES ]: function (store, param) {
     axios.post('/management/remove_role', param)
@@ -164,9 +151,7 @@ const actions = {
           .then(function (response) {
             store.commit('SET_ALL_ROLE', response.data)
           })
-          .catch(function (error) {
-            console.log(error)
-          })
+          .catch(handleError)
       })
   },
   /*
@@ -180,9 +165,7 @@ const actions = {
         console.log('get all permission roles')
         store.commit('SET_ALL_PERMISSION_ROLE', response.data)
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(handleError)
   },
   [ UPSERT_PERMISSION_ROLE ]: function (store, param) {
     'use strict'
@@ -194,9 +177,7 @@ const actions = {
             console.log('get all permission roles')
             store.commit('SET_ALL_PERMISSION_ROLE', response.data)
           })
-          .catch(function (error) {
-            console.log(error)
-          })
+          .catch(handleError)
       })
       .catch(function (error) {
         console.log(error)
@@ -212,13 +193,9 @@ const actions = {
             console.log('get all permission roles')
             store.commit('SET_ALL_PERMISSION_ROLE', response.data)
           })
-          .catch(function (error) {
-            console.log(error)
-          })
+          .catch(handleError)
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(handleError)
   },
   /*
    Permission
@@ -231,9 +208,7 @@ const actions = {
         console.log(response.data)
         store.commit('SET_ALL_PERMISSION', response.data)
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(handleError)
   },
   /*
    Duty
@@ -248,13 +223,9 @@ const actions = {
             console.log('get all duty')
             store.commit('SET_ALL_DUTY', response.data)
           })
-          .catch(function (error) {
-            console.log(error)
-          })
+          .catch(handleError)
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(handleError)
   },
   [ GET_DUTY_BY_USER ]: function (store, param) {
     'use strict'
@@ -264,9 +235,7 @@ const actions = {
         console.log(response.data)
         store.commit('SET_USER_DUTY_DATA', response.data)
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(handleError)
   },
   [ UPSERT_DUTY ]: function (store, param) {
     'use strict'
@@ -278,13 +247,9 @@ const actions = {
             console.log('get all duties')
             store.commit('SET_ALL_DUTY', response.data)
           })
-          .catch(function (error) {
-            console.log(error)
-          })
+          .catch(handleError)
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(handleError)
   },
   [ REMOVE_DUTIES ]: function (store, param) {
     axios.post('/management/remove_duty', param)
@@ -295,9 +260,7 @@ const actions = {
           .then(function (response) {
             store.commit('SET_ALL_DUTY', response.data)
           })
-          .catch(function (error) {
-            console.log(error)
-          })
+          .catch(handleError)
       })
   },
   /*
@@ -309,9 +272,7 @@ const actions = {
       .then(function (response) {
         store.commit('SET_ALL_DUTY_CATEGORY', response.data)
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(handleError)
   },
   [ UPSERT_DUTY_CATEGORY ]: function (store, param) {
     'use strict'
@@ -319,15 +280,14 @@ const actions = {
       .then(function (response) {
         store.dispatch(GET_ALL_DUTY_CATEGORY)
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(handleError)
   },
   [ REMOVE_DUTY_CATEGORIES ]: function (store, param) {
     axios.post('/management/remove_duty_category', param)
       .then(function (response) {
         store.dispatch(GET_ALL_DUTY_CATEGORY)
       })
+      .catch(handleError)
   },
   /*
    Task exec
@@ -345,13 +305,9 @@ const actions = {
           .then(function (response) {
             store.commit('SET_USER_DUTY_EXEC_DATA', response.data)
           })
-          .catch(function (error) {
-            console.log(error)
-          })
+          .catch(handleError)
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(handleError)
   },
   [ GET_ALL_USER_TASK_EXEC_DATA ]: function (store, param) {
     axios.post('/manager/get_all_user_task_exec_stat_by_time', param)
@@ -361,9 +317,7 @@ const actions = {
         console.log(response.data)
         store.commit('SET_ALL_STATISTIC_DATA', response.data)
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(handleError)
   },
   [ GET_ALL_USER_TASK_EXEC_DATA_BY_DATERANGE ]: function (store, param) {
     axios.post('/manager/get_all_user_task_exec_stat_by_date_range', param)
@@ -372,9 +326,7 @@ const actions = {
         console.log(response.data)
         store.commit('SET_ALL_STATISTIC_DATA', response.data)
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(handleError)
   },
   [ GET_TASK_EXEC_DATA_BY_DATE ]: function (store, param) {
     console.log('GET_TASK_EXEC_DATA_BY_DATE')
@@ -385,9 +337,7 @@ const actions = {
         console.log('update user duty data')
         store.commit('SET_USER_DUTY_EXEC_DATA', response.data)
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(handleError)
   },
   [ GET_USER_TASK_EXEC_DATA_BY_DATERANGE ]: function (store, param) {
     console.log('GET_USER_TASK_EXEC_DATA_BY_DATERANGE')
@@ -396,9 +346,7 @@ const actions = {
       .then(function (response) {
         store.commit('SET_USER_TASK_EXEC_DATA_BY_DATERANGE', response.data)
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(handleError)
   },
   [ GET_ONE_TASK_EXEC_DATA_BY_DATERANGE ]: function (store, param) {
     console.log('GET_ONE_TASK_EXEC_DATA_BY_DATERANGE')
@@ -407,9 +355,7 @@ const actions = {
       .then(function (response) {
         store.commit('SET_ONE_TASK_EXEC_DATA_BY_DATERANGE', response.data)
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(handleError)
   },
   /*
    User Location
@@ -419,9 +365,7 @@ const actions = {
       .then(function (response) {
         store.commit('SET_ALL_USER_LOCATION', response.data)
       })
-      .catch(function (error) {
-        console.log(error)
-      })
+      .catch(handleError)
   },
   [ UPSERT_USER_LOCATION ]: function (store, param) {
     'use strict'
@@ -429,10 +373,8 @@ const actions = {
       .then(function (response) {
         store.dispatch(GET_ALL_USER_LOCATION)
       })
-      .catch(function (error) {
-        console.log(error)
-      })
-  },
+      .catch(handleError)
+  }
 }
 export default actions
 

@@ -12,7 +12,8 @@ import functools
 import tornado.web
 import tornado.ioloop
 # from utils.collections import OrderedDict
-# from storage.usermanager import UserManager
+from backend.common.userManager import UserManager
+from backend.common.consts import Const
 
 # from common.jsonconst import COOKIE_USER_KEY, COOKIE_ROLE_KEY
 
@@ -33,13 +34,15 @@ class BaseHandler(tornado.web.RequestHandler):
         return self.get_secure_cookie("user")
 
     def _check_user_login(self):
-        if not self.current_user:
-            self.redirect(self.get_login_url())
+        return True
+        current_user = self.get_current_user()
+        if not current_user:
+            # self.redirect(self.get_login_url())
             return False
-        #
-        # if not UserManager.instance().access(self.current_user):
-        #     self.redirect(self.get_login_url())
-        #     return False
+
+        if not UserManager.instance().access(current_user):
+            # self.redirect(self.get_login_url())
+            return False
         #
         # self._username = self.get_user_name()
         # self._menulist = self._get_menu_pane(self.request.path)
@@ -50,8 +53,10 @@ class BaseHandler(tornado.web.RequestHandler):
         return True
 
     def get(self):
-        # if not self._check_user_login():
-        #     return
+        if not self._check_user_login():
+            self.set_status(401)
+            self.finish()
+            return
 
         cur_path = self.request.path
         if cur_path == '/login' or cur_path == '/logout' or self._is_admin_user():
@@ -67,8 +72,11 @@ class BaseHandler(tornado.web.RequestHandler):
         # self.render("not_auth.html")
 
     def post(self):
-        # if not self._check_user_login():
-        #     return
+        if not (self.request.uri == '/user/user_login' or self.request.uri == '/user/user_logout'):
+            if not self._check_user_login():
+                self.set_status(401)
+                self.finish()
+                return
 
         cur_path = self.request.path
         # auth_path = UserManager.instance().get_user_attr(self.current_user, 'auth_path')
@@ -105,8 +113,8 @@ class BaseHandler(tornado.web.RequestHandler):
     def write_error(self, status_code, **kwargs):
         self.render("404.html")
 
-    # def get_current_user(self):
-    #     return self.get_secure_cookie(COOKIE_USER_KEY)
+    def get_current_user(self):
+        return self.get_secure_cookie(Const.COOKIE_USER_KEY)
 
     def get_today(self):
         return str(datetime.date.today())

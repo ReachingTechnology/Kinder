@@ -31,9 +31,9 @@ from backend.conf.config import SystemConfig
 from urls import URLS
 
 # # --- util ---
-# from common.redisproxy import RedisProxy
-# from common.uploadengine import UploadEngine
-# from storage.usermanager import UserManager
+from backend.common.redisproxy import RedisProxy
+from backend.common.uploadengine import UploadEngine
+from backend.common.userManager import UserManager
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -91,7 +91,7 @@ def initialize_server():
 
     # ConfigSettings['uploader'] = UploadEngine(SystemConfig.mfs_url)
     #
-    # UserManager.instance().initialize(ConfigSettings['redis_proxy'])
+    UserManager.instance().initialize(ConfigSettings['redis_proxy'])
     # init_role_list()
 
 
@@ -108,9 +108,9 @@ def init_connection_pool():
 
     # initialize redis pools
     clusterConfig = SystemConfig.redis_data
-    # redisProxy = RedisProxy()
-    # redisProxy.initialize(clusterConfig)
-    # ConfigSettings['redis_proxy'] = redisProxy
+    redisProxy = RedisProxy()
+    redisProxy.initialize(clusterConfig)
+    ConfigSettings['redis_proxy'] = redisProxy
 
     # initialize mysql
     # mysqlConf = SystemConfig.mysql
