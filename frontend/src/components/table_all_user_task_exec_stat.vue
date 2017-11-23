@@ -84,19 +84,8 @@
       handleEdit (index, row) {
         this.selectedData = {}
         this.selectedData.userid = row.userid
-        if (this.datetime_type === 'month') {
-          this.selectedData.startofday = dateUtil.getStartofMonthofTheDay(this.selectedDay)
-          let daycount = dateUtil.getDayCountOfTheMonth(this.selectedDay)
-          this.selectedData.endofday = this.selectedData.startofday + 3600 * 24 * daycount
-          let startofToday = dateUtil.getStartOfToday()
-          if (this.selectedData.endofday > startofToday) {
-            console.log('this month')
-            this.selectedData.endofday = startofToday
-          }
-        } else {
-          this.selectedData.startofday = dateUtil.getStartOfTheday(this.selectedDay)
-          this.selectedData.endofday = this.selectedData.startofday + 3600 * 24
-        }
+        this.selectedData.startofday = dateUtil.getStartOfTheday(this.dateRange[0])
+        this.selectedData.endofday = dateUtil.getStartOfTheday(this.dateRange[1])
         this.$router.push({name: 'OneUserAllTaskExecStat', params: {selectedData: this.selectedData}})
       },
       handleDaySelected () {

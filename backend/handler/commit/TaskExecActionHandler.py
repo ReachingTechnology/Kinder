@@ -249,6 +249,72 @@ class TaskExecActionHandler(AsynchronousHandler):
                     result.append(item)
             print len(result)
             self.json_result = result
+        elif self._op == 'mobile_get_task_exec_info_by_date':
+            # 按照timeType进行分组，然后返回
+            print 'mobile get task exec info by date!'
+            arguments = ujson.loads(self.request.body)
+            userid = arguments['userid']
+
+            if 'timeType' in arguments:
+                timeType = arguments['timeType']
+            else:
+                timeType = ''
+            # find out user duties
+            allUserDuties = []
+            user = self._user_info_coll.find_one({'_id': userid})
+            if user:
+                userDuties = user['duty']
+                if timeType == Const.DUTY_TIME_TYPE_ALL or timeType == '':
+                    groupDuties = self.getUserGroupDuty(user['_id'])
+                    if len(groupDuties) > 0:
+                        userDuties = userDuties + groupDuties
+                if timeType == Const.DUTY_TIME_TYPE_GROUP:
+                    groupDuties = self.getUserGroupDuty(user['_id'])
+                    userDuties = groupDuties
+                print userDuties
+
+                if timeType == '' or timeType == Const.DUTY_TIME_TYPE_ALL or timeType == Const.DUTY_TIME_TYPE_GROUP:
+                    allUserDuties = self._duty_info_coll.find({"_id": {"$in": userDuties}}).sort('starttime', 1)
+                else:
+                    allUserDuties = self._duty_info_coll.find({"_id": {"$in": userDuties}, "timeType": timeType}).sort(
+                        'starttime', 1)
+
+            result = {}
+            startofday = arguments['startofday']
+            for index, duty in enumerate(allUserDuties):
+                if not self.shouldPickDuty(duty, startofday):
+                    # 如果此职责不需要显示在查询的date的职责列表上的话，直接跳过
+                    continue
+                dutyId = duty['_id']
+                dutyTimeType = duty['timeType']
+                if timeType == Const.DUTY_TIME_TYPE_SPECIFIC:
+                    # 对于特定时间的职责，因为是一个日期范围，所以查询时不能带startofday
+                    query = {'userid': userid, 'taskid': dutyId}
+                else:
+                    query = {'userid': userid, 'taskid': dutyId, 'startofday': startofday}
+                print userid + ';' + dutyId + ';'
+                print startofday
+                data = self._task_exec_data_coll.find_one(query)
+                if not data:
+                    data = {}
+                    data['userid'] = userid
+                    data['taskid'] = dutyId
+                    data['startofday'] = startofday
+                    data['realendtime'] = 0
+                    data['comment'] = ''
+                    data['approve_status'] = Const.TASK_APPROVE_STATUS_NONE
+                    data['approve_user'] = ''
+
+                data['starttime'] = duty['starttime']
+                data['endtime'] = duty['endtime']
+                data['name'] = duty['name']
+                data['seq'] = index + 1
+                data['descr'] = duty['descr']
+                if not dutyTimeType in result:
+                    result[dutyTimeType] = []
+                result[dutyTimeType].append(data)
+
+            self.json_result = result
         elif self._op == 'commit_task_exec_info':
             arguments = ujson.loads(self.request.body)
             userid = arguments['userid']
@@ -265,6 +331,14 @@ class TaskExecActionHandler(AsynchronousHandler):
             item['comment'] = arguments["comment"]
             item['approve_status'] = arguments['approve_status']
             item['approve_user'] = arguments['approve_user']
+            if 'locationLat' in arguments:
+                item['locationLat'] = arguments['locationLat']
+            else:
+                item['locationLat'] = 0
+            if 'locationLng' in arguments:
+                item['locationLng'] = arguments['locationLng']
+            else:
+                item['locationLng'] = 0
             self._task_exec_data_coll.save(item)
             self.json_result = {'status': 0}
         super(TaskExecActionHandler, self).process_request()
