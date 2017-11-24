@@ -48,7 +48,7 @@
         console.log('menu selected:' + key)
         this.menuKey = key
         switch (key) {
-          case '8':
+          case '8-2':
             this.showWarningDialog = true
         }
       },

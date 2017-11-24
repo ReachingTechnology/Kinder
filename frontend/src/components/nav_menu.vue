@@ -36,7 +36,11 @@
       <template slot="title">文件管理</template>
       <el-menu-item index="7-1">文件列表</el-menu-item>
     </el-submenu>
-    <el-menu-item index="8">系统退出</el-menu-item>
+    <el-submenu index="8">
+      <template slot="title">个人中心</template>
+      <el-menu-item index="8-1">修改密码</el-menu-item>
+      <el-menu-item index="8-2">退出登录</el-menu-item>
+    </el-submenu>
   </el-menu>
     </div>
     <div style="position:absolute; top: 50%; height: 40px; right:10px; margin-top: -10px">
@@ -107,6 +111,9 @@
               'datetime_type': DATETYPE_MONTH
             }
             this.$router.push({name: 'AllUserTaskExecStat', params: params})
+            break
+          case '8-1':
+            this.$router.push({name: 'ChangePass'})
             break
         }
         this.$emit('menuSelect', key)

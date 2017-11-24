@@ -2,7 +2,7 @@
  * Created by HOZ on 28/08/2017.
  */
 import axios from 'axios'
-import { SET_ACTIVE_MENU, GET_ALL_USER_TASK_EXEC_DATA, GET_ALL_USER_TASK_EXEC_DATA_BY_DATERANGE, USER_LOGIN, USER_LOGOUT,
+import { SET_ACTIVE_MENU, GET_ALL_USER_TASK_EXEC_DATA, GET_ALL_USER_TASK_EXEC_DATA_BY_DATERANGE, USER_LOGIN, USER_LOGOUT, USER_CHANGE_PASS,
   GET_DUTY_BY_USER, UPSERT_USER_ACCOUNT, GET_ALL_USER_ACCOUNT, REMOVE_USERS,
   GET_ALL_USER_GROUP, UPSERT_USER_GROUP, REMOVE_USER_GROUPS,
   GET_ALL_ROLE, UPSERT_ROLE, REMOVE_ROLES,
@@ -43,6 +43,18 @@ const actions = {
     data._id = ''
     data.name = ''
     store.commit('SET_USER', data)
+  },
+  [ USER_CHANGE_PASS ]: function (store, param) {
+    store.state.changePassFail = true
+    axios.post('/user/change_pass', param)
+      .then(function (response) {
+        if (response.data.status !== 0) {
+          store.state.changePassFail = true
+        } else {
+          store.state.changePassFail = false
+        }
+      })
+      .catch(handleError)
   },
   /*
    Navigation Menu

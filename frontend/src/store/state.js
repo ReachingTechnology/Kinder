@@ -83,6 +83,7 @@ const state = {
     //   console.log('return false')
     //   return false
     // }
-  }
+  },
+  changePassFail: false
 }
 export default state

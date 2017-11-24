@@ -9,6 +9,7 @@ export const GET_ALL_USER_TASK_EXEC_DATA_BY_DATERANGE = 'GET_ALL_USER_TASK_EXEC_
 // user login/logout
 export const USER_LOGIN = 'USER_LOGIN'
 export const USER_LOGOUT = 'USER_LOGOUT'
+export const USER_CHANGE_PASS = 'USER_CHANGE_PASS'
 
 // user account
 export const UPSERT_USER_ACCOUNT = 'UPSERT_USER_ACCOUNT'

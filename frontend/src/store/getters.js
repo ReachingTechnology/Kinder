@@ -21,6 +21,7 @@ const getters = {
   userDaterangeTask: state => { return state.userDaterangeTask },
   taskExecDaterangeData: state => { return state.taskExecDaterangeData },
   datePickerOptionsDay: state => { return state.datePickerOptionsDay },
-  datePickerOptionsMonth: state => { return state.datePickerOptionsMonth }
+  datePickerOptionsMonth: state => { return state.datePickerOptionsMonth },
+  changePassFail: state => { return state.changePassFail }
 }
 export default getters

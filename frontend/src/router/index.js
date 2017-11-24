@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import store from '../store/store'
 
 import UserLogin from '../components/user_login.vue'
+import ChangePass from '../components/change_password_panel.vue'
 import UserList from '../components/table_user_list.vue'
 import UserGroupList from '../components/table_user_group_list.vue'
 import RoleList from '../components/table_role_list.vue'
@@ -24,6 +25,11 @@ const router = new Router({
       path: '/login',
       name: 'userlogin',
       component: UserLogin
+    },
+    {
+      path: '/change_pass',
+      name: 'ChangePass',
+      component: ChangePass
     },
     {
       path: '/user_list',

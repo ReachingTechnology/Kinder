@@ -34,7 +34,6 @@ class BaseHandler(tornado.web.RequestHandler):
         return self.get_secure_cookie("user")
 
     def _check_user_login(self):
-        return True
         current_user = self.get_current_user()
         if not current_user:
             # self.redirect(self.get_login_url())
