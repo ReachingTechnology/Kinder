@@ -53,6 +53,9 @@
               node.children.push(childNode)
             }
           }
+          if (node.children.length === 0) {
+            node.disabled = true
+          }
           tree.push(node)
         }
         return tree

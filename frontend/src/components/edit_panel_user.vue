@@ -63,6 +63,7 @@
   import TreeDutySelect from './tree_duty_select.vue'
   import TreeUserSelect from './tree_user_select.vue'
   import ObjUtil from '../utils/ObjUtil'
+  import { DUTY_CAT_PREFIX } from '../store/common_defs'
 
   export default {
     components: {TreeDutySelect, TreeUserSelect},
@@ -168,7 +169,13 @@
       },
       selectDutyOver (duty) {
         if (this.showDutyEdit) {
-          this.edited_user.duty = duty
+          var result = []
+          for (var i = 0, len = duty.length; i < len; i++) {
+            if (duty[i].indexOf(DUTY_CAT_PREFIX) < 0) {
+              result.push(duty[i])
+            }
+          }
+          this.edited_user.duty = result
           this.showDutyEdit = false
         }
       },

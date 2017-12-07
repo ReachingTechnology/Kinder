@@ -263,6 +263,7 @@ const actions = {
             store.commit('SET_ALL_DUTY', response.data)
           })
           .catch(handleError)
+        store.dispatch(GET_ALL_USER_ACCOUNT)
       })
       .catch(handleError)
   },

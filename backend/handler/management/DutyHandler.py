@@ -9,6 +9,7 @@ import ujson
 
 from backend.handler.async_handler import AsynchronousHandler
 from backend.common.consts import Const
+from backend.handler.util.ArrayUtil import ArrayUtil
 
 
 class DutyHandler(AsynchronousHandler):
@@ -82,6 +83,16 @@ class DutyHandler(AsynchronousHandler):
             item['notify_manager'] = arguments['notify_manager']
             item['notify_manager_setting_list'] = arguments['notify_manager_setting_list']
             self._duty_info_coll.save(item)
+
+            allUser = list(self._user_info_coll.find({"_id": {"$ne": "admin"}}))
+            for user in allUser:
+                if ArrayUtil.isIntersect(user['role'], item['roles']):
+                    if not item['_id'] in user['duty']:
+                        user['duty'].append(item['_id'])
+                else:
+                    if item['_id'] in user['duty']:
+                        user['duty'].remove(item['_id'])
+                self._user_info_coll.save(user)
             self.json_result = {'status': 0}
         elif self._op == 'query_all_duty_category':
             categories = self._duty_category_coll.find()
