@@ -61,7 +61,7 @@ class EPGApplication(tornado.web.Application):
             "system_name": "幼儿园安保管理系统",
             "debug": SystemConfig.debug,  # changeTo False if online
             "listen_info": ConfigSettings['listen_info'],
-            # "redis_proxy": ConfigSettings['redis_proxy'],
+            "redis_proxy": ConfigSettings['redis_proxy'],
             # "mysql_pool": ConfigSettings['mysql_pool'],
             "thread_pool": ConfigSettings['thread_pool'],
             "kinder_mongo_pool": ConfigSettings['kinder_mongo_pool'],

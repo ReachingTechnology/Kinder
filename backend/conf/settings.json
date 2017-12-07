@@ -50,13 +50,13 @@
                 "port": 6379,
                 "name": "node1",
                 "db": 1,
-                "server": "10.98.18.35"
+                "server": "127.0.0.1"
             },
             {
                 "db": 1,
                 "port": 6379,
                 "name": "node2",
-                "server": "10.98.18.35"
+                "server": "127.0.0.1"
             }
         ],
         "interval": 5,
@@ -90,12 +90,12 @@
     "DEBUG": true,
     "CLUSTER_NUM" : 1,
     "CONTROLLER_REDIS_EVENT": {
-        "server": "10.98.18.35",
+        "server": "127.0.0.1",
         "port": 6379,
         "db": 1
     },
     "TVCAT_REDIS_EVENT": {
-        "server": "10.98.18.35",
+        "server": "127.0.0.1",
         "port": 6379,
         "db": 1
     },

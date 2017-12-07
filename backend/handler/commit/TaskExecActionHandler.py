@@ -8,7 +8,7 @@ from backend.handler.async_handler import AsynchronousHandler
 from backend.common.consts import Const
 import ujson
 import calendar
-
+from backend.handler.util.DateUtil import DateUtil
 
 class TaskExecActionHandler(AsynchronousHandler):
     QUERY_FIELDS = {"_id": 1, "description": 1}
@@ -57,12 +57,18 @@ class TaskExecActionHandler(AsynchronousHandler):
         if self._op == 'get_task_exec_info_by_date':
             print 'get task exec info by date!'
             arguments = ujson.loads(self.request.body)
-            userid = arguments['userid']
-
+            if 'userid' in arguments:
+                userid = arguments['userid']
+            else:
+                userid = self.current_user
             if 'timeType' in arguments:
                 timeType = arguments['timeType']
             else:
                 timeType = ''
+            if 'startofday' in arguments:
+                startofday = arguments['startofday']
+            else:
+                startofday = DateUtil.get_startof_today()
             # find out user duties
             allUserDuties = []
             user = self._user_info_coll.find_one({'_id': userid})
@@ -75,7 +81,6 @@ class TaskExecActionHandler(AsynchronousHandler):
                 if timeType == Const.DUTY_TIME_TYPE_GROUP:
                     groupDuties = self.getUserGroupDuty(user['_id'])
                     userDuties = groupDuties
-                print userDuties
 
                 if timeType == '' or timeType == Const.DUTY_TIME_TYPE_ALL or timeType == Const.DUTY_TIME_TYPE_GROUP:
                     allUserDuties = self._duty_info_coll.find({"_id": {"$in": userDuties}}).sort('starttime', 1)
@@ -84,7 +89,7 @@ class TaskExecActionHandler(AsynchronousHandler):
                         'starttime', 1)
 
             result = []
-            startofday = arguments['startofday']
+
             for index, duty in enumerate(allUserDuties):
                 if not self.shouldPickDuty(duty, startofday):
                     # 如果此职责不需要显示在查询的date的职责列表上的话，直接跳过
@@ -95,8 +100,6 @@ class TaskExecActionHandler(AsynchronousHandler):
                     query = {'userid': userid, 'taskid': dutyId}
                 else:
                     query = {'userid': userid, 'taskid': dutyId, 'startofday': startofday}
-                print userid + ';' + dutyId + ';'
-                print startofday
                 data = self._task_exec_data_coll.find_one(query)
                 if not data:
                     data = {}
@@ -213,9 +216,7 @@ class TaskExecActionHandler(AsynchronousHandler):
             result = []
             task = self._duty_info_coll.find_one({'_id': taskid})
             query = {'userid': userid, 'taskid': taskid, 'startofday': {'$gte': startofday, '$lt': endofday}}
-            print arguments
             taskexecdata = list(self._task_exec_data_coll.find(query))
-            print len(taskexecdata)
             if True:
                 # taskexecdata.sort('startofday')
                 dayCount = (endofday - startofday) / (3600 * 24)
@@ -247,7 +248,7 @@ class TaskExecActionHandler(AsynchronousHandler):
                     item['starttime'] = task['starttime']
                     item['endtime'] = task['endtime']
                     result.append(item)
-            print len(result)
+
             self.json_result = result
         elif self._op == 'mobile_get_task_exec_info_by_date':
             # 按照timeType进行分组，然后返回
@@ -271,7 +272,6 @@ class TaskExecActionHandler(AsynchronousHandler):
                 if timeType == Const.DUTY_TIME_TYPE_GROUP:
                     groupDuties = self.getUserGroupDuty(user['_id'])
                     userDuties = groupDuties
-                print userDuties
 
                 if timeType == '' or timeType == Const.DUTY_TIME_TYPE_ALL or timeType == Const.DUTY_TIME_TYPE_GROUP:
                     allUserDuties = self._duty_info_coll.find({"_id": {"$in": userDuties}}).sort('starttime', 1)
@@ -292,8 +292,6 @@ class TaskExecActionHandler(AsynchronousHandler):
                     query = {'userid': userid, 'taskid': dutyId}
                 else:
                     query = {'userid': userid, 'taskid': dutyId, 'startofday': startofday}
-                print userid + ';' + dutyId + ';'
-                print startofday
                 data = self._task_exec_data_coll.find_one(query)
                 if not data:
                     data = {}

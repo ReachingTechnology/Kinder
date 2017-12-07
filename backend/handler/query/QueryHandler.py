@@ -92,8 +92,6 @@ class QueryHandler(AsynchronousHandler):
                     if item['unfinish_count'] < 0:
                         item['unfinish_count'] = 0
                     result.append(item)
-            print '***************************'
-            print result
             self.json_result = result
         elif self._op == 'get_all_user_task_exec_stat_by_date_range':
             print 'get all member data by time range!'
@@ -105,7 +103,6 @@ class QueryHandler(AsynchronousHandler):
             startDate = datetime.datetime.fromtimestamp(starttime)
             endDate = datetime.datetime.fromtimestamp(endtime)
             daycount = (endDate - startDate).days
-            print daycount
             alluser = Util.getAllUnderling(self.get_current_user(), self._user_info_coll)
             allrole = list(self._role_info_coll.find())
             allDuties = list(self._duty_info_coll.find().sort('starttime', 1))

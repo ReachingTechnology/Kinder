@@ -61,12 +61,13 @@
         this.showWarningDialog = false
       },
       getUserInform () {
+        console.log('going to get user inform....')
         setTimeout(function () {
           if (this.user._id !== '') {
             this.GET_INFORM_BY_USER()
           }
           this.getUserInform()
-        }.bind(this), 120000)
+        }.bind(this), 1200000)
       }
     }
   }

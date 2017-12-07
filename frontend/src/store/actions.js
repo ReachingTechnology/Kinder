@@ -235,6 +235,7 @@ const actions = {
         axios.get('/management/query_all_duty')
           .then(function (response) {
             console.log('get all duty')
+            console.log(response.data)
             store.commit('SET_ALL_DUTY', response.data)
           })
           .catch(handleError)

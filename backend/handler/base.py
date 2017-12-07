@@ -31,7 +31,6 @@ class BaseHandler(tornado.web.RequestHandler):
         self.set_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
 
     def _check_user_login(self):
-        return True
         current_user = self.get_current_user()
         if not current_user:
             # self.redirect(self.get_login_url())
@@ -56,7 +55,7 @@ class BaseHandler(tornado.web.RequestHandler):
             return
 
         cur_path = self.request.path
-        if cur_path == '/login' or cur_path == '/logout' or self._is_admin_user():
+        if cur_path == '/login' or cur_path == '/logout':# or self._is_admin_user():
             self.handle()
             return
 

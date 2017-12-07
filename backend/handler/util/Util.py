@@ -32,8 +32,6 @@ class Util(object):
     def getAllUnderlingFromList(cls, self, userList):
         users = []
         for user in userList:
-            print user['leader']
-            print user['_id']
             if user['leader'] == self and user['_id'] != self:
                 users.append(user)
         userLen = len(users)

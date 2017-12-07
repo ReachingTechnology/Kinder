@@ -111,8 +111,7 @@
   import Util from '../store/utils'
   import Moment from 'moment'
   import dateUtil from '../utils/DateUtil'
-  import ObjUtil from '../utils/ObjUtil'
-  import { ROOT_ROLE } from '../store/common_defs'
+  import { ROOT_ROLE, DUTY_TIME_TYPE_SPECIFIC } from '../store/common_defs'
 
   export default {
     name: 'table_duty_list',
@@ -225,7 +224,11 @@
           duty.roleNames_display = duty.selectedRoleNames.join(',')
           let st = new Date(duty.starttime * 1000)
           let et = new Date(duty.endtime * 1000)
-          duty.timeRange = [st, et]
+          if (duty.timeType === DUTY_TIME_TYPE_SPECIFIC) {
+            duty.dateRange = [st, et]
+          } else {
+            duty.timeRange = [st, et]
+          }
           duty.timeRangeShow = Moment(duty.starttime * 1000).format('H:mm') + ' 到 ' + Moment(duty.endtime * 1000).format('H:mm')
           duty.categoryName = Util.getDutyCategoryNameById(duty.category)
         }

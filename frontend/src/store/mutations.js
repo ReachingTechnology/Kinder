@@ -6,7 +6,8 @@ import {
   TASK_STATUS_INPROCESS,
   TASK_STATUS_UNFINISHED,
   TASK_STATUS_DELAYED,
-  TASK_STATUS_FINISHED
+  TASK_STATUS_FINISHED,
+  DUTY_TIME_TYPE_SPECIFIC
 } from './common_defs'
 import Moment from 'moment'
 import dateUtil from '../utils/DateUtil'
@@ -38,8 +39,13 @@ const mutations = {
       item._id = data[i]._id
       item.descr = data[i].descr
       item.name = data[i].name
-      item.starttime = data[i].starttime + startofToday
-      item.endtime = data[i].endtime + startofToday
+      if (data[i].timeType === DUTY_TIME_TYPE_SPECIFIC) {
+        item.starttime = data[i].starttime
+        item.endtime = data[i].endtime
+      } else {
+        item.starttime = data[i].starttime + startofToday
+        item.endtime = data[i].endtime + startofToday
+      }
       var startDate = Moment(item.starttime * 1000).format('H:mm')
       var endDate = Moment(item.endtime * 1000).format('H:mm')
       item.executetime = startDate + ' 至 ' + endDate
@@ -183,8 +189,10 @@ const mutations = {
     for (var index = 0, lenDuty = state.allDuty.length; index < lenDuty; index++) {
       let item = state.allDuty[index]
       let startofyesterday = dateUtil.getStartOfToday() - 3600 * 24
-      item.starttime += startofyesterday
-      item.endtime += startofyesterday
+      if (item.timeType !== DUTY_TIME_TYPE_SPECIFIC) {
+        item.starttime += startofyesterday
+        item.endtime += startofyesterday
+      }
     }
     state.dutyForRoles = {}
     for (var i = 0, len = state.allRole.length; i < len; i++) {

@@ -4,6 +4,7 @@
 from datetime import date
 from datetime import datetime
 from time import strptime
+import time
 
 
 class DateUtil(object):
@@ -15,6 +16,12 @@ class DateUtil(object):
     @classmethod
     def get_current_time(cls):
         return datetime.datetime.now()
+
+    @classmethod
+    def get_startof_today(cls):
+        now = datetime.date()
+        today = datetime(now.year, now.month, now.day)
+        return time.mktime(today.timetuple())
 
     @classmethod
     def convert_str_to_date(cls, dateStr):
