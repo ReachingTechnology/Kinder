@@ -60,6 +60,24 @@ export const WEEK_DAYS = {
   '周五': 'DUTY_PERIOD_WEEK_4'
 }
 
+export const NOTIFY_TIME_TYPE = {
+  'before': '开始前(分钟)',
+  'after': '结束后(分钟)',
+  'specific': '具体时间'
+}
+
+export const NOTIFY_TYPE = {
+  'message_queue': '通知队列提醒',
+  'system_alarm': '系统闹钟提醒',
+  'short_message': '短信提醒'
+}
+
+export const NOTIFY_PRIORITY = {
+  'high': '重要',
+  'middle': '一般',
+  'low': '不重要'
+}
+
 // export const MONTH_DAYS = {
 //   '1': 'DUTY_PERIOD_DATE_1'
 // }

@@ -16,6 +16,7 @@ import 'mint-ui/lib/style.css'
 import 'muse-ui/dist/muse-ui.css'
 import 'muse-ui/dist/theme-light.css'
 import BaiduMap from 'vue-baidu-map'
+import Moment from 'vue-moment'
 
 Vue.use(Element)
 // Vue.use(VueRouter)
@@ -24,6 +25,7 @@ Vue.use(MuseUI)
 Vue.use(BaiduMap, {
   ak: 'YS2Sf5srZfCl9sItzAnu6lNABhYB4rUU'
 })
+Vue.use(Moment)
 
 Vue.config.productionTip = false
 

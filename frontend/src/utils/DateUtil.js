@@ -61,6 +61,7 @@ _DateUtil.prototype.getStartofMonthofTheDay = function (datetime) {
   return startOfTheday - 3600 * 24 * (datetime.getDate() - 1)
 }
 _DateUtil.prototype.getDatetimeSeconds = function (datetime) {
+  console.log(datetime)
   let date = new Date(datetime)
   let miliseconds = date.getMilliseconds()
   return (date.getTime() - miliseconds) / 1000

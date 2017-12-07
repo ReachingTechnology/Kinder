@@ -16,6 +16,8 @@ import AllUserTaskExecStat from '../components/table_all_user_task_exec_stat.vue
 import OneUserAllTaskExecStat from '../components/table_one_user_all_task_exec_stat.vue'
 import OneUserOneTaskExecStat from '../components/table_one_user_one_task_exec_stat.vue'
 import AllUserLocation from '../components/table_user_location_list.vue'
+import InformList from '../components/table_inform_list.vue'
+import UserMessageList from '../components/table_user_message_list.vue'
 
 Vue.use(Router)
 
@@ -99,6 +101,22 @@ const router = new Router({
       path: '/user_location',
       name: 'AllUserLocation',
       component: AllUserLocation,
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: '/inform',
+      name: 'InformList',
+      component: InformList,
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: '/user_message',
+      name: 'UserMessageList',
+      component: UserMessageList,
       meta: {
         keepAlive: false
       }

@@ -1,4 +1,5 @@
 <template>
+  <div>
   <el-dialog title="编辑任务" :visible.sync="dialogVisible" @close="handleClose" :close-on-click-modal="false">
     <el-form :model="current_edited_duty"  :label-width="formLabelWidth" :label-position="labelPosition" ref="dutyForm" :rules="rules">
       <el-form-item label="任务名称" prop="name">
@@ -53,6 +54,23 @@
           placeholder="选择时间区间">
         </el-time-picker>
       </el-form-item>
+      <el-form-item align="left" label="消息提醒" prop="notify_user">
+        <div>
+          <el-switch align="left" style="display: inline-block"
+            v-model="current_edited_duty.notify_user"
+            >
+          </el-switch>
+          <el-button align="right" style="display: inline-block" v-show="current_edited_duty.notify_user" @click="editNotifyUser">设置</el-button>
+        </div>
+      </el-form-item>
+      <el-form-item align="left" label="职责完成情况提醒" prop="notify_manager">
+        <div>
+          <el-switch style="display: inline-block"
+            v-model="current_edited_duty.notify_manager">
+          </el-switch>
+          <el-button style="display: inline-block" v-show="current_edited_duty.notify_manager" @click="editNotifyManager">设置</el-button>
+        </div>
+      </el-form-item>
       <el-form-item align="left" label="相关岗位" prop="selectedRoleNames">
         <el-checkbox-group v-model="current_edited_duty.selectedRoleNames" @change="handleCheckedRolesChange">
           <el-checkbox v-for="item in allRole" :label="item.name" :key="item._id"></el-checkbox>
@@ -64,6 +82,9 @@
     <el-button type="primary" @click="commitEdit">提交</el-button>
   </span>
   </el-dialog>
+  <table-notify-setting-list @notifySettingListCommitted="notifySettingListCommitted" @showNotifySettingEdit="showEditOver" :settings="this.current_edited_duty.notify_user_setting_list" :dialogVisible="showEditNotifyUser"></table-notify-setting-list>
+    <table-notify-setting-list @notifySettingListCommitted="notifySettingListCommitted" @showNotifySettingEdit="showEditOver" :settings="this.current_edited_duty.notify_manager_setting_list" :dialogVisible="showEditNotifyManager"></table-notify-setting-list>
+  </div>
 </template>
 <script>
   import { mapActions, mapGetters } from 'vuex'
@@ -72,10 +93,11 @@
   import Util from '../store/utils'
   import ObjUtil from '../utils/ObjUtil'
   import ArrayUtil from '../utils/ArrayUtil'
+  import TableNotifySettingList from './table_notify_setting_list.vue'
   import { WEEK_DAYS, DUTY_TIME_TYPE_ROUTINE, DUTY_TIME_TYPE_PERIODICAL, DUTY_TIME_TYPE_SPECIFIC, DUTY_PERIOD_TYPE_WEEK, DUTY_PERIOD_TYPE_MONTH, DUTY_PERIOD_MONTH_PREFIX } from '../store/common_defs'
 
   export default {
-    components: {},
+    components: {TableNotifySettingList},
     name: 'duty_edit_panel',
     methods: {
       tableRowClassName (row, index) {
@@ -123,8 +145,13 @@
           let st = duty.timeRange[0]
           let et = duty.timeRange[1]
           let startofyesterday = dateUtil.getStartOfToday() - 3600 * 24
+          console.log(startofyesterday)
+          console.log('&&&&&&')
+          console.log(dateUtil.getDatetimeSeconds(st))
           duty.starttime = dateUtil.getDatetimeSeconds(st) - startofyesterday
           duty.endtime = dateUtil.getDatetimeSeconds(et) - startofyesterday
+          console.log('for other time, start:')
+          console.log(duty.starttime)
         }
       },
       getPeriodDate (periodType, labels) {
@@ -181,6 +208,30 @@
       handleClose () {
         this.cancelEdit()
       },
+      editNotifyUser () {
+        this.showEditNotifyUser = true
+      },
+      editNotifyManager () {
+        this.showEditNotifyManager = true
+      },
+      showEditOver () {
+        if (this.showEditNotifyUser) {
+          this.showEditNotifyUser = false
+        }
+        if (this.showEditNotifyManager) {
+          this.showEditNotifyManager = false
+        }
+      },
+      notifySettingListCommitted (val) {
+        if (this.showEditNotifyUser) {
+          this.current_edited_duty.notify_user_setting_list = val
+          this.showEditNotifyUser = false
+        }
+        if (this.showEditNotifyManager) {
+          this.current_edited_duty.notify_manager_setting_list = val
+          this.showEditNotifyManager = false
+        }
+      },
       ...mapActions([ UPSERT_DUTY ])
     },
     computed: {
@@ -224,7 +275,9 @@
         DUTY_TIME_TYPE_SPECIFIC: DUTY_TIME_TYPE_SPECIFIC,
         DUTY_PERIOD_TYPE_WEEK: DUTY_PERIOD_TYPE_WEEK,
         DUTY_PERIOD_TYPE_MONTH: DUTY_PERIOD_TYPE_MONTH,
-        DUTY_PERIOD_MONTH_PREFIX: DUTY_PERIOD_MONTH_PREFIX
+        DUTY_PERIOD_MONTH_PREFIX: DUTY_PERIOD_MONTH_PREFIX,
+        showEditNotifyUser: false,
+        showEditNotifyManager: false
       }
     }
   }

@@ -15,6 +15,7 @@ from backend.handler.management.TaskHandler import TaskHandler
 from backend.handler.management.DutyHandler import DutyHandler
 from backend.handler.commit.TaskExecActionHandler import TaskExecActionHandler
 from backend.handler.management.UserLocationHandler import UserLocationHandler
+from backend.handler.management.InformHandler import InformHandler
 
 URLS = [
     # (r"/user/login", LoginHandler, {'op':'login'}),
@@ -60,4 +61,9 @@ URLS = [
 
     (r"/management/query_all_user_location", UserLocationHandler, {'op':'query_all_user_location'}),
     (r"/management/upsert_user_location", UserLocationHandler, {'op':'upsert_user_location'}),
+
+    (r"/inform/query_all_inform", InformHandler, {'op':'query_all_inform'}),
+    (r"/inform/upsert_inform", InformHandler, {'op':'upsert_inform'}),
+    (r"/inform/remove_inform", InformHandler, {'op':'remove_inform'}),
+    (r"/inform/query_inform_by_user", InformHandler, {'op':'get_inform_by_user'})
 ]

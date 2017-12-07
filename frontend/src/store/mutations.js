@@ -40,8 +40,8 @@ const mutations = {
       item.name = data[i].name
       item.starttime = data[i].starttime + startofToday
       item.endtime = data[i].endtime + startofToday
-      var startDate = Moment(item.starttime * 1000).format('h:mm')
-      var endDate = Moment(item.endtime * 1000).format('h:mm')
+      var startDate = Moment(item.starttime * 1000).format('H:mm')
+      var endDate = Moment(item.endtime * 1000).format('H:mm')
       item.executetime = startDate + ' 至 ' + endDate
       console.log('insert: ' + item)
       state.userDayTask.push(item)
@@ -203,6 +203,12 @@ const mutations = {
   },
   SET_ALL_USER_LOCATION (state, data) {
     state.allUserLocation = data
+  },
+  SET_ALL_INFORM (state, data) {
+    state.allInform = data
+  },
+  SET_USER_INFORM_DATA (state, data) {
+    state.userInform = data
   }
 }
 export default mutations

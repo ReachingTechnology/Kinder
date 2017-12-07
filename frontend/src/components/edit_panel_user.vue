@@ -51,7 +51,7 @@
     <el-button type="primary" @click="commitEdit">提交</el-button>
   </span>
     </el-dialog>
-    <tree-duty-select@dutySelected="selectDutyOver" @showEdit="showEditOver" :dialogVisible="showDutyEdit" :selectedDuties="userDuties"></tree-duty-select>
+    <tree-duty-select @dutySelected="selectDutyOver" @showEdit="showEditOver" :dialogVisible="showDutyEdit" :selectedDuties="userDuties"></tree-duty-select>
     <tree-user-select @selectedUser="selectUserOver" @showEdit="showEditOver" title="选择直接汇报人" :dialogVisible="showLeaderEdit" :selectedUser="leader"></tree-user-select>
   </div>
 </template>
@@ -104,7 +104,6 @@
         var removed = ArrayUtil.diff(oldRoles, this.edited_user.role)
         this.addDutyByRole(this.edited_user.duty, added)
         this.removeDutyByRole(this.edited_user.duty, removed)
-
       },
       commitEdit () {
         this.current_edited_user = ObjUtil.clone(this.edited_user)

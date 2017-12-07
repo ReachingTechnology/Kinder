@@ -24,7 +24,7 @@ class TaskExecActionHandler(AsynchronousHandler):
         weekDayid = 'DUTY_PERIOD_WEEK_' + str(weekDay)
         return (weekDayid in periodDate)
 
-    def matchMontDay(self, monthDay, periodDate):
+    def matchMonthDay(self, monthDay, periodDate):
         monthDayid = 'DUTY_PERIOD_DATE_' + str(monthDay)
         return (monthDayid in periodDate)
 
@@ -38,7 +38,7 @@ class TaskExecActionHandler(AsynchronousHandler):
                 return self.matchWeekDay(date.weekday(), duty['periodDate'])
             elif duty['periodType'] == Const.DUTY_PERIOD_TYPE_MONTH:
                 # 计算startofday 是一个月的第几天
-                return self.matchMontDay(date.day, duty['periodDate'])
+                return self.matchMonthDay(date.day, duty['periodDate'])
         elif duty['timeType'] == Const.DUTY_TIME_TYPE_SPECIFIC:
             if duty['starttime'] <= startofday and duty['endtime'] > startofday:
                 return True
@@ -173,7 +173,7 @@ class TaskExecActionHandler(AsynchronousHandler):
                                     month = 1
                                     year += 1
                                 dayofMonth = calendar.monthrange(year, month)
-                            if self.matchMontDay(monthday, duty['periodDate']):
+                            if self.matchMonthDay(monthday, duty['periodDate']):
                                 dayCount += 1
                 else:
                     dayCount = 1

@@ -54,6 +54,7 @@
   import { GET_ALL_USER_LOCATION } from '../store/mutation_types'
   import RoleEditPanel from './edit_panel_role.vue'
   import Util from '../store/utils'
+  import Moment from 'moment'
 
   export default {
     name: 'table_user_location_list',
@@ -66,7 +67,7 @@
       },
       handleShowInMap (index, row) {
       },
-      ...mapActions([])
+      ...mapActions([GET_ALL_USER_LOCATION])
     },
     computed: {
       ...mapGetters(['allUser', 'allUserLocation']),
@@ -82,7 +83,7 @@
               location.locationY = this.allUserLocation[j].locationY
               location.update_time = this.allUserLocation[j].update_time
               if(location.update_time > 0) {
-                location.update_time_display = new Date(location.update_time).toDateString()
+                location.update_time_display = Moment(location.update_time * 1000).format('MM-DD H:mm')
               } else {
                 location.update_time_display = ''
               }
@@ -94,7 +95,11 @@
       }
     },
     created: function () {
-      GET_ALL_USER_LOCATION()
+      this.GET_ALL_USER_LOCATION()
+    },
+    beforeRouteUpdate: function (to, from, next) {
+      this.GET_ALL_USER_LOCATION()
+      next()
     },
     data: () => {
       return {

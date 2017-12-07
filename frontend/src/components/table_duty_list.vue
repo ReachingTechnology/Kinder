@@ -146,6 +146,18 @@
             this.selectedDuty = this.allDuty[i]
             this.selectedDuty.selectedWeekDays = []
             this.selectedDuty.selectedMonthDays = []
+            if (this.selectedDuty.notify_user === undefined) {
+              this.selectedDuty.notify_user = false
+            }
+            if (this.selectedDuty.notify_user_setting_list === undefined) {
+              this.selectedDuty.notify_user_setting_list = []
+            }
+            if (this.selectedDuty.notify_manager === undefined) {
+              this.selectedDuty.notify_manager = false
+            }
+            if (this.selectedDuty.notify_manager_setting_list === undefined) {
+              this.selectedDuty.notify_manager_setting_list = []
+            }
             this.isCreating = false
             this.showEdit = true
             console.log(this.selectedDuty)
@@ -174,7 +186,11 @@
           'periodType': '',
           'periodDate': [],
           'selectedWeekDays': [],
-          'selectedMonthDays': []
+          'selectedMonthDays': [],
+          'notify_user': false,
+          'notify_manager': false,
+          'notify_user_setting_list': [],
+          'notify_manager_setting_list': []
         }
         this.isCreating = true
         this.showEdit = true
@@ -210,7 +226,7 @@
           let st = new Date(duty.starttime * 1000)
           let et = new Date(duty.endtime * 1000)
           duty.timeRange = [st, et]
-          duty.timeRangeShow = Moment(duty.starttime * 1000).format('h:mm') + ' 到 ' + Moment(duty.endtime * 1000).format('h:mm')
+          duty.timeRangeShow = Moment(duty.starttime * 1000).format('H:mm') + ' 到 ' + Moment(duty.endtime * 1000).format('H:mm')
           duty.categoryName = Util.getDutyCategoryNameById(duty.category)
         }
         return data

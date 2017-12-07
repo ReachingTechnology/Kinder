@@ -13,7 +13,7 @@
   import UserLogin from './components/user_login.vue'
   import NavMenu from './components/nav_menu.vue'
   import { mapGetters, mapActions } from 'vuex'
-  import { GET_ALL_USER_ACCOUNT, GET_ALL_ROLE, GET_ALL_DUTY, GET_ALL_PERMISSION, GET_ALL_PERMISSION_ROLE, GET_ALL_USER_TASK_EXEC_DATA, USER_LOGOUT } from './store/mutation_types'
+  import { GET_ALL_USER_ACCOUNT, GET_ALL_ROLE, GET_ALL_DUTY, GET_ALL_PERMISSION, GET_ALL_PERMISSION_ROLE, GET_ALL_USER_TASK_EXEC_DATA, USER_LOGOUT, GET_INFORM_BY_USER } from './store/mutation_types'
   import WarningDialog from './components/warning_dialog.vue'
   export default {
     name: 'app',
@@ -41,9 +41,10 @@
       this.GET_ALL_USER_ACCOUNT()
       this.GET_ALL_ROLE()
       this.GET_ALL_DUTY()
+      this.getUserInform()
     },
     methods: {
-      ...mapActions([GET_ALL_USER_ACCOUNT, GET_ALL_ROLE, GET_ALL_DUTY, GET_ALL_PERMISSION, GET_ALL_PERMISSION_ROLE, GET_ALL_USER_TASK_EXEC_DATA, USER_LOGOUT]),
+      ...mapActions([GET_ALL_USER_ACCOUNT, GET_ALL_ROLE, GET_ALL_DUTY, GET_ALL_PERMISSION, GET_ALL_PERMISSION_ROLE, GET_ALL_USER_TASK_EXEC_DATA, USER_LOGOUT, GET_INFORM_BY_USER]),
       menuSelected: function (key) {
         console.log('menu selected:' + key)
         this.menuKey = key
@@ -58,6 +59,14 @@
           window.location.href = this.backend_uri
         }
         this.showWarningDialog = false
+      },
+      getUserInform () {
+        setTimeout(function () {
+          if (this.user._id !== '') {
+            this.GET_INFORM_BY_USER()
+          }
+          this.getUserInform()
+        }.bind(this), 120000)
       }
     }
   }

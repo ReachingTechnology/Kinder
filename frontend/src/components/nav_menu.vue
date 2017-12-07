@@ -30,7 +30,8 @@
     </el-submenu>
     <el-submenu index="6">
       <template slot="title">安全秘书</template>
-      <el-menu-item index="6-1">职责提醒设置</el-menu-item>
+      <el-menu-item index="6-1">我的消息</el-menu-item>
+      <el-menu-item index="6-2">工作通知列表</el-menu-item>
     </el-submenu>
     <el-submenu index="7">
       <template slot="title">文件管理</template>
@@ -111,6 +112,12 @@
               'datetime_type': DATETYPE_MONTH
             }
             this.$router.push({name: 'AllUserTaskExecStat', params: params})
+            break
+          case '6-1':
+            this.$router.push({name: 'UserMessageList'})
+            break
+          case '6-2':
+            this.$router.push({name: 'InformList'})
             break
           case '8-1':
             this.$router.push({name: 'ChangePass'})

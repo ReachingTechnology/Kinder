@@ -1,9 +1,19 @@
 /**
  * Created by HOZ on 19/10/2017.
  */
+import ObjUtil from './ObjUtil'
+
 function _ArrayUtil () {
 }
-
+_ArrayUtil.prototype.clone = function (array) {
+  var result = []
+  if (array !== undefined) {
+    for (var i = 0, len = array.length; i < len; i++) {
+      result.push(ObjUtil.clone(array[i]))
+    }
+  }
+  return result
+}
 _ArrayUtil.prototype.in_array = function (obj, array) {
   if (obj === undefined || array === undefined) {
     return false

@@ -77,6 +77,10 @@ class DutyHandler(AsynchronousHandler):
             item['timeType'] = arguments['timeType']
             item['periodType'] = arguments['periodType']
             item['periodDate'] = arguments['periodDate']
+            item['notify_user'] = arguments['notify_user']
+            item['notify_user_setting_list'] = arguments['notify_user_setting_list']
+            item['notify_manager'] = arguments['notify_manager']
+            item['notify_manager_setting_list'] = arguments['notify_manager_setting_list']
             self._duty_info_coll.save(item)
             self.json_result = {'status': 0}
         elif self._op == 'query_all_duty_category':

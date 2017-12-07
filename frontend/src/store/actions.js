@@ -9,9 +9,11 @@ import { SET_ACTIVE_MENU, GET_ALL_USER_TASK_EXEC_DATA, GET_ALL_USER_TASK_EXEC_DA
   GET_ALL_PERMISSION_ROLE, UPSERT_PERMISSION_ROLE, GET_ALL_PERMISSION, REMOVE_PERMISSION_ROLES,
   COMMIT_TASK_EXEC_INFO, GET_TASK_EXEC_DATA_BY_DATE, GET_USER_TASK_EXEC_DATA_BY_DATERANGE, GET_ONE_TASK_EXEC_DATA_BY_DATERANGE,
   GET_ALL_DUTY, UPSERT_DUTY, REMOVE_DUTIES, GET_ALL_DUTY_CATEGORY, UPSERT_DUTY_CATEGORY, REMOVE_DUTY_CATEGORIES,
-  GET_ALL_USER_LOCATION, UPSERT_USER_LOCATION } from './mutation_types'
+  GET_ALL_USER_LOCATION, UPSERT_USER_LOCATION,
+  GET_ALL_INFORM, GET_INFORM_BY_USER, UPSERT_INFORM, REMOVE_INFORMS} from './mutation_types'
 // import dateUtil from '../utils/DateUtil'
 import state from './state'
+import dateUtil from '../utils/DateUtil'
 
 axios.defaults.baseURL = state.backend_uri
 // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN
@@ -241,7 +243,7 @@ const actions = {
   },
   [ GET_DUTY_BY_USER ]: function (store, param) {
     'use strict'
-    axios.post('/duty/query_duty_by_user', {'userid': store.state.user['id']})
+    axios.post('/duty/query_duty_by_user', {'userid': store.state.user['_id']})
       .then(function (response) {
         console.log('get data by user:')
         console.log(response.data)
@@ -386,7 +388,43 @@ const actions = {
         store.dispatch(GET_ALL_USER_LOCATION)
       })
       .catch(handleError)
-  }
+  },
+  /*
+   Inform
+   */
+  [ GET_ALL_INFORM ]: function (store, param) {
+    'use strict'
+    axios.get('/inform/query_all_inform ')
+      .then(function (response) {
+        store.commit('SET_ALL_INFORM', response.data)
+      })
+      .catch(handleError)
+  },
+  [ GET_INFORM_BY_USER ]: function (store, param) {
+    'use strict'
+    console.log('query inform by user:::::::')
+    axios.post('/inform/query_inform_by_user', {'userid': store.state.user['_id'], 'queryTime': dateUtil.getNow(), 'startofday': dateUtil.getStartOfToday()})
+      .then(function (response) {
+        console.log('get inform by user:')
+        console.log(response.data)
+        store.commit('SET_USER_INFORM_DATA', response.data)
+      })
+      .catch(handleError)
+  },
+  [ UPSERT_INFORM ]: function (store, param) {
+    'use strict'
+    axios.post('/inform/upsert_inform', param)
+      .then(function (response) {
+        store.dispatch(GET_ALL_INFORM)
+      })
+      .catch(handleError)
+  },
+  [ REMOVE_INFORMS ]: function (store, param) {
+    axios.post('/inform/remove_inform', param)
+      .then(function (response) {
+        store.dispatch(GET_ALL_INFORM)
+      })
+  },
 }
 export default actions
 

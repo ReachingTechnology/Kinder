@@ -166,8 +166,8 @@
         this.unfinish_total = 0
         for (var i = 0, len = this.userDayTask.length; i < len; i++) {
           var item = this.userDayTask[i]
-          item.executetime = Moment(item.starttime * 1000).format('h:mm') + ' 到 ' + Moment(item.endtime * 1000).format('h:mm')
-          item.realendtimeDisplay = item.realendtime === 0 ? '' : Moment(item.realendtime * 1000).format('M月D日 hh:mm')
+          item.executetime = Moment(item.starttime * 1000).format('H:mm') + ' 到 ' + Moment(item.endtime * 1000).format('H:mm')
+          item.realendtimeDisplay = item.realendtime === 0 ? '' : Moment(item.realendtime * 1000).format('M月D日 HH:mm')
           item.finish_status_display = TASK_STATUS.get(item.finish_status)
           data.push(item)
           if (item.finish_status === TASK_STATUS_UNFINISHED && item.approve_status !== '1') {
