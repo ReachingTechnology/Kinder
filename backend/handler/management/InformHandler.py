@@ -117,9 +117,7 @@ class InformHandler(AsynchronousHandler):
                                 item['notifyTimeType'] = notify['timeType']
                                 item['notifyType'] = notify['notifyType']
                                 item['notifyPriority'] = notify['notifyPriority']
-
-                    result.append(item)
-
+                                result.append(item)
             self.json_result = result
         elif self._op == 'remove_inform':
             arguments = ujson.loads(self.request.body)

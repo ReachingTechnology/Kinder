@@ -426,7 +426,7 @@ const actions = {
       .then(function (response) {
         store.dispatch(GET_ALL_INFORM)
       })
-  },
+  }
 }
 export default actions
 

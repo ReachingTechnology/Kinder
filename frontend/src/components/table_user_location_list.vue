@@ -101,6 +101,9 @@
       this.GET_ALL_USER_LOCATION()
       next()
     },
+    beforeRouteEnter: function (to, from, next) {
+      next(vm => { vm.GET_ALL_USER_LOCATION() })
+    },
     data: () => {
       return {
         showEdit: false,

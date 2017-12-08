@@ -15,7 +15,7 @@ class DateUtil(object):
 
     @classmethod
     def get_current_time(cls):
-        return datetime.datetime.now()
+        return time.mktime(datetime.now().timetuple())
 
     @classmethod
     def get_startof_today(cls):

@@ -18,6 +18,7 @@ export const TASK_STATUS = new Map([
   [TASK_STATUS_URGENT, '已完成']
 ])
 
+export const DUTY_TIME_TYPE_ALL = 'DUTY_TIME_TYPE_ALL'
 export const DUTY_CAT_PREFIX = 'DUTY_CAT_'
 
 export const DUTY_TIME_TYPE_ROUTINE = 'DUTY_TIME_TYPE_ROUTINE'

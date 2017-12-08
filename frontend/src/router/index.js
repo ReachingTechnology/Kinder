@@ -121,9 +121,9 @@ const router = new Router({
         keepAlive: false
       }
     }
-  ],
-  mode: 'history',
-  base: '/'
+  ]
+  // mode: 'history',
+  // base: '/'
 })
 /**
  * 登录钩子函数

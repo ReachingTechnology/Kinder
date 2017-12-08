@@ -23,15 +23,16 @@ class UserLocationHandler(AsynchronousHandler):
             # result = self._user_location_info_coll.find()
             result = []
             allUser = list(self._user_info_coll.find({"_id": {"$ne": "admin"}}))
-            allTaskExecData = list(self._task_exec_data_coll.find().sort('realendtime', -1))
+            # allTaskExecData = list(self._task_exec_data_coll.find().sort('realendtime', -1))
+            allUserLocationData = list(self._user_location_info_coll.find().sort('update_time', -1))
             for user in allUser:
-                for task in allTaskExecData:
-                    if user['_id'] == task['userid'] and 'locationLat' in task and 'locationLng' in task and task['locationLat'] != 0 and task['locationLng'] != 0:
+                for location in allUserLocationData:
+                    if user['_id'] == location['user_id'] and location['locationLat'] != 0 and location['locationLng'] != 0:
                         data = {}
-                        data['user_id'] = task['userid']
-                        data['locationLat'] = task['locationLat']
-                        data['locationLng'] = task['locationLng']
-                        data['update_time'] = task['realendtime']
+                        data['user_id'] = location['user_id']
+                        data['locationLat'] = location['locationLat']
+                        data['locationLng'] = location['locationLng']
+                        data['update_time'] = location['update_time']
                         result.append(data)
                         break
                 index = 0
@@ -39,13 +40,11 @@ class UserLocationHandler(AsynchronousHandler):
         elif self._op == 'upsert_user_location':
             arguments = ujson.loads(self.request.body)
             item = {}
-            location = self._user_location_info_coll.find({'user_id': arguments['user_id']})
-            if not location:
-                location = {'user_id': arguments['user_id']}
-            location['locationLat'] = arguments['locationLat']
-            location['locationLng'] = arguments['locationLng']
-            location['update_time'] = DateUtil.get_current_time()
-            self._user_location_info_coll.save(location)
+            item['user_id'] = arguments['user_id']
+            item['locationLat'] = arguments['locationLat']
+            item['locationLng'] = arguments['locationLng']
+            item['update_time'] = DateUtil.get_current_time()
+            self._user_location_info_coll.save(item)
             self.json_result = {'status': 0}
         super(UserLocationHandler, self).process_request()
 
