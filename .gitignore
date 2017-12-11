@@ -2,6 +2,7 @@
 /static
 index.html
 *.pyc
+*.png
 
 # Editor directories and files
 .idea
