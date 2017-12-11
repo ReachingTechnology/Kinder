@@ -63,27 +63,7 @@
         "retrytimes": 3
     },
 
-    "CAS_SETTINGS": {
-        "cas_server": "https://casdev.mioffice.cn",
-        "service_url": "http://127.0.0.1:9090/cas",
-        "login_url": "http://127.0.0.1:9090/login",
-        "version": 2
-    },
-
-    "EMAIL": {
-        "AUTH": {
-            "server": "mail.xiaomi.com:25",
-            "user": "duokanmail@xiaomi.com",
-            "password": "bzf=nghiXjqNjovs5jp7"
-        },
-        "FROM_ADDR": "duokanmail@xiaomi.com",
-        "TO_LIST": [
-            "zhanghao8@xiaomi.com"
-        ]
-    },
-
     "default_page_size": 20,
-    "domain": "http://cms.controller.duokanbox.com/",
     "mfs_upload_url": "http://127.0.0.1:9696/mfs/upload/poster?url=%s&type=%s",
     "BACKUP_APK_URL":"http://127.0.0.1:9696/mfs/upload/apk?type=apk&url=%s&name=%s",
     "LOG_PATH": "access.log",
@@ -98,22 +78,5 @@
         "server": "127.0.0.1",
         "port": 6379,
         "db": 1
-    },
-    "REDIS_REFRESH_DEVICE_BRAND":"controller.service.refresh.device.brand",
-    "REDIS_REFRESH_DEVICE":"controller.service.refresh.device",
-    "REDIS_REFRESH_BRAND":"controller.service.refresh.brand",
-    "REDIS_REFRESH_VERSION":"controller.service.refresh.version",
-    "REDIS_REFRESH_COUNTRY":"controller.service.refresh.country",
-    "REDIS_REFRESH_ACTIVITY":"controller.service.refresh.activity",
-    "REDIS_REFRESH_LINEUP":"controller.service.refresh.lineup",
-    "REDIS_REFRESH_CONFIG":"controller.service.refresh.config",
-    "REDIS_REFRESH_SOLR":"infrared.solr.index.match.complete",
-    "REDIS_REFRESH_TVCAT_CONFIG":"tvcat.notify.refresh.config",
-    "REDIS_REFRESH_TVCAT_CHANNEL":"tvcat.notify.refresh.channel",
-    "REDIS_REFRESH_TVCAT_INFO":"tvcat.notify.refresh.lineup.info",
-    "REDIS_REFRESH_TVCAT_RECOMMEND":"tvcat.notify.recommend.update",
-    "REDIS_REFRESH_TVCAT_RCEPG_HOME":"tvcat.notify.refresh.rcepg.home",
-    "REDIS_REFRESH_TVCAT_ASPECT":"tvcat.notify.refresh.epg.aspect",
-    "REDIS_REFRESH_TVCAT_CUST_EVENT":"tvcat.notify.refresh.epg.cust_event",
-    "REDIS_REFRESH_TVCAT_CUSTOMIZE_DATA":"tvcat.notify.refresh.customize_data"
+    }
 }
