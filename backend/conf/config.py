@@ -49,45 +49,17 @@ class _Config(object):
             setting = ujson.loads(data)
             setting = self.convert(setting)
 
-            self._controller_mongo = setting.get('CONTROLLER_MONGO_DATABASE')
-            self._tvcat_mongo = setting.get('TVCAT_MONGO_DATABASE')
             self._kinder_mongo = setting.get('KINDER_MONGO_DATABASE')
-            self._dvb_mongo = setting.get('DVB_MONGO_DATABASE')
-            self._assistant_mongo = setting.get('ASSISTANT_MONGO_DATABASE')
-            self._mysql = setting.get('MYSQL_DATABASE')
             self._redis_data = setting.get('REDIS_DATA')
             self._domain = setting.get('domain')
             self._logfile = setting.get('LOG_PATH')
             self._debug = setting.get('DEBUG')
             self._page_size = setting.get('default_page_size')
 
-            self._cas = setting.get("CAS_SETTINGS")
-            self._email = setting.get('EMAIL')
             self._cluster_num = setting.get('CLUSTER_NUM')
             self._upload_cong = setting.get('UPLOAD_CONF')
             self._mfs = setting.get('mfs_upload_url')
-            self._redis_event_config = setting.get('CONTROLLER_REDIS_EVENT')
-            self._refresh_brand = setting.get('REDIS_REFRESH_BRAND')
-            self._refresh_device = setting.get('REDIS_REFRESH_DEVICE')
-            self._refresh_version = setting.get('REDIS_REFRESH_VERSION')
-            self._refresh_country = setting.get('REDIS_REFRESH_COUNTRY')
-            self._refresh_activity = setting.get('REDIS_REFRESH_ACTIVITY')
-            self._refresh_lineup = setting.get('REDIS_REFRESH_LINEUP')
-            self._refresh_solr = setting.get('REDIS_REFRESH_SOLR')
-            self._refresh_device_brand = setting.get('REDIS_REFRESH_DEVICE_BRAND')
-            self._refresh_config = setting.get('REDIS_REFRESH_CONFIG')
 
-            self._redis_tvcat_event_config = setting.get('TVCAT_REDIS_EVENT')
-            self._refresh_tvcat_config = setting.get('REDIS_REFRESH_TVCAT_CONFIG')
-            self._refresh_tvcat_channel = setting.get('REDIS_REFRESH_TVCAT_CHANNEL')
-            self._refresh_tvcat_info = setting.get('REDIS_REFRESH_TVCAT_INFO')
-            self._refresh_tvcat_recommend = setting.get('REDIS_REFRESH_TVCAT_RECOMMEND')
-            self._refresh_tvcat_rcepg_home = setting.get('REDIS_REFRESH_TVCAT_RCEPG_HOME')
-            self._refresh_tvcta_aspect = setting.get('REDIS_REFRESH_TVCAT_ASPECT')
-            self._refresh_tvcta_cust_event = setting.get('REDIS_REFRESH_TVCAT_CUST_EVENT')
-            self._refresh_tvcta_customize_data = setting.get('REDIS_REFRESH_TVCAT_CUSTOMIZE_DATA')
-            self._backup_apk_url = setting.get('BACKUP_APK_URL')
-            self._mongo_db_name = setting.get('CONTROLLER_DB_NAME')
             if self._logger:
                 self._logger.warn("Load setting config: %s", data)
 
@@ -95,28 +67,8 @@ class _Config(object):
         self._logger = logging.getLogger(self.__class__.__name__)
 
     @property
-    def controller_mongo(self):
-        return self._controller_mongo
-
-    @property
-    def dvb_mongo(self):
-        return self._dvb_mongo
-
-    @property
-    def tvcat_mongo(self):
-        return self._tvcat_mongo
-
-    @property
     def kinder_mongo(self):
         return self._kinder_mongo
-
-    @property
-    def assistant_mongo(self):
-        return self._assistant_mongo
-
-    @property
-    def mysql(self):
-        return self._mysql
 
     @property
     def domain(self):
@@ -133,14 +85,6 @@ class _Config(object):
     @property
     def logfile(self):
         return self._logfile
-
-    @property
-    def cas(self):
-        return self._cas
-
-    @property
-    def email(self):
-        return self._email
 
     @property
     def mfs_url(self):
@@ -189,50 +133,6 @@ class _Config(object):
     @property
     def refresh_solr(self):
         return self._refresh_solr
-
-    @property
-    def refresh_device(self):
-        return self._refresh_device
-
-    @property
-    def refresh_device_brand(self):
-        return self._refresh_device_brand
-
-    @property
-    def redis_tvcat_event(self):
-        return self._redis_tvcat_event_config
-
-    @property
-    def refresh_tvcat_config(self):
-        return self._refresh_tvcat_config
-
-    @property
-    def refresh_tvcat_channel(self):
-        return self._refresh_tvcat_channel
-
-    @property
-    def refresh_tvcat_info(self):
-        return self._refresh_tvcat_info
-
-    @property
-    def refresh_tvcat_recommend(self):
-        return self._refresh_tvcat_recommend
-
-    @property
-    def refresh_tvcat_rcepghome(self):
-        return self._refresh_tvcat_rcepg_home
-
-    @property
-    def refresh_tvcat_aspect(self):
-        return self._refresh_tvcta_aspect
-
-    @property
-    def refresh_tvcat_cust_event(self):
-        return self._refresh_tvcta_cust_event
-
-    @property
-    def refresh_tvcat_customize_data(self):
-        return self._refresh_tvcta_customize_data
 
     @property
     def mongo_db_name(self):

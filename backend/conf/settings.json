@@ -1,48 +1,11 @@
 {
-    "CONTROLLER_MONGO_DATABASE": {
-        "db_sock": "127.0.0.1:27017",
-        "db_user": null,
-        "db_pass": null,
-        "db_size": 10
-    },
-
-    "TVCAT_MONGO_DATABASE": {
-        "db_sock": "127.0.0.1:27017",
-        "db_user": null,
-        "db_pass": null,
-        "db_size": 10
-    },
-  
     "KINDER_MONGO_DATABASE": {
         "db_sock": "127.0.0.1:27017",
         "db_user": null,
         "db_pass": null,
         "db_size": 10
     },
-  
-    "DVB_MONGO_DATABASE": {
-        "db_sock": "127.0.0.1:27017",
-        "db_user": null,
-        "db_pass": null,
-        "db_size": 10
-    },
 
-    "ASSISTANT_MONGO_DATABASE": {
-        "db_sock": "127.0.0.1:27017",
-        "db_user": null,
-        "db_pass": null,
-        "db_size": 10
-    },
-
-    "MYSQL_DATABASE": {
-        "db_host": "10.98.18.35",
-        "db_user": "root",
-        "db_pass": "server2011",
-        "db_base": "mobile_controller_cms",
-        "db_sock": "/var/lib/mysql/mysql.sock",
-        "db_port": 3306,
-        "pool_size": 3
-    },
    "CONTROLLER_DB_NAME":"controller",
    "REDIS_DATA": {
         "cluster": [
@@ -68,15 +31,5 @@
     "BACKUP_APK_URL":"http://127.0.0.1:9696/mfs/upload/apk?type=apk&url=%s&name=%s",
     "LOG_PATH": "access.log",
     "DEBUG": true,
-    "CLUSTER_NUM" : 1,
-    "CONTROLLER_REDIS_EVENT": {
-        "server": "127.0.0.1",
-        "port": 6379,
-        "db": 1
-    },
-    "TVCAT_REDIS_EVENT": {
-        "server": "127.0.0.1",
-        "port": 6379,
-        "db": 1
-    }
+    "CLUSTER_NUM" : 1
 }

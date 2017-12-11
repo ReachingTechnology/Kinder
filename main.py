@@ -47,7 +47,7 @@ ConfigSettings = {}
 MAX_WAIT_SECONDS_BEFORE_SHUTDOWN = 5
 
 
-class EPGApplication(tornado.web.Application):
+class KinderApplication(tornado.web.Application):
     def __init__(self):
         settings = {
             "domain": SystemConfig.domain,
@@ -58,11 +58,10 @@ class EPGApplication(tornado.web.Application):
         # base64.b64encode(uuid.uuid4().bytes + uuid.uuid4().bytes),
             "xsrf_cookies": False,
             "login_url": "/login",
-            "system_name": "幼儿园安保管理系统",
+            "system_name": "",
             "debug": SystemConfig.debug,  # changeTo False if online
             "listen_info": ConfigSettings['listen_info'],
             "redis_proxy": ConfigSettings['redis_proxy'],
-            # "mysql_pool": ConfigSettings['mysql_pool'],
             "thread_pool": ConfigSettings['thread_pool'],
             "kinder_mongo_pool": ConfigSettings['kinder_mongo_pool'],
             "timer": ConfigSettings['timer'],
@@ -211,7 +210,7 @@ def main():
     logger.info("Listen info ip:%s, port:%s", ipAddr, options.port)
     ConfigSettings['listen_info'] = {'host': ipAddr, 'port': options.port}
 
-    http_server = tornado.httpserver.HTTPServer(EPGApplication(), ssl_options={
+    http_server = tornado.httpserver.HTTPServer(KinderApplication(), ssl_options={
         "certfile": os.path.join(os.path.dirname(__file__), "backend/secure/server.crt"),
         "keyfile": os.path.join(os.path.dirname(__file__), "backend/secure/server.key"),
     })
