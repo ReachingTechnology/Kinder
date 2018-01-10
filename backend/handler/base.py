@@ -110,7 +110,6 @@ class BaseHandler(tornado.web.RequestHandler):
         self.render("404.html")
 
     def get_current_user(self):
-        return '000001'
         return self.get_secure_cookie(Const.COOKIE_USER_KEY)
 
     def get_today(self):

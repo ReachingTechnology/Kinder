@@ -39,7 +39,10 @@ class UserLocationHandler(AsynchronousHandler):
             self.json_result = result
         elif self._op == 'upsert_user_location':
             arguments = ujson.loads(self.request.body)
+            existLocation = self._user_location_info_coll.find_one({'user_id': arguments['user_id']})
             item = {}
+            if existLocation:
+                item['_id'] = existLocation['_id']
             item['user_id'] = arguments['user_id']
             item['locationLat'] = arguments['locationLat']
             item['locationLng'] = arguments['locationLng']

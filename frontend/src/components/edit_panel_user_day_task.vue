@@ -44,13 +44,17 @@
         return ''
       },
       commitEdit () {
-        var finishTime = dateUtil.getNow()
         this.edited_task.startofday = dateUtil.getStartOfTheday(this.selectedDay)
         var taskFinishInfo = {}
         taskFinishInfo.taskid = this.edited_task.taskid
         taskFinishInfo.userid = this.edited_task.userid
         taskFinishInfo.startofday = this.edited_task.startofday
-        taskFinishInfo.realendtime = finishTime
+        if (this.edited_task.realendtime === 0) {
+          var finishTime = dateUtil.getNow()
+          taskFinishInfo.realendtime = finishTime
+        } else {
+          taskFinishInfo.realendtime = this.edited_task.realendtime
+        }
         taskFinishInfo.comment = this.edited_task.comment
         taskFinishInfo.approve_status = this.edited_task.approve_status
         taskFinishInfo.approve_user = this.edited_task.approve_user

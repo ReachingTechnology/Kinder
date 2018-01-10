@@ -65,7 +65,10 @@ URLS = [
     (r"/inform/query_all_inform", InformHandler, {'op':'query_all_inform'}),
     (r"/inform/upsert_inform", InformHandler, {'op':'upsert_inform'}),
     (r"/inform/remove_inform", InformHandler, {'op':'remove_inform'}),
-    (r"/inform/query_inform_by_user", InformHandler, {'op':'get_inform_by_user'})
+    (r"/inform/get_duty_notification_by_user", InformHandler, {'op':'get_duty_notification_by_user'}),
+    (r"/inform/query_inform_by_user", InformHandler, {'op':'get_inform_by_user'}),
+    (r"/inform/get_new_duty_notification_count", InformHandler, {'op':'get_new_duty_notification_count'}),
+    (r"/inform/get_new_inform_count", InformHandler, {'op':'get_new_inform_count'})
 
     # (r"/.(.*)", TaskExecActionHandler, {'op':'get_task_exec_info_by_date'})
     #

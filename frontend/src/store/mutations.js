@@ -217,6 +217,15 @@ const mutations = {
   },
   SET_USER_INFORM_DATA (state, data) {
     state.userInform = data
+  },
+  SET_USER_DUTY_NOTIFICATION_DATA (state, data) {
+    state.userDutyNotification = data
+  },
+  SET_NEW_DUTY_NOTIFICATION_COUNT (state, data) {
+    state.newDutyNotificationCount = data.count
+  },
+  SET_NEW_INFORM_COUNT (state, data) {
+    state.newInformCount = data.count
   }
 }
 export default mutations

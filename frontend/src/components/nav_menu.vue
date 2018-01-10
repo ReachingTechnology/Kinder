@@ -30,8 +30,9 @@
     </el-submenu>
     <el-submenu index="6">
       <template slot="title">安全秘书</template>
-      <el-menu-item index="6-1">我的消息</el-menu-item>
-      <el-menu-item index="6-2">工作通知列表</el-menu-item>
+      <el-menu-item index="6-1">我的职责提醒消息</el-menu-item>
+      <el-menu-item index="6-2">我的工作通知</el-menu-item>
+      <el-menu-item index="6-3">工作通知设置列表</el-menu-item>
     </el-submenu>
     <el-submenu index="7">
       <template slot="title">文件管理</template>
@@ -114,9 +115,12 @@
             this.$router.push({name: 'AllUserTaskExecStat', params: params})
             break
           case '6-1':
-            this.$router.push({name: 'UserMessageList'})
+            this.$router.push({name: 'UserDutyNotificationList'})
             break
           case '6-2':
+            this.$router.push({name: 'UserInformList'})
+            break
+          case '6-3':
             this.$router.push({name: 'InformList'})
             break
           case '8-1':
