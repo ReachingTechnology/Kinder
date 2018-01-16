@@ -129,7 +129,6 @@ class QueryHandler(AsynchronousHandler):
                         userDuties = ArrayUtil.noDuplicateJoin(userDuties, groupDuties)
                     userRoles = user['role']
                     userRoleNames = self.getRoleNames(userRoles, allrole)
-                    pre_finish_count = 0
                     userAllDutyCount = 0
                     for dutyId in userDuties:
                         duty = self.getDuty(dutyId, allDuties)
@@ -145,6 +144,7 @@ class QueryHandler(AsynchronousHandler):
                     queryEndDate = endtime
                     taskExecInfo = self._task_exec_data_coll.find({'userid': user['_id'], 'startofday': {'$gte': queryStartDate, '$lt': queryEndDate}})
                     finishCount = 0
+                    approveCount = 0
                     if taskExecInfo:
                         for taskexec in taskExecInfo:
                             realendtime = taskexec['realendtime']
@@ -162,13 +162,15 @@ class QueryHandler(AsynchronousHandler):
                                         if realendtime < taskexec['startofday'] + 3600 * 24 or taskexec['approve_status'] == '1':
                                             # 只要是当天提交的就可以算完成
                                             finishCount += 1
+                            elif taskexec['approve_status'] != Const.TASK_APPROVE_STATUS_NONE:
+                                approveCount += 1
                     item = {}
                     item['userid'] = user['_id']
                     item['username'] = user['name']
                     item['role'] = ' '.join(userRoleNames)
                     item['unfinish_count'] = userAllDutyCount - finishCount
                     item['finish_count'] = finishCount
-                    item['pre_finish_count'] = pre_finish_count
+                    item['approved_count'] = approveCount
 
                     if item['unfinish_count'] < 0:
                         item['unfinish_count'] = 0

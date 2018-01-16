@@ -36,4 +36,10 @@ class LoginHandler(AsynchronousHandler):
                 self.save_user_info(userid)
 
             self.json_result = result
-            super(LoginHandler, self).process_request()
+        elif self._op == 'get_current_user':
+            userid = self.get_current_user()
+            result = self._user_info_coll.find_one({'_id': userid})
+            if not result:
+                result = {'_id': '', 'name': ''}
+            self.json_result = result
+        super(LoginHandler, self).process_request()

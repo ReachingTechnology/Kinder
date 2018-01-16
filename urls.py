@@ -16,11 +16,14 @@ from backend.handler.management.DutyHandler import DutyHandler
 from backend.handler.commit.TaskExecActionHandler import TaskExecActionHandler
 from backend.handler.management.UserLocationHandler import UserLocationHandler
 from backend.handler.management.InformHandler import InformHandler
+from backend.handler.util.UploadImage import UploadImage
 
 URLS = [
     # (r"/user/login", LoginHandler, {'op':'login'}),
     # (r"/login", UserLogin),
+    (r"/user/get_current_user", LoginHandler, {'op':'get_current_user'}),
     (r"/user/user_login", LoginHandler, {'op':'login'}),
+    (r"/user/change_pass", UserAccountHandler, {'op':'change_pass'}),
 
     (r"/management/upsert_user", UserAccountHandler, {'op':'upsert_user'}),
     (r"/management/remove_user", UserAccountHandler, {'op':'remove_user'}),
@@ -68,8 +71,10 @@ URLS = [
     (r"/inform/get_duty_notification_by_user", InformHandler, {'op':'get_duty_notification_by_user'}),
     (r"/inform/query_inform_by_user", InformHandler, {'op':'get_inform_by_user'}),
     (r"/inform/get_new_duty_notification_count", InformHandler, {'op':'get_new_duty_notification_count'}),
-    (r"/inform/get_new_inform_count", InformHandler, {'op':'get_new_inform_count'})
+    (r"/inform/get_new_inform_count", InformHandler, {'op':'get_new_inform_count'}),
 
     # (r"/.(.*)", TaskExecActionHandler, {'op':'get_task_exec_info_by_date'})
     #
+
+    (r"/util/uploadimage", UploadImage)
 ]

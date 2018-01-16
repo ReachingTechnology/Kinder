@@ -189,6 +189,7 @@ class TaskExecActionHandler(AsynchronousHandler):
                 if dayCount > 0:
                     dutyId = duty['_id']
                     finishCount = 0
+                    approveCount = 0
                     for taskexec in taskData:
                         if taskexec['taskid'] == dutyId:
                             realendtime = taskexec['realendtime']
@@ -201,6 +202,8 @@ class TaskExecActionHandler(AsynchronousHandler):
                                     if realendtime < taskexec['startofday'] + 3600 * 24:
                                         # 只要是当天提交的就可以算完成
                                         finishCount += 1
+                            elif taskexec['approve_status'] != Const.TASK_APPROVE_STATUS_NONE:
+                                approveCount += 1
 
                     item = {}
                     item['seq'] = index + 1
@@ -210,6 +213,7 @@ class TaskExecActionHandler(AsynchronousHandler):
                     item['taskname'] = duty['name']
 
                     item['unfinish_count'] = dayCount - finishCount
+                    item['approved_count'] = approveCount
                     if item['unfinish_count'] < 0:
                         item['unfinish_count'] = 0
                     result.append(item)
@@ -393,22 +397,24 @@ class TaskExecActionHandler(AsynchronousHandler):
             if 'finish_status' in arguments:
                 if item['finish_status'] != arguments['finish_status']:
                     if arguments['finish_status'] == Const.TASK_STATUS_INPROCESS:
-                        self._task_exec_data_coll.remove(query)
-                        return
+                        if item['finish_status'] == '':
+                            if arguments['timeType'] == Const.DUTY_TIME_TYPE_SPECIFIC:
+                                if item['realendtime'] < arguments['endtime'] + 3600 * 24:
+                                    item['finish_status'] = Const.TASK_STATUS_FINISHED
+                                else:
+                                    item['finish_status'] = Const.TASK_STATUS_UNFINISHED
+                            else:
+                                if item['realendtime'] < startofday + 3600 * 24:
+                                    item['finish_status'] = Const.TASK_STATUS_FINISHED
+                                else:
+                                    item['finish_status'] = Const.TASK_STATUS_UNFINISHED
+                        else:
+                            self._task_exec_data_coll.remove(query)
+                            return
                     elif arguments['finish_status'] == Const.TASK_STATUS_FINISHED:
                         return
-                    item['finish_status'] = arguments['finish_status']
-            else:
-                if arguments['timeType'] == Const.DUTY_TIME_TYPE_SPECIFIC:
-                    if item['realendtime'] < arguments['endtime'] + 3600 * 24:
-                        item['finish_status'] = Const.TASK_STATUS_FINISHED
                     else:
-                        item['finish_status'] = Const.TASK_STATUS_UNFINISHED
-                else:
-                    if item['realendtime'] < startofday + 3600 * 24:
-                        item['finish_status'] = Const.TASK_STATUS_FINISHED
-                    else:
-                        item['finish_status'] = Const.TASK_STATUS_UNFINISHED
+                        item['finish_status'] = arguments['finish_status']
 
             item['comment'] = arguments["comment"]
             item['approve_status'] = arguments['approve_status']

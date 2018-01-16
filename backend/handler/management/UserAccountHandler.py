@@ -34,6 +34,21 @@ class UserAccountHandler(AsynchronousHandler):
                 print 'not found user by cellphone'
                 result = {'_id': '', 'name': ''}
             self.json_result = result
+        elif self._op == 'change_pass':
+            arguments = ujson.loads(self.request.body)
+            userid = arguments['userid']
+            oldpass = arguments['oldpass']
+            password = arguments['pass']
+            result = {}
+            user = self._user_info_coll.find_one({'_id': userid})
+            if not user or user['password'] != oldpass:
+                result['status'] = -1
+                result['text'] = '用户名密码错误'
+            else:
+                user['password'] = password
+                self._user_info_coll.save(user)
+                result['status'] = 0
+            self.json_result = result
         elif self._op == 'upsert_user':
             print 'add user!'
             arguments = ujson.loads(self.request.body)

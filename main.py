@@ -32,7 +32,6 @@ from urls import URLS
 
 # # --- util ---
 from backend.common.redisproxy import RedisProxy
-from backend.common.uploadengine import UploadEngine
 from backend.common.userManager import UserManager
 
 reload(sys)

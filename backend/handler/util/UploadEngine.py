@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #
+# Copyright 2014 DuoKan
 #
 
 import time
@@ -7,15 +8,15 @@ from urllib import quote
 import logging
 import requests
 
+
 class UploadEngine(object):
-        
     MAX_RETRY_TIMES = 3
 
     def __init__(self, uploader_fmt):
         self._logger = logging.getLogger(self.__class__.__name__)
         self._uploader_fmt = uploader_fmt
-        
-    def upload(self, *args):        
+
+    def upload(self, *args):
         self._finalUrl = self._uploader_fmt % tuple(quote(item) for item in args)
         currentTimes = 0
         while currentTimes <= self.MAX_RETRY_TIMES:
@@ -33,8 +34,8 @@ class UploadEngine(object):
                         continue
                 else:
                     self._logger.error("Send %s occur error:%s", self._finalUrl, r.status_code)
-                    return {'status': -1, 'url': '', 'md5':''}
+                    return {'status': -1, 'url': '', 'md5': ''}
             except Exception as ex:
                 self._logger.error("Send file [%s] failed, due to: %s", str(args), str(ex), exc_info=1)
-                
-        return {'status': -1, 'url': '', 'md5':''}
+
+        return {'status': -1, 'url': '', 'md5': ''}
