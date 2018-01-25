@@ -10,7 +10,7 @@ class Util(object):
         return results
 
     @classmethod
-    def getAllUnderling(cls, self, coll):
+    def getAllUnderlingWithSelf(cls, self, coll):
 
         # query = {"_id": {"$nin": ['admin', self]}, "leader": self}
         query = {"_id": {"$ne": 'admin'}}
@@ -25,6 +25,23 @@ class Util(object):
         me = coll.find_one({'_id': self})
         result = []
         result.append(me)
+        result.extend(users)
+        return result
+
+    @classmethod
+    def getAllUnderling(cls, self, coll):
+
+        # query = {"_id": {"$nin": ['admin', self]}, "leader": self}
+        query = {"_id": {"$ne": 'admin'}}
+        allUsers = list(coll.find(query))
+        users = []
+        userLen = len(allUsers)
+        if allUsers != None and userLen > 0:
+            users = cls.getAllUnderlingFromList(self, allUsers)
+        else:
+            return []
+
+        result = []
         result.extend(users)
         return result
 

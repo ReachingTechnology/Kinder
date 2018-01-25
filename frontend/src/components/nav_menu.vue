@@ -32,7 +32,8 @@
       <template slot="title">安全秘书</template>
       <el-menu-item index="6-1">我的职责提醒消息</el-menu-item>
       <el-menu-item index="6-2">我的工作通知</el-menu-item>
-      <el-menu-item index="6-3">工作通知设置列表</el-menu-item>
+      <el-menu-item index="6-3">下属职责提醒消息</el-menu-item>
+      <el-menu-item index="6-4">工作通知设置列表</el-menu-item>
     </el-submenu>
     <el-submenu index="7">
       <template slot="title">文件管理</template>
@@ -115,12 +116,15 @@
             this.$router.push({name: 'AllUserTaskExecStat', params: params})
             break
           case '6-1':
-            this.$router.push({name: 'UserDutyNotificationList'})
+            this.$router.push({name: 'UserDutyNotificationList', params: {type: 'SELF'}})
             break
           case '6-2':
             this.$router.push({name: 'UserInformList'})
             break
           case '6-3':
+            this.$router.push({name: 'UnderlineDutyNotificationList', params: {type: 'UNDERLINE'}})
+            break
+          case '6-4':
             this.$router.push({name: 'InformList'})
             break
           case '8-1':
@@ -150,9 +154,19 @@
       }
     },
     created: function () {
-      if (this.active_menu === '4-1') {
+      if (this.active_menu === '4-1' && this.user._id !== '') {
         this.$router.push({name: 'UserDayTaskList', params: {'timeType': DUTY_TIME_TYPE_ROUTINE}})
         SET_ACTIVE_MENU({'active_menu': this.active_menu})
+      }
+    },
+    watch: {
+      user: function (val, oldVal) {
+        if (val._id !== oldVal._id) {
+          if (this.active_menu === '4-1' && this.user._id !== '') {
+            this.$router.push({name: 'UserDayTaskList', params: {'timeType': DUTY_TIME_TYPE_ROUTINE}})
+            SET_ACTIVE_MENU({'active_menu': this.active_menu})
+          }
+        }
       }
     },
     data: function () {

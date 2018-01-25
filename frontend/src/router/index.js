@@ -115,8 +115,16 @@ const router = new Router({
       }
     },
     {
-      path: '/user_duty_notification',
+      path: '/user_duty_notification/:type',
       name: 'UserDutyNotificationList',
+      component: UserDutyNotificationList,
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: '/underline_duty_notification/:type',
+      name: 'UnderlineDutyNotificationList',
       component: UserDutyNotificationList,
       meta: {
         keepAlive: false

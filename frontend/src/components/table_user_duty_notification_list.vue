@@ -8,6 +8,13 @@
       :default-sort = "{prop: 'informSendTime', order: 'descending'}"
       :row-class-name="tableRowClassName">
       <el-table-column
+        :v-show="type === 'UNDERLINE'"
+        prop="userName"
+        label="下属姓名"
+        align="center"
+        sortable>
+      </el-table-column>
+      <el-table-column
         prop="msgPriorityDisplay"
         label="消息等级"
         align="center"
@@ -54,11 +61,11 @@
 </style>
 <script>
   import { mapActions, mapGetters } from 'vuex'
-  import { GET_DUTY_NOTIFICATION_BY_USER } from '../store/mutation_types'
+  import { GET_DUTY_NOTIFICATION_BY_USER, GET_UNDERLINE_DUTY_NOTIFICATION_BY_USER } from '../store/mutation_types'
   import InformEditPanel from './edit_panel_inform.vue'
   import { NOTIFY_PRIORITY} from '../store/common_defs'
   import Moment from 'moment'
-  //  import Util from '../store/utils'
+  import Util from '../store/utils'
   //  import ObjUtil from '../utils/ObjUtil'
 
   export default {
@@ -67,28 +74,56 @@
       tableRowClassName (row, index) {
         return ''
       },
-      ...mapActions([GET_DUTY_NOTIFICATION_BY_USER])
+      ...mapActions([GET_DUTY_NOTIFICATION_BY_USER, GET_UNDERLINE_DUTY_NOTIFICATION_BY_USER])
     },
     computed: {
-      ...mapGetters(['userDutyNotification']),
+      ...mapGetters(['userDutyNotification', 'underlineDutyNotification']),
       messages () {
         var data = []
-        for (var i = 0, len = this.userDutyNotification.length; i < len; i++) {
-          var item = this.userDutyNotification[i]
-          if (item.notifyTimeType === 'after') {
-            item.msgContent = '应该于' + Moment(item.realendtime * 1000).format('H:mm') + '完成执行.'
-          } else {
-            item.msgContent = '将于' + Moment(item.realstarttime * 1000).format('H:mm') + '开始执行.'
+        var i = 0, len = 0
+        var item = {}
+        if (this.type === 'SELF') {
+          for (i = 0, len = this.userDutyNotification.length; i < len; i++) {
+            item = this.userDutyNotification[i]
+            if (item.notifyTimeType === 'after') {
+              item.msgContent = '应该于' + Moment(item.realendtime * 1000).format('H:mm') + '完成执行.'
+            } else {
+              item.msgContent = '将于' + Moment(item.realstarttime * 1000).format('H:mm') + '开始执行.'
+            }
+            item.msgArriveTimeDisplay = Moment(item.informSendTime * 1000).format('YY年M月D日 H:mm')
+            item.msgPriorityDisplay = NOTIFY_PRIORITY[item.notifyPriority]
+            data.push(item)
           }
-          item.msgArriveTimeDisplay = Moment(item.informSendTime * 1000).format('YY年M月D日 H:mm')
-          item.msgPriorityDisplay = NOTIFY_PRIORITY[item.notifyPriority]
-          data.push(item)
+        } else {
+          for (i = 0, len = this.underlineDutyNotification.length; i < len; i++) {
+            item = this.underlineDutyNotification[i]
+            item.userName = Util.getUserName(item.userid)
+            if (item.notifyTimeType === 'after') {
+              item.msgContent = '应该于' + Moment(item.realendtime * 1000).format('H:mm') + '完成执行.'
+            } else {
+              item.msgContent = '将于' + Moment(item.realstarttime * 1000).format('H:mm') + '开始执行.'
+            }
+            item.msgArriveTimeDisplay = Moment(item.informSendTime * 1000).format('YY年M月D日 H:mm')
+            item.msgPriorityDisplay = NOTIFY_PRIORITY[item.notifyPriority]
+            data.push(item)
+          }
         }
         return data
+      },
+      type () {
+        return this.$route.params.type
       }
     },
     created: function () {
-      this.GET_DUTY_NOTIFICATION_BY_USER()
+    },
+    beforeRouteEnter: function (to, from, next) {
+      next(vm => {
+        if (vm.type === 'SELF') {
+          vm.GET_DUTY_NOTIFICATION_BY_USER()
+        } else {
+          vm.GET_UNDERLINE_DUTY_NOTIFICATION_BY_USER()
+        }
+      })
     },
     data: () => {
       return {

@@ -70,7 +70,7 @@ class NotifyHandler(AsynchronousHandler):
                     daycount = currentdate.day - 1
             print 'get statistic'
             print daycount
-            alluser = Util.getAllUnderling(self.get_current_user(), self._user_info_coll)
+            alluser = Util.getAllUnderlingWithSelf(self.get_current_user(), self._user_info_coll)
             allrole = list(self._role_info_coll.find())
             allDuties = list(self._duty_info_coll.find().sort('starttime', 1))
             if alluser and allrole:
@@ -116,7 +116,7 @@ class NotifyHandler(AsynchronousHandler):
             startDate = datetime.datetime.fromtimestamp(starttime)
             endDate = datetime.datetime.fromtimestamp(endtime)
             daycount = (endDate - startDate).days
-            alluser = Util.getAllUnderling(self.get_current_user(), self._user_info_coll)
+            alluser = Util.getAllUnderlingWithSelf(self.get_current_user(), self._user_info_coll)
             allrole = list(self._role_info_coll.find())
             allDuties = list(self._duty_info_coll.find().sort('starttime', 1))
             if alluser and allrole:

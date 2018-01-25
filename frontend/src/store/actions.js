@@ -2,7 +2,7 @@
  * Created by HOZ on 28/08/2017.
  */
 import axios from 'axios'
-import { SET_ACTIVE_MENU, GET_ALL_USER_TASK_EXEC_DATA, GET_ALL_USER_TASK_EXEC_DATA_BY_DATERANGE, USER_LOGIN, USER_LOGOUT, USER_CHANGE_PASS,
+import { SET_ACTIVE_MENU, GET_ALL_USER_TASK_EXEC_DATA, GET_ALL_USER_TASK_EXEC_DATA_BY_DATERANGE, GET_CURRENT_USER, USER_LOGIN, USER_LOGOUT, USER_CHANGE_PASS,
   GET_DUTY_BY_USER, UPSERT_USER_ACCOUNT, GET_ALL_USER_ACCOUNT, REMOVE_USERS,
   GET_ALL_USER_GROUP, UPSERT_USER_GROUP, REMOVE_USER_GROUPS,
   GET_ALL_ROLE, UPSERT_ROLE, REMOVE_ROLES,
@@ -10,10 +10,11 @@ import { SET_ACTIVE_MENU, GET_ALL_USER_TASK_EXEC_DATA, GET_ALL_USER_TASK_EXEC_DA
   COMMIT_TASK_EXEC_INFO, GET_TASK_EXEC_DATA_BY_DATE, GET_USER_TASK_EXEC_DATA_BY_DATERANGE, GET_ONE_TASK_EXEC_DATA_BY_DATERANGE,
   GET_ALL_DUTY, UPSERT_DUTY, REMOVE_DUTIES, GET_ALL_DUTY_CATEGORY, UPSERT_DUTY_CATEGORY, REMOVE_DUTY_CATEGORIES,
   GET_ALL_USER_LOCATION, UPSERT_USER_LOCATION,
-  GET_ALL_INFORM, GET_DUTY_NOTIFICATION_BY_USER, GET_INFORM_BY_USER, UPSERT_INFORM, REMOVE_INFORMS, GET_NEW_DUTY_NOTIFICATION_COUNT, GET_NEW_INFORM_COUNT } from './mutation_types'
+  GET_ALL_INFORM, GET_DUTY_NOTIFICATION_BY_USER, GET_UNDERLINE_DUTY_NOTIFICATION_BY_USER, GET_INFORM_BY_USER, UPSERT_INFORM, REMOVE_INFORMS, GET_NEW_DUTY_NOTIFICATION_COUNT, GET_NEW_INFORM_COUNT } from './mutation_types'
 // import dateUtil from '../utils/DateUtil'
 import state from './state'
 import dateUtil from '../utils/DateUtil'
+import store from './store'
 
 axios.defaults.baseURL = state.backend_uri
 // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN
@@ -24,11 +25,21 @@ axios.defaults.headers.post['X-Requested-With'] = 'XMLHttpRequest'
 
 function handleError (error) {
   if (error.response.status === 401) {
-    state.user._id = ''
+    var empty_user = {'_id': '', 'name': ''}
+    store.commit('SET_USER', empty_user)
   }
 }
 
 const actions = {
+  [ GET_CURRENT_USER ]: function (store, param) {
+    axios.get('/user/get_current_user')
+        .then(function (response) {
+          console.log('get current user:')
+          console.log(response.data)
+          store.commit('SET_USER', response.data)
+        })
+        .catch(handleError)
+  },
   /*
    Login/logout
    */
@@ -42,10 +53,13 @@ const actions = {
       .catch(handleError)
   },
   [ USER_LOGOUT ]: function (store, param) {
-    var data = {}
-    data._id = ''
-    data.name = ''
-    store.commit('SET_USER', data)
+    axios.post('/user/user_logout', param)
+      .then(function (response) {
+        console.log('user logout')
+        console.log(response.data)
+        store.commit('SET_USER', response.data)
+      })
+      .catch(handleError)
   },
   [ USER_CHANGE_PASS ]: function (store, param) {
     store.state.changePassFail = true
@@ -411,6 +425,17 @@ const actions = {
         console.log('get duty notifcation by user:')
         console.log(response.data)
         store.commit('SET_USER_DUTY_NOTIFICATION_DATA', response.data)
+      })
+      .catch(handleError)
+  },
+  [ GET_UNDERLINE_DUTY_NOTIFICATION_BY_USER ]: function (store, param) {
+    'use strict'
+    console.log('query underline duty notification by user:::::::')
+    axios.post('/inform/get_underline_duty_notification_by_user', {'userid': store.state.user['_id'], 'queryTime': dateUtil.getNow(), 'startofday': dateUtil.getStartOfToday()})
+      .then(function (response) {
+        console.log('get underline duty notifcation by user:')
+        console.log(response.data)
+        store.commit('SET_UNDERLINE_DUTY_NOTIFICATION_DATA', response.data)
       })
       .catch(handleError)
   },

@@ -13,7 +13,7 @@
   import UserLogin from './components/user_login.vue'
   import NavMenu from './components/nav_menu.vue'
   import { mapGetters, mapActions } from 'vuex'
-  import { GET_ALL_USER_ACCOUNT, GET_ALL_ROLE, GET_ALL_DUTY, GET_ALL_PERMISSION, GET_ALL_PERMISSION_ROLE, GET_ALL_USER_TASK_EXEC_DATA, USER_LOGOUT, GET_INFORM_BY_USER } from './store/mutation_types'
+  import { GET_CURRENT_USER, GET_ALL_USER_ACCOUNT, GET_ALL_ROLE, GET_ALL_DUTY, GET_ALL_PERMISSION, GET_ALL_PERMISSION_ROLE, GET_ALL_USER_TASK_EXEC_DATA, USER_LOGOUT, GET_NEW_INFORM_COUNT, GET_NEW_DUTY_NOTIFICATION_COUNT } from './store/mutation_types'
   import WarningDialog from './components/warning_dialog.vue'
   export default {
     name: 'app',
@@ -33,18 +33,23 @@
       }
     },
     created: function () {
-//      this.user._id = '000001'
-//      this.user.role = ['ROLE_0001', 'ROLE_0004']
-//      this.user.name = 'zhanghao'
-      this.GET_ALL_PERMISSION_ROLE()
-      this.GET_ALL_PERMISSION()
-      this.GET_ALL_USER_ACCOUNT()
-      this.GET_ALL_ROLE()
-      this.GET_ALL_DUTY()
-      this.getUserInform()
+      this.GET_CURRENT_USER()
+    },
+    watch: {
+      user: function () {
+        if (this.user._id !== '') {
+          this.GET_ALL_PERMISSION_ROLE()
+          this.GET_ALL_PERMISSION()
+          this.GET_ALL_USER_ACCOUNT()
+          this.GET_ALL_ROLE()
+          this.GET_ALL_DUTY()
+          this.GET_NEW_INFORM_COUNT()
+          this.GET_NEW_DUTY_NOTIFICATION_COUNT()
+        }
+      }
     },
     methods: {
-      ...mapActions([GET_ALL_USER_ACCOUNT, GET_ALL_ROLE, GET_ALL_DUTY, GET_ALL_PERMISSION, GET_ALL_PERMISSION_ROLE, GET_ALL_USER_TASK_EXEC_DATA, USER_LOGOUT, GET_INFORM_BY_USER]),
+      ...mapActions([GET_CURRENT_USER, GET_ALL_USER_ACCOUNT, GET_ALL_ROLE, GET_ALL_DUTY, GET_ALL_PERMISSION, GET_ALL_PERMISSION_ROLE, GET_ALL_USER_TASK_EXEC_DATA, USER_LOGOUT, GET_NEW_INFORM_COUNT, GET_NEW_DUTY_NOTIFICATION_COUNT]),
       menuSelected: function (key) {
         console.log('menu selected:' + key)
         this.menuKey = key
@@ -55,7 +60,7 @@
       },
       handleQuitChoice (choice) {
         if (choice) {
-          this.USER_LOGOUT()
+          this.USER_LOGOUT({userid: this.user._id})
           window.location.href = this.backend_uri
         }
         this.showWarningDialog = false

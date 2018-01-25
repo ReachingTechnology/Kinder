@@ -83,7 +83,11 @@
       }
     },
     created: function () {
-      this.GET_INFORM_BY_USER()
+    },
+    beforeRouteEnter: function (to, from, next) {
+      next(vm => {
+        vm.GET_INFORM_BY_USER()
+      })
     },
     data: () => {
       return {

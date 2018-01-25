@@ -9,7 +9,8 @@ import ujson
 
 from backend.handler.async_handler import AsynchronousHandler
 from backend.common.consts import Const
-
+from backend.handler.util.DateUtil import DateUtil
+from backend.handler.util.Util import Util
 
 class InformHandler(AsynchronousHandler):
     def initialize(self, op):
@@ -70,7 +71,13 @@ class InformHandler(AsynchronousHandler):
                 super(InformHandler, self).process_request()
                 return
             userid = arguments['userid']
-            queryTime = arguments['queryTime']
+            userAccess = self._user_duty_notification_access_coll.find_one({'userid': userid})
+            userLastAccessTime = 0
+            if userAccess:
+                userLastAccessTime = userAccess['lastAccessTime']
+            else:
+                userAccess = {}
+            queryTime = DateUtil.get_current_time()
             startofday = arguments['startofday']
             allUserDuties = []
             user = self._user_info_coll.find_one({'_id': userid})
@@ -80,10 +87,9 @@ class InformHandler(AsynchronousHandler):
                 if len(groupDuties) > 0:
                     userDuties = userDuties + groupDuties
                 allUserDuties = self._duty_info_coll.find({"_id": {"$in": userDuties}}).sort('starttime', 1)
-
             result = []
             for index, duty in enumerate(allUserDuties):
-                if not self.shouldPickDuty(duty, startofday):
+                if not self.shouldPickDuty(duty, startofday) or not duty['notify_user']:
                     # 如果此职责不需要显示在查询的date的职责列表上的话，直接跳过
                     continue
                 dutyId = duty['_id']
@@ -97,20 +103,20 @@ class InformHandler(AsynchronousHandler):
                         for notify in duty['notify_user_setting_list']:
                             match = False
                             if notify['timeType'] == Const.NOTIFY_TIME_TYPE_BEFORE \
-                                and queryTime >= (dutyRealStarttime - notify['timeLength'] * 60):
+                                and queryTime >= (dutyRealStarttime - notify['timeLength'] * 60 > userLastAccessTime):
                                 item['informSendTime'] = (dutyRealStarttime - notify['timeLength'] * 60)
                                 match = True
                             elif notify['timeType'] == Const.NOTIFY_TIME_TYPE_AFTER \
-                                and queryTime >= (dutyRealEndtime + notify['timeLength'] * 60):
+                                and queryTime >= (dutyRealEndtime + notify['timeLength'] * 60 > userLastAccessTime):
                                 item['informSendTime'] = (dutyRealEndtime + notify['timeLength'] * 60)
                                 match = True
                             elif notify['timeType'] == Const.NOTIFY_TIME_TYPE_SPECIFIC \
-                                and (queryTime >= (notify['timePoint'] and queryTime < (notify['timePoint'] + 3*60))):
+                                and (queryTime >= notify['timePoint']  > userLastAccessTime):
                                 item['informSendTime'] = notify['timePoint']
                                 match = True
 
                             if match:
-                                item['_id'] = '{:s}_{:s}_{:d}'.format(dutyId, userid, startofday)
+                                item['_id'] = '{:s}_{:s}_{:d}_{:s}'.format(userid, dutyId, startofday, notify['timeType'])
                                 item['userid'] = userid
                                 item['taskid'] = dutyId
                                 item['taskname'] = duty['name']
@@ -121,7 +127,82 @@ class InformHandler(AsynchronousHandler):
                                 item['notifyTimeType'] = notify['timeType']
                                 item['notifyType'] = notify['notifyType']
                                 item['notifyPriority'] = notify['notifyPriority']
+                                item['createTime'] = queryTime
                                 result.append(item)
+                userAccess['userid'] = userid
+                userAccess['lastAccessTime'] = queryTime
+                self._user_duty_notification_access_coll.save(userAccess)
+            self.json_result = result
+        elif self._op == 'get_underline_duty_notification_by_user':
+            arguments = ujson.loads(self.request.body)
+            if not 'userid' in arguments:
+                self.json_result = []
+                super(InformHandler, self).process_request()
+                return
+            userid = arguments['userid']
+            userAccess = self._user_duty_notification_access_coll.find_one({'userid': userid})
+            userLastAccessTime = 0
+            if userAccess:
+                userLastAccessTime = userAccess['lastAccessTime']
+            else:
+                userAccess = {}
+            queryTime = DateUtil.get_current_time()
+            startofday = arguments['startofday']
+            allUserDuties = []
+            result = []
+            allUnderlineUsers = Util.getAllUnderling(userid, self._user_info_coll)
+            if len(allUnderlineUsers) > 0:
+                for user in allUnderlineUsers:
+                    userDuties = user['duty']
+                    groupDuties = self.getUserGroupDuty(user['_id'])
+                    if len(groupDuties) > 0:
+                        userDuties = userDuties + groupDuties
+                    allUserDuties = self._duty_info_coll.find({"_id": {"$in": userDuties}}).sort('starttime', 1)
+
+                    for index, duty in enumerate(allUserDuties):
+                        if not self.shouldPickDuty(duty, startofday) or not duty['notify_manager']:
+                            # 如果此职责不需要显示在查询的date的职责列表上的话，直接跳过
+                            continue
+                        dutyId = duty['_id']
+                        if 'notify_user_setting_list' in duty and len(duty['notify_manager_setting_list']) > 0:
+                            query = {'userid': user['_id'], 'taskid': dutyId, 'startofday': startofday}
+                            data = self._task_exec_data_coll.find_one(query)
+                            item = {}
+                            if not data:
+                                dutyRealStarttime = duty['startime'] if (duty['timeType'] == Const.DUTY_TIME_TYPE_SPECIFIC) else startofday + duty['starttime']
+                                dutyRealEndtime = duty['endtime'] if (duty['timeType'] == Const.DUTY_TIME_TYPE_SPECIFIC) else startofday + duty['endtime']
+                                for notify in duty['notify_user_setting_list']:
+                                    match = False
+                                    if notify['timeType'] == Const.NOTIFY_TIME_TYPE_BEFORE \
+                                        and queryTime >= (dutyRealStarttime - notify['timeLength'] * 60 > userLastAccessTime):
+                                        item['informSendTime'] = (dutyRealStarttime - notify['timeLength'] * 60)
+                                        match = True
+                                    elif notify['timeType'] == Const.NOTIFY_TIME_TYPE_AFTER \
+                                        and queryTime >= (dutyRealEndtime + notify['timeLength'] * 60 > userLastAccessTime):
+                                        item['informSendTime'] = (dutyRealEndtime + notify['timeLength'] * 60)
+                                        match = True
+                                    elif notify['timeType'] == Const.NOTIFY_TIME_TYPE_SPECIFIC \
+                                        and (queryTime >= notify['timePoint']  > userLastAccessTime):
+                                        item['informSendTime'] = notify['timePoint']
+                                        match = True
+
+                                    if match:
+                                        item['_id'] = '{:s}_{:s}_{:s}_{:d}_{:s}'.format(userid, user['_id'], dutyId, startofday, notify['timeType'])
+                                        item['userid'] = user['_id']
+                                        item['taskid'] = dutyId
+                                        item['taskname'] = duty['name']
+                                        item['taskDescr'] = duty['descr']
+                                        item['realstarttime'] = dutyRealStarttime
+                                        item['realendtime'] = dutyRealEndtime
+                                        item['dutyTimeType'] = duty['timeType']
+                                        item['notifyTimeType'] = notify['timeType']
+                                        item['notifyType'] = notify['notifyType']
+                                        item['notifyPriority'] = notify['notifyPriority']
+                                        item['createTime'] = queryTime
+                                        result.append(item)
+                userAccess['userid'] = userid
+                userAccess['lastAccessTime'] = queryTime
+                self._user_duty_notification_access_coll.save(userAccess)
             self.json_result = result
         elif self._op == 'get_inform_by_user':
             arguments = ujson.loads(self.request.body)
@@ -130,14 +211,22 @@ class InformHandler(AsynchronousHandler):
                 super(InformHandler, self).process_request()
                 return
             userid = arguments['userid']
-            queryTime = arguments['queryTime']
+            userAccess = self._user_inform_access_coll.find_one({'userid': userid})
+            userLastAccessTime = 0
+            if userAccess:
+                userLastAccessTime = userAccess['lastAccessTime']
+            else:
+                userAccess = {}
+            queryTime = DateUtil.get_current_time()
             startofday = arguments['startofday']
-            allInform = list(self._inform_info_coll.find({'sendTime': {'lte': queryTime}}))
+            allInform = list(self._inform_info_coll.find({'sendTime': {'$lte': queryTime, '$gt': userLastAccessTime}}))
             result = []
             for inform in allInform:
                 if userid in inform['informUserList']:
                     result.append(inform)
-
+            userAccess['userid'] = userid
+            userAccess['lastAccessTime'] = queryTime
+            self._user_inform_access_coll.save(userAccess)
             self.json_result = result
         elif self._op == 'get_new_duty_notification_count':
             arguments = ujson.loads(self.request.body)
@@ -150,7 +239,9 @@ class InformHandler(AsynchronousHandler):
             userLastAccessTime = 0
             if userAccess:
                 userLastAccessTime = userAccess['lastAccessTime']
-            queryTime = arguments['queryTime']
+            else:
+                userAccess = {}
+            queryTime = DateUtil.get_current_time()
             startofday = arguments['startofday']
             allUserDuties = []
             user = self._user_info_coll.find_one({'_id': userid})
@@ -188,13 +279,15 @@ class InformHandler(AsynchronousHandler):
                                 item['informSendTime'] = (dutyRealEndtime + notify['timeLength'] * 60)
                                 match = True
                             elif notify['timeType'] == Const.NOTIFY_TIME_TYPE_SPECIFIC \
-                                    and (queryTime >= (
-                                        notify['timePoint'] and queryTime < (notify['timePoint'] + 3 * 60)) > userLastAccessTime):
+                                    and (queryTime >= notify['timePoint']  > userLastAccessTime):
                                 item['informSendTime'] = notify['timePoint']
                                 match = True
 
                             if match:
                                 count += 1
+            userAccess['userid'] = userid
+            userAccess['lastAccessTime'] = queryTime
+            self._user_duty_notification_access_coll.save(userAccess)
             result['count'] = count
             self.json_result = result
         elif self._op == 'get_new_inform_count':
@@ -208,11 +301,16 @@ class InformHandler(AsynchronousHandler):
             userLastAccessTime = 0
             if userAccess:
                 userLastAccessTime = userAccess['lastAccessTime']
+            else:
+                userAccess = {}
             queryTime = arguments['queryTime']
-            allInform = list(self._inform_info_coll.find({'sendTime': {'lte': queryTime, 'gt': userLastAccessTime}}))
+            allInform = list(self._inform_info_coll.find({'sendTime': {'$lte': queryTime, '$gt': userLastAccessTime}}))
             result = {}
             result['count'] = len(allInform)
 
+            userAccess['userid'] = userid
+            userAccess['lastAccessTime'] = queryTime
+            self._user_inform_access_coll.save(userAccess)
             self.json_result = result
         elif self._op == 'remove_inform':
             arguments = ujson.loads(self.request.body)

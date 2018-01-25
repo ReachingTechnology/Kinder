@@ -6,6 +6,7 @@
 import tornado.web
 
 from backend.handler.auth.LoginHandler import LoginHandler
+from backend.handler.auth.LogoutHandler import LogoutHandler
 # from backend.handler.userLogin import UserLogin
 from backend.handler.query.QueryHandler import QueryHandler
 from backend.handler.management.UserAccountHandler import UserAccountHandler
@@ -23,6 +24,7 @@ URLS = [
     # (r"/login", UserLogin),
     (r"/user/get_current_user", LoginHandler, {'op':'get_current_user'}),
     (r"/user/user_login", LoginHandler, {'op':'login'}),
+    (r"/user/user_logout", LogoutHandler, {'op':'logout'}),
     (r"/user/change_pass", UserAccountHandler, {'op':'change_pass'}),
 
     (r"/management/upsert_user", UserAccountHandler, {'op':'upsert_user'}),
@@ -69,6 +71,7 @@ URLS = [
     (r"/inform/upsert_inform", InformHandler, {'op':'upsert_inform'}),
     (r"/inform/remove_inform", InformHandler, {'op':'remove_inform'}),
     (r"/inform/get_duty_notification_by_user", InformHandler, {'op':'get_duty_notification_by_user'}),
+    (r"/inform/get_underline_duty_notification_by_user", InformHandler, {'op':'get_underline_duty_notification_by_user'}),
     (r"/inform/query_inform_by_user", InformHandler, {'op':'get_inform_by_user'}),
     (r"/inform/get_new_duty_notification_count", InformHandler, {'op':'get_new_duty_notification_count'}),
     (r"/inform/get_new_inform_count", InformHandler, {'op':'get_new_inform_count'}),
