@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-#
-# Copyright 2014 DuoKan
-#
+
 
 import time
 from urllib import quote

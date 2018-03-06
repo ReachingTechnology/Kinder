@@ -10,6 +10,7 @@ import sys
 # import uuid
 # import base64
 import time
+import logging
 
 # tornado
 import tornado.httpserver
@@ -33,6 +34,7 @@ from urls import URLS
 # # --- util ---
 from backend.common.redisproxy import RedisProxy
 from backend.common.userManager import UserManager
+from backend.handler.util.InformScanJob import InformScanJob
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -72,7 +74,8 @@ class KinderApplication(tornado.web.Application):
         # handlers.append((r"/static/(.*)", tornado.web.StaticFileHandler, dict(path=settings['static_path'])))
         handlers.append((r"/(.*)", tornado.web.StaticFileHandler, dict(default_filename='index.html', path=os.path.dirname(__file__))))
         tornado.web.Application.__init__(self, handlers, **settings)
-
+        scheduler = InformScanJob(settings)
+        scheduler.startScan()
 
 def initialize_server():
     init_connection_pool()
@@ -91,7 +94,6 @@ def initialize_server():
     #
     UserManager.instance().initialize(ConfigSettings['redis_proxy'])
     # init_role_list()
-
 
 def init_connection_pool():
 

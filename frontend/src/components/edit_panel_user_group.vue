@@ -14,7 +14,7 @@
               <el-button @click="editLeader">选择负责人</el-button>
             </div>
             <div style="display: inline-block;">
-              <span> {{ leaderName }}</span>
+              <span>  {{ leaderName }}</span>
             </div>
           </div>
         </el-form-item>

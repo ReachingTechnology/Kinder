@@ -29,7 +29,7 @@
     "default_page_size": 20,
     "mfs_upload_url": "http://127.0.0.1:9696/mfs/upload/poster?url=%s&type=%s",
     "BACKUP_APK_URL":"http://127.0.0.1:9696/mfs/upload/apk?type=apk&url=%s&name=%s",
-    "LOG_PATH": "access.log",
+    "LOG_PATH": "kinder.log",
     "DEBUG": true,
     "CLUSTER_NUM" : 1
 }

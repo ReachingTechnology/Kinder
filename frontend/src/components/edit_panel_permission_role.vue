@@ -10,10 +10,10 @@
       <el-form-item label="角色权限">
         <template>
         <br/>
-        <div v-for="categoryid in Object.keys(allPermission)">
+        <div align="left" v-for="categoryid in Object.keys(allPermission)">
           <!--<el-checkbox :indeterminate="isIndeterminate[categoryid]" v-model="permissionCategory[categoryid]" @change="(event) => {handleCheckCategoryChange(event, categoryid)}">{{ allPermission[categoryid].categoryName }}</el-checkbox>-->
           <!--<div style="margin: 15px 0;"></div>-->
-          <div align="left"><span>{{ allPermission[categoryid].categoryName }}</span></div>
+          <div align="left"><span>  {{ allPermission[categoryid].categoryName }}</span></div>
           <el-checkbox-group v-model="checkedPermissions[categoryid]" @change="(value) => {handleCheckedPermissionChange(value, categoryid)}">
             <el-checkbox v-for="permission in allPermission[categoryid].permissions" :name="categoryid" :value="permission.id" :label="permission.name"></el-checkbox>
           </el-checkbox-group>

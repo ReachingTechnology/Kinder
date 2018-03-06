@@ -1,8 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-#
-# Copyright 2011 DuoKan
-#
+
 
 import datetime
 import logging

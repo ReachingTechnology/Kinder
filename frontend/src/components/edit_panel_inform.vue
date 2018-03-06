@@ -9,7 +9,17 @@
         <el-form-item label="通知内容" :label-width="formLabelWidth">
           <el-input v-model="current_inform.descr" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item align="left" label="提醒类型">
+        <el-form-item align="left">
+          <div>
+            <div style="display: inline-block">
+              <el-button @click="editInformer">选择通知发送人</el-button>
+            </div>
+            <div style="display: inline-block">
+              <span>  {{ current_inform.senderName }}</span>
+            </div>
+          </div>
+        </el-form-item>
+        <el-form-item align="left" label="通知方式">
           <el-select v-model="current_inform.notifyType">
             <el-option :label="NOTIFY_TYPE['message_queue']" value="message_queue"/>
             <el-option :label="NOTIFY_TYPE['system_alarm']" value="system_alarm"/>
@@ -31,7 +41,14 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item align="left">
-          <el-button @click="editInformUser">选择被通知人</el-button>
+          <div>
+            <div style="display: inline-block;">
+              <el-button @click="editInformee">选择被通知人</el-button>
+            </div>
+            <div style="display: inline-block;">
+              <span>  {{ informeeList }}</span>
+            </div>
+          </div>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -39,13 +56,15 @@
         <el-button type="primary" @click="commitEdit">提交</el-button>
       </span>
     </el-dialog>
-    <tree-user-select @selectedUser="selectUserOver" @showEdit="showEditOver" title="选择被通知人" :dialogVisible="showInformUserEdit" :selectedUser="current_inform.informUserList"></tree-user-select>
+    <tree-user-select @selectedUser="selectInformeeOver" @showEdit="showInformeeEditOver" title="选择被通知人" :dialogVisible="showInformeeEdit" :selectedUser="current_inform.informUserList"></tree-user-select>
+    <tree-user-select @selectedUser="selectInformerOver" @showEdit="showInformerEditOver" title="选择通知发送人" :dialogVisible="showInformerEdit" :selectedUser="informerList"></tree-user-select>
   </div>
 </template>
 <script>
   import {mapGetters, mapActions} from 'vuex'
   import dateUtil from '../utils/DateUtil'
   import ObjUtil from '../utils/ObjUtil'
+  import Util from '../store/utils'
   import {UPSERT_INFORM} from '../store/mutation_types'
   import {NOTIFY_TYPE, NOTIFY_PRIORITY} from '../store/common_defs'
   import TreeUserSelect from './tree_user_select.vue'
@@ -69,15 +88,31 @@
       handleClose () {
         this.cancelEdit()
       },
-      editInformUser () {
-        this.showInformUserEdit = true
+      editInformee () {
+        this.showInformeeEdit = true
       },
-      showEditOver () {
-        this.showInformUserEdit = false
+      editInformer () {
+        this.showInformerEdit = true
       },
-      selectUserOver (user) {
+      showInformeeEditOver () {
+        this.showInformeeEdit = false
+      },
+      selectInformeeOver (user) {
+        console.log(user)
         this.current_inform.informUserList = user
-        this.showInformUserEdit = false
+        this.showInformeeEdit = false
+      },
+      showInformerEditOver () {
+        this.showInformerEdit = false
+      },
+      selectInformerOver (user) {
+        if (user.length === 0) {
+          this.current_inform.sender = ''
+        } else {
+          this.current_inform.sender = user[0]
+        }
+        this.current_inform.senderName = Util.getUserName(this.current_inform.sender)
+        this.showInformerEdit = false
       },
       ...mapActions([UPSERT_INFORM])
     },
@@ -86,11 +121,27 @@
         if (val === true) {
           this.current_inform = ObjUtil.clone(this.edited_inform)
           this.current_inform.sendTime = new Date(this.current_inform.sendTime * 1000)
+          this.current_inform.senderName = Util.getUserName(this.current_inform.sender)
         }
       }
     },
     computed: {
-      ...mapGetters([])
+      ...mapGetters([]),
+      informeeList () {
+        var data = []
+        var idList = this.current_inform.informUserList
+        for (var i = 0, len = idList.length; i < len; i++) {
+          data.push(Util.getUserName(idList[i]))
+        }
+        return data.join(', ')
+      },
+      informerList () {
+        var data = []
+        if (this.current_inform.sender !== '') {
+          data.push(this.current_inform.sender)
+        }
+        return data
+      }
     },
     props: ['edited_inform', 'dialogVisible'],
     created: function () {
@@ -102,7 +153,8 @@
         NOTIFY_TYPE: NOTIFY_TYPE,
         NOTIFY_PRIORITY: NOTIFY_PRIORITY,
         current_inform: {},
-        showInformUserEdit: false
+        showInformeeEdit: false,
+        showInformerEdit: false
       }
     }
   }

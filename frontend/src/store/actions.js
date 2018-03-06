@@ -10,7 +10,8 @@ import { SET_ACTIVE_MENU, GET_ALL_USER_TASK_EXEC_DATA, GET_ALL_USER_TASK_EXEC_DA
   COMMIT_TASK_EXEC_INFO, GET_TASK_EXEC_DATA_BY_DATE, GET_USER_TASK_EXEC_DATA_BY_DATERANGE, GET_ONE_TASK_EXEC_DATA_BY_DATERANGE,
   GET_ALL_DUTY, UPSERT_DUTY, REMOVE_DUTIES, GET_ALL_DUTY_CATEGORY, UPSERT_DUTY_CATEGORY, REMOVE_DUTY_CATEGORIES,
   GET_ALL_USER_LOCATION, UPSERT_USER_LOCATION,
-  GET_ALL_INFORM, GET_DUTY_NOTIFICATION_BY_USER, GET_UNDERLINE_DUTY_NOTIFICATION_BY_USER, GET_INFORM_BY_USER, UPSERT_INFORM, REMOVE_INFORMS, GET_NEW_DUTY_NOTIFICATION_COUNT, GET_NEW_INFORM_COUNT } from './mutation_types'
+  GET_ALL_INFORM, GET_DUTY_NOTIFICATION_BY_USER, GET_UNDERLINE_DUTY_NOTIFICATION_BY_USER, GET_INFORM_BY_USER, UPSERT_INFORM, REMOVE_INFORMS,
+  GET_NEW_DUTY_NOTIFICATION_COUNT, GET_NEW_INFORM_COUNT, CHECK_SINGLE_NOTIFICATION, CHECK_SINGLE_INFORM } from './mutation_types'
 // import dateUtil from '../utils/DateUtil'
 import state from './state'
 import dateUtil from '../utils/DateUtil'
@@ -411,7 +412,7 @@ const actions = {
    */
   [ GET_ALL_INFORM ]: function (store, param) {
     'use strict'
-    axios.get('/inform/query_all_inform ')
+    axios.post('/inform/query_all_inform', {'userid': store.state.user['_id']})
       .then(function (response) {
         store.commit('SET_ALL_INFORM', response.data)
       })
@@ -420,7 +421,7 @@ const actions = {
   [ GET_DUTY_NOTIFICATION_BY_USER ]: function (store, param) {
     'use strict'
     console.log('query duty notification by user:::::::')
-    axios.post('/inform/get_duty_notification_by_user', {'userid': store.state.user['_id'], 'queryTime': dateUtil.getNow(), 'startofday': dateUtil.getStartOfToday()})
+    axios.post('/inform/get_all_duty_notification_by_user', {'userid': store.state.user['_id'], 'pageNum': param.pageNum})
       .then(function (response) {
         console.log('get duty notifcation by user:')
         console.log(response.data)
@@ -442,7 +443,7 @@ const actions = {
   [ GET_INFORM_BY_USER ]: function (store, param) {
     'use strict'
     console.log('query inform by user:::::::')
-    axios.post('/inform/query_inform_by_user', {'userid': store.state.user['_id'], 'queryTime': dateUtil.getNow(), 'startofday': dateUtil.getStartOfToday()})
+    axios.post('/inform/get_all_inform_by_user', {'userid': store.state.user['_id'], 'pageNum': param.pageNum })
       .then(function (response) {
         console.log('get inform by user:')
         console.log(response.data)
@@ -480,6 +481,18 @@ const actions = {
         console.log('got new inform count' + response.data.count)
         store.commit('SET_NEW_INFORM_COUNT', response.data)
       })
+      .catch(handleError)
+  },
+  [ CHECK_SINGLE_NOTIFICATION ]: function (store, param) {
+    axios.post('/inform/check_single_notification', param).then(function (response) {
+      param.isNew = false
+    })
+      .catch(handleError)
+  },
+  [ CHECK_SINGLE_INFORM ]: function (store, param) {
+    axios.post('/inform/check_single_inform', param).then(function (response) {
+      param.isNew = false
+    })
       .catch(handleError)
   }
 }

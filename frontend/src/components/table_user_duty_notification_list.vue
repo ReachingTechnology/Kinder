@@ -8,13 +8,6 @@
       :default-sort = "{prop: 'informSendTime', order: 'descending'}"
       :row-class-name="tableRowClassName">
       <el-table-column
-        :v-show="type === 'UNDERLINE'"
-        prop="userName"
-        label="下属姓名"
-        align="center"
-        sortable>
-      </el-table-column>
-      <el-table-column
         prop="msgPriorityDisplay"
         label="消息等级"
         align="center"
@@ -32,22 +25,29 @@
         align="center"
         sortable>
       </el-table-column>
-      <!--<el-table-column-->
-        <!--label="操作"-->
-        <!--align="center">-->
-        <!--<template scope="scope">-->
-          <!--<div>-->
-            <!--<el-button-->
-              <!--size="small"-->
-              <!--@click="handleEdit(scope.$index, scope.row)" type="success">消息详情</el-button>-->
-          <!--</div>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
+      <el-table-column
+        prop="readStatus"
+        label="状态"
+        align="center"
+        sortable>
+      </el-table-column>
+      <el-table-column
+        label="操作"
+        align="center">
+        <template scope="scope">
+          <div>
+            <el-button
+              size="small"
+              @click="handleEdit(scope.$index, scope.row)" type="success">查看详情</el-button>
+          </div>
+        </template>
+      </el-table-column>
       <!--<el-table-column-->
         <!--type="selection"-->
         <!--width="55">-->
       <!--</el-table-column>-->
     </el-table>
+    <info-panel-user-notification @showEdit="showEditOver" :dialogVisible="showEdit" :edited_notification="selectedNotification"></info-panel-user-notification>
   </div>
 </template>
 <style>
@@ -61,8 +61,8 @@
 </style>
 <script>
   import { mapActions, mapGetters } from 'vuex'
-  import { GET_DUTY_NOTIFICATION_BY_USER, GET_UNDERLINE_DUTY_NOTIFICATION_BY_USER } from '../store/mutation_types'
-  import InformEditPanel from './edit_panel_inform.vue'
+  import { GET_DUTY_NOTIFICATION_BY_USER, GET_UNDERLINE_DUTY_NOTIFICATION_BY_USER, CHECK_SINGLE_NOTIFICATION } from '../store/mutation_types'
+  import InfoPanelUserNotification from './info_panel_user_notification.vue'
   import { NOTIFY_PRIORITY} from '../store/common_defs'
   import Moment from 'moment'
   import Util from '../store/utils'
@@ -74,7 +74,15 @@
       tableRowClassName (row, index) {
         return ''
       },
-      ...mapActions([GET_DUTY_NOTIFICATION_BY_USER, GET_UNDERLINE_DUTY_NOTIFICATION_BY_USER])
+      handleEdit (index, row) {
+        this.CHECK_SINGLE_NOTIFICATION(row)
+        this.showEdit = true
+        this.selectedNotification = row
+      },
+      showEditOver () {
+        this.showEdit = false
+      },
+      ...mapActions([GET_DUTY_NOTIFICATION_BY_USER, GET_UNDERLINE_DUTY_NOTIFICATION_BY_USER, CHECK_SINGLE_NOTIFICATION])
     },
     computed: {
       ...mapGetters(['userDutyNotification', 'underlineDutyNotification']),
@@ -92,6 +100,7 @@
             }
             item.msgArriveTimeDisplay = Moment(item.informSendTime * 1000).format('YY年M月D日 H:mm')
             item.msgPriorityDisplay = NOTIFY_PRIORITY[item.notifyPriority]
+            item.readStatus = item.isNew ? '未读' : '已读'
             data.push(item)
           }
         } else {
@@ -119,7 +128,7 @@
     beforeRouteEnter: function (to, from, next) {
       next(vm => {
         if (vm.type === 'SELF') {
-          vm.GET_DUTY_NOTIFICATION_BY_USER()
+          vm.GET_DUTY_NOTIFICATION_BY_USER({'pageNum': 0})
         } else {
           vm.GET_UNDERLINE_DUTY_NOTIFICATION_BY_USER()
         }
@@ -128,12 +137,12 @@
     data: () => {
       return {
         showEdit: false,
-        selectedInform: {},
+        selectedNotification: {},
         multipleSelection: []
       }
     },
     components: {
-      InformEditPanel
+      InfoPanelUserNotification
     }
   }
 </script>

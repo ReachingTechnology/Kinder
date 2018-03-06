@@ -13,7 +13,6 @@
       <template slot="title">职责管理</template>
       <el-menu-item index="2-1" v-show="Util.hasPermission('PERMISSION_TASK_EDIT_USER_TASK')">职责类别列表</el-menu-item>
       <el-menu-item index="2-2" v-show="Util.hasPermission('PERMISSION_TASK_EDIT_USER_TASK')">岗位职责列表</el-menu-item>
-      <el-menu-item index="2-3">突发事件处理流程</el-menu-item>
     </el-submenu>
     <el-menu-item index="3" v-show="Util.hasPermission('PERMISSION_TASK_QUERY_USER_LOCATION')">员工定位</el-menu-item>
     <el-submenu index="4">
@@ -32,8 +31,8 @@
       <template slot="title">安全秘书</template>
       <el-menu-item index="6-1">我的职责提醒消息</el-menu-item>
       <el-menu-item index="6-2">我的工作通知</el-menu-item>
-      <el-menu-item index="6-3">下属职责提醒消息</el-menu-item>
-      <el-menu-item index="6-4">工作通知设置列表</el-menu-item>
+      <!--<el-menu-item index="6-3">下属职责提醒消息</el-menu-item>-->
+      <el-menu-item index="6-4" v-show="Util.hasPermission('PERMISSION_INFORM_UPSERT')">工作通知设置列表</el-menu-item>
     </el-submenu>
     <el-submenu index="7">
       <template slot="title">文件管理</template>

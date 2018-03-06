@@ -58,3 +58,18 @@ class Util(object):
         else:
             return []
         return users
+
+    @classmethod
+    def getDutyByIds(cls, allDuty, dutyIds):
+        result = []
+        for duty in allDuty:
+            if duty['_id'] in dutyIds:
+                result.append(duty)
+        return result
+
+    @classmethod
+    def getTaskExecData(cls, userid, taskid, startofday, allData):
+        for data in allData:
+            if data['userid'] == userid and data['taskid'] == taskid and data['startofday'] == startofday:
+                return data
+        return None

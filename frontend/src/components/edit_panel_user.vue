@@ -31,7 +31,7 @@
               <el-button @click="editLeader">直接汇报人</el-button>
             </div>
             <div style="display: inline-block;">
-              <span> {{ leaderName }}</span>
+              <span>  {{ leaderName }}</span>
             </div>
           </div>
         </el-form-item>

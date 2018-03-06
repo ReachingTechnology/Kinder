@@ -69,7 +69,6 @@ _Util.prototype.getDutiesByRoleId = function (roleId) {
 _Util.prototype.getDutyCategoryNameById = function (catId) {
   for (var i = 0, len = state.allDutyCategory.length; i < len; i++) {
     if (state.allDutyCategory[i]._id === catId) {
-      console.log('get name:')
       return state.allDutyCategory[i].name
     }
   }

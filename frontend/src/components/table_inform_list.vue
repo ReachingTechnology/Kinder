@@ -6,7 +6,7 @@
                  @click="handleCreate()" type="success">
         添加新通知
       </el-button>
-      <el-button size="large" class="horizontal-btn"
+      <el-button v-show="Util.hasPermission('PERMISSION_INFORM_REMOVE')" size="large" class="horizontal-btn"
                  @click="handleDelete()" type="success">
         删除选中通知
       </el-button>
@@ -83,7 +83,7 @@
   import { NOTIFY_TYPE, NOTIFY_PRIORITY} from '../store/common_defs'
   import Moment from 'moment'
   import dateUtil from '../utils/DateUtil'
-  //  import Util from '../store/utils'
+  import Util from '../store/utils'
   //  import ObjUtil from '../utils/ObjUtil'
 
   export default {
@@ -108,7 +108,8 @@
           'notifyType': '',
           'notifyPriority': '',
           'sendTime': dateUtil.getNow(),
-          'informUserList': []
+          'informUserList': [],
+          'sender': ''
         }
         this.showEdit = true
       },
@@ -136,6 +137,9 @@
           data.push(item)
         }
         return data
+      },
+      Util () {
+        return Util
       }
     },
     created: function () {
