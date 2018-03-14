@@ -79,6 +79,8 @@ URLS = [
     (r"/inform/check_single_inform", InformHandler, {'op':'check_single_inform'}),
     (r"/inform/get_new_duty_notification_count", InformHandler, {'op':'get_new_duty_notification_count'}),
     (r"/inform/get_new_inform_count", InformHandler, {'op':'get_new_inform_count'}),
+    (r"/inform/remove_user_inform", InformHandler, {'op':'remove_user_inform'}),
+    (r"/inform/remove_user_notification", InformHandler, {'op':'remove_user_notification'}),
 
     # (r"/.(.*)", TaskExecActionHandler, {'op':'get_task_exec_info_by_date'})
     #

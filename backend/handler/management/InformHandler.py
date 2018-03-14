@@ -265,6 +265,14 @@ class InformHandler(AsynchronousHandler):
             item['informUserList'] = arguments["informUserList"]
             self._inform_info_coll.save(item)
             self.json_result = {'status': 0}
+        elif self._op == 'remove_user_inform':
+            arguments = ujson.loads(self.request.body)
+            self._scanned_user_inform_list.remove({"_id": {"$in": arguments}})
+            self.json_result = {'status': 0}
+        elif self._op == 'remove_user_notification':
+            arguments = ujson.loads(self.request.body)
+            self._scanned_user_notification_list.remove({"_id": {"$in": arguments}})
+            self.json_result = {'status': 0}
         super(InformHandler, self).process_request()
 
 
