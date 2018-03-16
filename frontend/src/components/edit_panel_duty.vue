@@ -126,8 +126,6 @@
         }
       },
       handleCheckedWeekDaysChange (value) {
-        console.log('handleCheckedWeekDaysChange')
-        console.log(value)
         this.current_edited_duty.selectedWeekDays = value
       },
       handleCheckedMonthDaysChange (value) {
@@ -139,19 +137,12 @@
           let et = duty.dateRange[1]
           duty.starttime = dateUtil.getDatetimeSeconds(st)
           duty.endtime = dateUtil.getDatetimeSeconds(et)
-          console.log('for specific time, start:')
-          console.log(duty.starttime)
         } else {
           let st = duty.timeRange[0]
           let et = duty.timeRange[1]
           let startofyesterday = dateUtil.getStartOfToday() - 3600 * 24
-          console.log(startofyesterday)
-          console.log('&&&&&&')
-          console.log(dateUtil.getDatetimeSeconds(st))
           duty.starttime = dateUtil.getDatetimeSeconds(st) - startofyesterday
           duty.endtime = dateUtil.getDatetimeSeconds(et) - startofyesterday
-          console.log('for other time, start:')
-          console.log(duty.starttime)
         }
       },
       getPeriodDate (periodType, labels) {

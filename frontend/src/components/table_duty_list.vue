@@ -227,12 +227,10 @@
             let et = new Date(duty.endtime * 1000)
             duty.dateRange = [st, et]
           } else {
-            let startofyesterday = dateUtil.getStartOfToday() - 3600 * 24
-            let st = new Date((startofyesterday + duty.starttime % 86400) * 1000)
-            let et = new Date((startofyesterday + duty.endtime % 86400) * 1000)
+            let st = new Date(duty.starttime * 1000)
+            let et = new Date(duty.endtime * 1000)
             duty.timeRange = [st, et]
           }
-          duty.timeRangeShow = Moment(duty.starttime * 1000).format('H:mm') + ' 到 ' + Moment(duty.endtime * 1000).format('H:mm')
           duty.categoryName = Util.getDutyCategoryNameById(duty.category)
         }
         return data

@@ -190,8 +190,8 @@ const mutations = {
       let item = state.allDuty[index]
       let startofyesterday = dateUtil.getStartOfToday() - 3600 * 24
       if (item.timeType !== DUTY_TIME_TYPE_SPECIFIC) {
-        item.starttime += startofyesterday
-        item.endtime += startofyesterday
+        item.starttime = item.starttime % 86400 + startofyesterday
+        item.endtime = item.endtime % 86400 + startofyesterday
       }
     }
     state.dutyForRoles = {}
