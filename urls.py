@@ -30,6 +30,7 @@ URLS = [
     (r"/management/upsert_user", UserAccountHandler, {'op':'upsert_user'}),
     (r"/management/remove_user", UserAccountHandler, {'op':'remove_user'}),
     (r"/management/query_all_user", UserAccountHandler, {'op':'query_all_user'}),
+    (r"/management/set_user_avatar", UserAccountHandler, {'op':'set_user_avatar'}),
 
     (r"/management/upsert_user_group", UserAccountHandler, {'op':'upsert_user_group'}),
     (r"/management/remove_user_group", UserAccountHandler, {'op':'remove_user_group'}),
@@ -81,9 +82,6 @@ URLS = [
     (r"/inform/get_new_inform_count", InformHandler, {'op':'get_new_inform_count'}),
     (r"/inform/remove_user_inform", InformHandler, {'op':'remove_user_inform'}),
     (r"/inform/remove_user_notification", InformHandler, {'op':'remove_user_notification'}),
-
-    # (r"/.(.*)", TaskExecActionHandler, {'op':'get_task_exec_info_by_date'})
-    #
 
     (r"/util/uploadimage", UploadImage)
 ]

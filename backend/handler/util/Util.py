@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #
+import hashlib
 
 class Util(object):
     @classmethod
@@ -73,3 +74,13 @@ class Util(object):
             if data['userid'] == userid and data['taskid'] == taskid and data['startofday'] == startofday:
                 return data
         return None
+
+    @staticmethod
+    def get_md5_str(value):
+        return hashlib.md5(value).hexdigest()
+
+    @classmethod
+    def get_str_md5(cls, input_str):
+        md5obj = hashlib.md5(input_str)
+        hash_value = md5obj.hexdigest()
+        return hash_value

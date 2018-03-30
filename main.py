@@ -52,6 +52,7 @@ class KinderApplication(tornado.web.Application):
     def __init__(self):
         settings = {
             "domain": SystemConfig.domain,
+            "base_path": os.path.dirname(__file__),
             "static_path": os.path.join(os.path.dirname(__file__), "static"),
             "template_path": os.path.join(os.path.dirname(__file__), "backend/template"),
             "img_upload_path": os.path.join(os.path.dirname(__file__), 'static', 'upload'),

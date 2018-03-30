@@ -111,6 +111,7 @@ class TaskExecActionHandler(AsynchronousHandler):
                     data['comment'] = ''
                     data['approve_status'] = Const.TASK_APPROVE_STATUS_NONE
                     data['approve_user'] = ''
+                    data['pictures'] = []
 
                 data['starttime'] = duty['starttime']
                 data['endtime'] = duty['endtime']
@@ -242,6 +243,10 @@ class TaskExecActionHandler(AsynchronousHandler):
                         item['approve_status'] = taskexecdata[0]['approve_status']
                         item['approve_user'] = taskexecdata[0]['approve_user']
                         item['finish_status'] = taskexecdata[0]['finish_status']
+                        if 'pictures' in taskexecdata[0]:
+                            item['pictures'] = taskexecdata[0]['pictures']
+                        else:
+                            item['pictures'] = []
                     else:
                         item['realendtime'] = 0
                         item['comment'] = ''
@@ -251,6 +256,7 @@ class TaskExecActionHandler(AsynchronousHandler):
                             item['finish_status'] = Const.TASK_STATUS_INPROCESS
                         else:
                             item['finish_status'] = Const.TASK_STATUS_UNFINISHED
+                        item['pictures'] = []
                     item['timeType'] = task['timeType']
                     item['startofday'] = DateUtil.get_startof_today()
                     result.append(item)
@@ -287,6 +293,10 @@ class TaskExecActionHandler(AsynchronousHandler):
                             item['approve_status'] = taskexecdata[taskexecdata_cursor]['approve_status']
                             item['approve_user'] = taskexecdata[taskexecdata_cursor]['approve_user']
                             item['finish_status'] = taskexecdata[taskexecdata_cursor]['finish_status']
+                            if 'pictures' in taskexecdata[taskexecdata_cursor]:
+                                item['pictures'] = taskexecdata[taskexecdata_cursor]['pictures']
+                            else:
+                                item['pictures'] = []
                             taskexecdata_cursor += 1
                         else:
                             item['startofday'] = date
@@ -298,6 +308,7 @@ class TaskExecActionHandler(AsynchronousHandler):
                                 item['finish_status'] = Const.TASK_STATUS_INPROCESS
                             else:
                                 item['finish_status'] = Const.TASK_STATUS_UNFINISHED
+                            item['pictures'] = []
                         item['starttime'] = task['starttime']
                         item['endtime'] = task['endtime']
                         item['timeType'] = task['timeType']
@@ -357,6 +368,7 @@ class TaskExecActionHandler(AsynchronousHandler):
                     data['comment'] = ''
                     data['approve_status'] = Const.TASK_APPROVE_STATUS_NONE
                     data['approve_user'] = ''
+                    data['pictures'] = []
                     if timeType == Const.DUTY_TIME_TYPE_SPECIFIC:
                         if now < duty['endtime'] + 3600 * 24:
                             data['finish_status'] = Const.TASK_STATUS_INPROCESS
@@ -374,6 +386,8 @@ class TaskExecActionHandler(AsynchronousHandler):
                 data['seq'] = index + 1
                 data['descr'] = duty['descr']
                 data['timeType'] = duty['timeType']
+                if not 'pictures' in data:
+                    data['pictures'] = []
                 if not dutyTimeType in result:
                     result[dutyTimeType] = []
                 result[dutyTimeType].append(data)
@@ -384,6 +398,9 @@ class TaskExecActionHandler(AsynchronousHandler):
             userid = arguments['userid']
             taskid = arguments['taskid']
             startofday = arguments['startofday']
+            pictures = []
+            if 'pictures' in arguments:
+                pictures = arguments['pictures']
             now = DateUtil.get_current_time()
             query = {'userid': userid, 'taskid': taskid, 'startofday': startofday}
             item = self._task_exec_data_coll.find_one(query)
@@ -416,6 +433,7 @@ class TaskExecActionHandler(AsynchronousHandler):
                     else:
                         item['finish_status'] = arguments['finish_status']
 
+            item['pictures'] = pictures
             item['comment'] = arguments["comment"]
             item['approve_status'] = arguments['approve_status']
             item['approve_user'] = arguments['approve_user']

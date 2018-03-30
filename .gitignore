@@ -11,3 +11,4 @@ index.html
 *.njsproj
 *.sln
 access.log*
+kinder.log*

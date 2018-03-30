@@ -10,13 +10,13 @@ from datetime import datetime
 
 from backend.conf.config import SystemConfig
 from backend.handler.async_handler import AsynchronousHandler
+from backend.handler.util.Util import Util
 
 
 class UploadImage(AsynchronousHandler):
-    UPLOAD_EMPTY = 0
-    UPLOAD_SUCCESS = 1
-    UPLOAD_FAILED = 0
-    UPLOAD_DONT_MATCH_REQUIRE = 0
+    UPLOAD_SUCCESS = 0
+    UPLOAD_FAILED = -1
+    UPLOAD_DONT_MATCH_REQUIRE = -2
 
     def check_xsrf_cookie(self):
         pass
@@ -37,7 +37,7 @@ class UploadImage(AsynchronousHandler):
             data = {}
             if self.request.files:
                 # file_para = self.get_arguments('input_name', [])[0]
-                f = self.request.files['file'][0]
+                f = self.request.files['blob'][0]
                 try:
                     resp = {}
                     filename = f["filename"]
@@ -54,18 +54,21 @@ class UploadImage(AsynchronousHandler):
                         os.makedirs(relativePath)
                     with open(iconFilePath, 'wb') as fp:
                         fp.write(f['body'])
-                    data['file_name'] = filename
-                    uploader = self.settings['uploader']
-                    img_cdn_json = uploader.upload(iconFilePath, "png")
 
-                    if not img_cdn_json or not img_cdn_json['url']:
-                        data['status'] = self.UPLOAD_FAILED
-                    else:
-                        data['md5'] = str(img_cdn_json.get('md5'))
-                        data['cdn_url'] = str(img_cdn_json.get('url'))
-                        data['status'] = self.UPLOAD_SUCCESS
-                    data['cdn_url'] = str('')
+                    basePath = self.settings['base_path']
+                    data['fileurl'] = iconFilePath[len(basePath):]
+                    # uploader = self.settings['uploader']
+                    # img_cdn_json = uploader.upload(iconFilePath, "png")
+                    #
+                    # if not img_cdn_json or not img_cdn_json['url']:
+                    #     data['status'] = self.UPLOAD_FAILED
+                    # else:
+                    #     data['md5'] = str(img_cdn_json.get('md5'))
+                    #     data['cdn_url'] = str(img_cdn_json.get('url'))
+                    #     data['status'] = self.UPLOAD_SUCCESS
+                    # data['cdn_url'] = str('')
                     data['status'] = self.UPLOAD_SUCCESS
+
                 except Exception as ex:
                     self._logger.error("Ajax: UploadIcon error:%s", str(ex), exc_info=1)
                     data['status'] = self.UPLOAD_FAILED

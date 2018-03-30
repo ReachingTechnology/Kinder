@@ -76,6 +76,17 @@ class UserAccountHandler(AsynchronousHandler):
             arguments = ujson.loads(self.request.body)
             self._user_info_coll.remove({"_id": {"$in": arguments}})
             self.json_result = {'status': 0}
+        elif self._op == 'set_user_avatar':
+            arguments = ujson.loads(self.request.body)
+            userid = arguments['_id']
+            avatar = arguments['avatar']
+            user = self._user_info_coll.find_one({'_id': userid})
+            if user:
+                user['avatar'] = avatar
+                self._user_info_coll.save(user)
+                self.json_result = {'status': 0}
+            else:
+                self.json_result = {'status': -1}
         elif self._op == 'query_all_user':
             results = Util.getAllUser(self._user_info_coll)
             self.json_result = results
