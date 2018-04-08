@@ -90,6 +90,8 @@ class QueryHandler(AsynchronousHandler):
                         for taskexec in taskExecInfo:
                             realendtime = taskexec['realendtime']
                             duty = self.getDuty(taskexec['taskid'], allDuties)
+                            if not duty:
+                                continue
                             taskStarttime = duty['starttime'] + taskexec['startofday']
                             taskEndtime = duty['endtime'] + taskexec['startofday']
                             if realendtime < taskEndtime + 600 or taskexec['approve_status'] == '1':
@@ -132,6 +134,8 @@ class QueryHandler(AsynchronousHandler):
                     userAllDutyCount = 0
                     for dutyId in userDuties:
                         duty = self.getDuty(dutyId, allDuties)
+                        if not duty:
+                            continue
                         if duty['timeType'] == Const.DUTY_TIME_TYPE_SPECIFIC:
                             if endtime >= duty['starttime'] and starttime <= duty['endtime']:
                                 userAllDutyCount += 1

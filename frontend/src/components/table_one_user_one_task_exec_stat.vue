@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div>
+    <div id="print_area">
       <h2 style="margin-top: 0px">用户任务 {{ selectedData.taskname }} 统计</h2>
       <h3>用户姓名 {{ queryUser }}</h3>
       <div align="left">
-        <input :disabled="true" v-model="time_range"/>
+        <el-tag>{{time_range}}</el-tag>
       </div>
       <br/>
       <el-table
@@ -39,6 +39,7 @@
         <el-table-column
           label="操作"
           align="center"
+          class="no-print"
         >
           <template scope="scope">
             <el-button
@@ -49,6 +50,13 @@
           </template>
         </el-table-column>
       </el-table>
+      <br/>
+      <div align="left" class="no-print">
+        <el-button size="large" class="horizontal-btn"
+                   @click="handlePrint" type="success">
+          打印
+        </el-button>
+      </div>
     </div>
   <edit-panel-user-day-task @showEdit="showEditOver" :dialogVisible="showEdit" :edited_task="selectedTask" :selectedDay="selectedDay"></edit-panel-user-day-task>
 </div>
@@ -68,7 +76,7 @@
 </style>
 <script>
   import {mapActions, mapGetters} from 'vuex'
-  import {GET_ONE_TASK_EXEC_DATA_BY_DATERANGE} from '../store/mutation_types'
+  import {GET_ONE_TASK_EXEC_DATA_BY_DATERANGE, PRINT} from '../store/mutation_types'
   import Moment from 'moment'
   import EditPanelUserDayTask from './edit_panel_user_day_task.vue'
   import {
@@ -87,7 +95,7 @@
         }
         return ''
       },
-      ...mapActions([GET_ONE_TASK_EXEC_DATA_BY_DATERANGE]),
+      ...mapActions([GET_ONE_TASK_EXEC_DATA_BY_DATERANGE, PRINT]),
       handleEdit (index, row) {
         this.selectedDay = new Date(row.startofday * 1000)
         this.selectedTask = row
@@ -99,6 +107,12 @@
       },
       showEditOver () {
         this.showEdit = false
+      },
+      handlePrint () {
+        let allContent = document.documentElement.innerHTML
+        let printContent = document.getElementById('print_area').innerHTML
+        this.PRINT({all: allContent, print: printContent})
+        return true
       }
     },
     computed: {

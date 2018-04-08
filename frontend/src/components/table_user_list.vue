@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div id="print_area">
     <h2>幼儿园员工列表</h2>
-    <div align="left">
+    <div align="left" class="no-print">
       <el-button size="large" class="horizontal-btn"
                  @click="handleCreate()" type="success">
         添加新员工
@@ -62,6 +62,7 @@
         sortable>
       </el-table-column>
       <el-table-column
+        class="no-print"
         label="操作"
         align="center">
         <template scope="scope">
@@ -73,6 +74,7 @@
         </template>
       </el-table-column>
       <el-table-column
+        class="no-print"
         type="selection"
         width="55">
       </el-table-column>
@@ -81,6 +83,13 @@
     <br/>
     <div align="left">
       <span>总员工数：{{ this.allUser.length }}</span>
+    </div>
+    <br/>
+    <div align="left" class="no-print">
+      <el-button size="large" class="horizontal-btn"
+                 @click="handlePrint" type="success">
+        打印
+      </el-button>
     </div>
   </div>
 </template>
@@ -99,7 +108,7 @@
 </style>
 <script>
   import { mapActions, mapGetters } from 'vuex'
-  import { GET_ALL_USER_ACCOUNT, GET_ALL_ROLE, REMOVE_USERS } from '../store/mutation_types'
+  import { GET_ALL_USER_ACCOUNT, GET_ALL_ROLE, REMOVE_USERS, PRINT } from '../store/mutation_types'
   import UserEditPanel from './edit_panel_user.vue'
   import Utils from '../store/utils'
   import ObjUtil from '../utils/ObjUtil'
@@ -156,14 +165,20 @@
       showEditOver () {
         this.showEdit = false
       },
-      ...mapActions([GET_ALL_USER_ACCOUNT, GET_ALL_ROLE, REMOVE_USERS]),
+      ...mapActions([GET_ALL_USER_ACCOUNT, GET_ALL_ROLE, REMOVE_USERS, PRINT]),
       handleDelete () {
         let users = []
         for (var i = 0, len = this.multipleSelection.length; i < len; i++) {
           users.push(this.multipleSelection[i]._id)
         }
         this.REMOVE_USERS(users)
-      }
+      },
+      handlePrint () {
+        let allContent = document.documentElement.innerHTML
+        let printContent = document.getElementById('print_area').innerHTML
+        this.PRINT({all: allContent, print: printContent})
+        return true
+      },
     },
     computed: {
       ...mapGetters(['allUser', 'allRole']),

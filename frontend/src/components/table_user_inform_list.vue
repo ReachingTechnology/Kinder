@@ -1,11 +1,18 @@
 <template>
   <div>
     <h2>我的工作通知</h2>
+    <div align="left">
+      <el-button size="large" class="horizontal-btn"
+                 @click="handleDelete()" type="success">
+        删除选中通知
+      </el-button>
+    </div>
     <br/>
     <el-table
       :data="messages"
       style="width: 100%"
       :default-sort = "{prop: 'informSendTime', order: 'descending'}"
+      @selection-change="handleSelectionChange"
       :row-class-name="tableRowClassName">
       <el-table-column
         prop="name"
@@ -47,10 +54,10 @@
           </div>
         </template>
       </el-table-column>
-      <!--<el-table-column-->
-      <!--type="selection"-->
-      <!--width="55">-->
-      <!--</el-table-column>-->
+      <el-table-column
+      type="selection"
+      width="55">
+      </el-table-column>
     </el-table>
     <info-panel-user-inform @showEdit="showEditOver" :dialogVisible="showEdit" :edited_inform="selectedInform"></info-panel-user-inform>
   </div>
@@ -66,7 +73,7 @@
 </style>
 <script>
   import { mapActions, mapGetters } from 'vuex'
-  import { GET_INFORM_BY_USER, CHECK_SINGLE_INFORM } from '../store/mutation_types'
+  import { GET_INFORM_BY_USER, CHECK_SINGLE_INFORM, REMOVE_USER_INFORMS } from '../store/mutation_types'
   import { NOTIFY_PRIORITY} from '../store/common_defs'
   import Moment from 'moment'
   import InfoPanelUserInform from './info_panel_user_inform.vue'
@@ -79,15 +86,25 @@
       tableRowClassName (row, index) {
         return ''
       },
+      handleSelectionChange (val) {
+        this.multipleSelection = val
+      },
       handleEdit (index, row) {
         this.CHECK_SINGLE_INFORM(row)
         this.showEdit = true
         this.selectedInform = row
       },
+      handleDelete () {
+        let informs = []
+        for (var i = 0, len = this.multipleSelection.length; i < len; i++) {
+          informs.push(this.multipleSelection[i]._id)
+        }
+        this.REMOVE_USER_INFORMS(informs)
+      },
       showEditOver () {
         this.showEdit = false
       },
-      ...mapActions([GET_INFORM_BY_USER, CHECK_SINGLE_INFORM])
+      ...mapActions([GET_INFORM_BY_USER, CHECK_SINGLE_INFORM, REMOVE_USER_INFORMS])
     },
     computed: {
       ...mapGetters(['userInform']),

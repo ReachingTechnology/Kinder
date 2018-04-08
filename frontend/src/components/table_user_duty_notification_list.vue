@@ -1,11 +1,18 @@
 <template>
   <div>
     <h2>我的职责任务提醒</h2>
+    <div align="left">
+      <el-button size="large" class="horizontal-btn"
+                 @click="handleDelete()" type="success">
+        删除选中提醒
+      </el-button>
+    </div>
     <br/>
     <el-table
       :data="messages"
       style="width: 100%"
       :default-sort = "{prop: 'informSendTime', order: 'descending'}"
+      @selection-change="handleSelectionChange"
       :row-class-name="tableRowClassName">
       <el-table-column
         prop="msgPriorityDisplay"
@@ -42,10 +49,10 @@
           </div>
         </template>
       </el-table-column>
-      <!--<el-table-column-->
-        <!--type="selection"-->
-        <!--width="55">-->
-      <!--</el-table-column>-->
+      <el-table-column
+        type="selection"
+        width="55">
+      </el-table-column>
     </el-table>
     <info-panel-user-notification @showEdit="showEditOver" :dialogVisible="showEdit" :edited_notification="selectedNotification"></info-panel-user-notification>
   </div>
@@ -61,7 +68,7 @@
 </style>
 <script>
   import { mapActions, mapGetters } from 'vuex'
-  import { GET_DUTY_NOTIFICATION_BY_USER, GET_UNDERLINE_DUTY_NOTIFICATION_BY_USER, CHECK_SINGLE_NOTIFICATION } from '../store/mutation_types'
+  import { GET_DUTY_NOTIFICATION_BY_USER, GET_UNDERLINE_DUTY_NOTIFICATION_BY_USER, CHECK_SINGLE_NOTIFICATION, REMOVE_USER_NOTIFICATIONS } from '../store/mutation_types'
   import InfoPanelUserNotification from './info_panel_user_notification.vue'
   import { NOTIFY_PRIORITY} from '../store/common_defs'
   import Moment from 'moment'
@@ -74,15 +81,25 @@
       tableRowClassName (row, index) {
         return ''
       },
+      handleSelectionChange (val) {
+        this.multipleSelection = val
+      },
       handleEdit (index, row) {
         this.CHECK_SINGLE_NOTIFICATION(row)
         this.showEdit = true
         this.selectedNotification = row
       },
+      handleDelete () {
+        let informs = []
+        for (var i = 0, len = this.multipleSelection.length; i < len; i++) {
+          informs.push(this.multipleSelection[i]._id)
+        }
+        this.REMOVE_USER_NOTIFICATIONS(informs)
+      },
       showEditOver () {
         this.showEdit = false
       },
-      ...mapActions([GET_DUTY_NOTIFICATION_BY_USER, GET_UNDERLINE_DUTY_NOTIFICATION_BY_USER, CHECK_SINGLE_NOTIFICATION])
+      ...mapActions([GET_DUTY_NOTIFICATION_BY_USER, GET_UNDERLINE_DUTY_NOTIFICATION_BY_USER, CHECK_SINGLE_NOTIFICATION, REMOVE_USER_NOTIFICATIONS])
     },
     computed: {
       ...mapGetters(['userDutyNotification', 'underlineDutyNotification']),

@@ -135,8 +135,10 @@ const mutations = {
       item.realendtime = data[i].realendtime
       item.comment = data[i].comment
       item.startofday = data[i].startofday
-      var taskStartTime = item.starttime + item.startofday
-      var taskEndTime = item.endtime + item.startofday
+      item.starttime += item.startofday
+      item.endtime += item.startofday
+      var taskStartTime = item.starttime
+      var taskEndTime = item.endtime
       if (item.realendtime === 0) {
         if (taskStartTime > currentTime) {
           item.finish_status = TASK_STATUS_PREPARE

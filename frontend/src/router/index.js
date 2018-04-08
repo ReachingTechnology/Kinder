@@ -83,7 +83,7 @@ const router = new Router({
       component: AllUserTaskExecStat
     },
     {
-      path: '/one_user_all_task_stat/:selectedData',
+      path: '/one_user_all_task_stat/:userid/:startofday/:endofday',
       name: 'OneUserAllTaskExecStat',
       component: OneUserAllTaskExecStat,
       meta: {

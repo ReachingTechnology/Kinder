@@ -31,6 +31,7 @@
         sortable>
       </el-table-column>
       <el-table-column
+        v-show="false"
         prop="notifyTypeDisplay"
         label="通知类型"
         align="center"
@@ -105,7 +106,7 @@
           '_id': '',
           'name': '',
           'descr': '',
-          'notifyType': '',
+          'notifyType': 'message_queue',
           'notifyPriority': '',
           'sendTime': dateUtil.getNow(),
           'informUserList': [],

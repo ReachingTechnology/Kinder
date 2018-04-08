@@ -1,10 +1,10 @@
 <template>
   <div>
-      <div>
+      <div id="print_area">
         <h2 style="margin-top: 0px">用户任务统计</h2>
         <h3>用户姓名 {{ queryUser }}</h3>
         <div align="left">
-          <input :disabled="true" v-model="time_range"/>
+          <el-tag>{{time_range}}</el-tag>
         </div>
         <br/>
         <el-table
@@ -30,6 +30,7 @@
           >
           </el-table-column>
           <el-table-column
+            class="no-print"
             label="操作"
             align="center">
             <template scope="scope">
@@ -42,6 +43,13 @@
             </template>
           </el-table-column>
         </el-table>
+        <br/>
+        <div align="left" class="no-print">
+          <el-button size="large" class="horizontal-btn"
+                     @click="handlePrint" type="success">
+            打印
+          </el-button>
+        </div>
       </div>
   </div>
 </template>
@@ -60,21 +68,22 @@
 </style>
 <script>
   import {mapActions, mapGetters} from 'vuex'
-  import {GET_USER_TASK_EXEC_DATA_BY_DATERANGE} from '../store/mutation_types'
+  import {GET_USER_TASK_EXEC_DATA_BY_DATERANGE, PRINT} from '../store/mutation_types'
   import Moment from 'moment'
   import TableOneTaskDaterangeExecStat from './table_one_user_one_task_exec_stat'
   import Util from '../store/utils'
+
   export default {
     name: 'table_user_daterange_task_stat',
     methods: {
       tableRowClassName (row, index) {
         return ''
       },
-      ...mapActions([GET_USER_TASK_EXEC_DATA_BY_DATERANGE]),
+      ...mapActions([GET_USER_TASK_EXEC_DATA_BY_DATERANGE, PRINT]),
       handleEdit (index, row) {
         this.selectedTask = row
-        this.selectedTask.startofday = this.selectedData.startofday
-        this.selectedTask.endofday = this.selectedData.endofday
+        this.selectedTask.startofday = this.startofday
+        this.selectedTask.endofday = this.endofday
         this.$router.push({name: 'OneUserOneTaskExecStat', params: {selectedData: this.selectedTask}})
       },
       handleClose () {
@@ -82,23 +91,40 @@
       },
       showEditOver () {
         this.showEdit = false
+      },
+      handlePrint () {
+        let allContent = document.documentElement.innerHTML
+        let printContent = document.getElementById('print_area').innerHTML
+        this.PRINT({all: allContent, print: printContent})
+        return true
+      },
+      getData () {
+        let params = {}
+        params.userid = this.userid
+        if (typeof this.startofday === 'string') {
+          params.startofday = parseInt(this.startofday)
+        } else {
+          params.startofday = this.startofday
+        }
+        if (typeof this.endofday === 'string') {
+          params.endofday = parseInt(this.endofday)
+        } else {
+          params.endofday = this.endofday
+        }
+        this.GET_USER_TASK_EXEC_DATA_BY_DATERANGE(params)
       }
     },
     computed: {
       ...mapGetters(['userDaterangeTask', 'user', 'datePickerOptionsDay']),
       time_range () {
-        return Moment(this.selectedData.startofday * 1000).format('M月D日') + '到' + Moment(this.selectedData.endofday * 1000).format('M月D日')
-      },
-      queryUser () {
-        return Util.getUserName(this.selectedData.userid)
+        return Moment(this.startofday * 1000).format('M月D日') + '到' + Moment(this.endofday * 1000).format('M月D日')
       }
     },
-    created: function () {
-      let params = {}
-      params.userid = this.selectedData.userid
-      params.startofday = this.selectedData.startofday
-      params.endofday = this.selectedData.endofday
-      this.GET_USER_TASK_EXEC_DATA_BY_DATERANGE(params)
+    beforeRouteEnter: function (to, from, next) {
+      next(vm => {
+        vm.queryUser = Util.getUserName(vm.userid)
+        vm.getData()
+      })
     },
     beforeRouteLeave: function (to, from, next) {
       this.$destroy()
@@ -107,9 +133,12 @@
     props: [],
     data: function () {
       return {
-        selectedData: this.$route.params.selectedData,
+        userid: this.$route.params.userid,
+        startofday: this.$route.params.startofday,
+        endofday: this.$route.params.endofday,
         selectedTask: {},
-        showEdit: false
+        showEdit: false,
+        queryUser: ''
       }
     },
     components: {

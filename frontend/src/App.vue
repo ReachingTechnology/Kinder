@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <user-login  v-show="user._id == ''"></user-login>
-    <nav-menu v-show="user._id != ''" @menuSelect="menuSelected"></nav-menu>
+    <nav-menu v-show="user._id != ''" class="no-print" @menuSelect="menuSelected"></nav-menu>
     <keep-alive>
       <router-view v-show="user._id != ''"></router-view>
     </keep-alive>
@@ -86,4 +86,19 @@
     color: #2c3e50;
     margin-top: 20px;
   }
+
+  @media print {
+    .no-print {
+      display: none;
+    }
+    @page
+    { size: landscape; }
+  }
+
+  @media screen {
+    .no-screen {
+      display: none
+    }
+  }
+
 </style>

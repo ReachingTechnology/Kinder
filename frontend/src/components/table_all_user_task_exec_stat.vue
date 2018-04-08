@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div id="print_area">
     <h2>幼儿园安保统计报表</h2>
-    <div style="width: 100%; text-align: left">
+    <div style="width: 100%; text-align: left" class="no-print">
       <el-date-picker
         v-model="dateRange"
         type="daterange"
@@ -10,6 +10,9 @@
         @change="handleDaySelected"
         :picker-options="datePickerOption">
       </el-date-picker>
+    </div>
+    <div align="left" class="no-screen">
+      <el-tag>{{time_range}}</el-tag>
     </div>
     <br/>
     <el-table
@@ -42,6 +45,7 @@
         sortable>
       </el-table-column>
       <el-table-column
+        class="no-print"
         label="操作"
         align="center">
         <template scope="scope">
@@ -53,6 +57,13 @@
         </template>
       </el-table-column>
     </el-table>
+    <br/>
+    <div align="left" class="no-print">
+      <el-button size="large" class="horizontal-btn"
+                 @click="handlePrint" type="success">
+        打印
+      </el-button>
+    </div>
   </div>
 </template>
 <style>
@@ -66,10 +77,11 @@
 </style>
 <script>
   import { mapActions, mapGetters } from 'vuex'
-  import { GET_ALL_USER_TASK_EXEC_DATA, GET_ALL_USER_TASK_EXEC_DATA_BY_DATERANGE, GET_USER_TASK_EXEC_DATA_BY_DATERANGE } from '../store/mutation_types'
+  import { GET_ALL_USER_TASK_EXEC_DATA, GET_ALL_USER_TASK_EXEC_DATA_BY_DATERANGE, GET_USER_TASK_EXEC_DATA_BY_DATERANGE, PRINT } from '../store/mutation_types'
   import DateRangePicker from './date_rrange_picker'
   import dateUtil from '../utils/DateUtil'
   import { DATETYPE_DAY, DATETYPE_MONTH } from '../store/common_defs'
+  import Moment from 'moment'
 
   export default {
     name: 'table_manage_unfinished_data',
@@ -82,11 +94,10 @@
         return ''
       },
       handleEdit (index, row) {
-        this.selectedData = {}
-        this.selectedData.userid = row.userid
-        this.selectedData.startofday = dateUtil.getStartOfTheday(this.dateRange[0])
-        this.selectedData.endofday = dateUtil.getStartOfTheday(this.dateRange[1])
-        this.$router.push({name: 'OneUserAllTaskExecStat', params: {selectedData: this.selectedData}})
+        var userid = row.userid
+        var startofday = dateUtil.getStartOfTheday(this.dateRange[0])
+        var endofday = dateUtil.getStartOfTheday(this.dateRange[1])
+        this.$router.push({name: 'OneUserAllTaskExecStat', params: {userid: userid, startofday: startofday, endofday: endofday}})
       },
       handleDaySelected () {
         var param = {dateRange: this.dateRange}
@@ -102,7 +113,13 @@
       showEditOver () {
         this.showEdit = false
       },
-      ...mapActions([GET_ALL_USER_TASK_EXEC_DATA, GET_ALL_USER_TASK_EXEC_DATA_BY_DATERANGE, GET_USER_TASK_EXEC_DATA_BY_DATERANGE])
+      handlePrint () {
+        let allContent = document.documentElement.innerHTML
+        let printContent = document.getElementById('print_area').innerHTML
+        this.PRINT({all: allContent, print: printContent})
+        return true
+      },
+      ...mapActions([GET_ALL_USER_TASK_EXEC_DATA, GET_ALL_USER_TASK_EXEC_DATA_BY_DATERANGE, GET_USER_TASK_EXEC_DATA_BY_DATERANGE, PRINT])
     },
     computed: {
       ...mapGetters(['datePickerOptionsDay', 'datePickerOptionsMonth', 'all_statistic_data']),
@@ -119,6 +136,9 @@
       },
       starttime () {
         return this.$route.params.starttime
+      },
+      time_range () {
+        return Moment(this.dateRange[0]).format('M月D日') + '到' + Moment(this.dateRange[1]).format('M月D日')
       }
     },
     created: function () {

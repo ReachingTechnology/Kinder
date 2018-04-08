@@ -11,7 +11,8 @@ import { SET_ACTIVE_MENU, GET_ALL_USER_TASK_EXEC_DATA, GET_ALL_USER_TASK_EXEC_DA
   GET_ALL_DUTY, UPSERT_DUTY, REMOVE_DUTIES, GET_ALL_DUTY_CATEGORY, UPSERT_DUTY_CATEGORY, REMOVE_DUTY_CATEGORIES,
   GET_ALL_USER_LOCATION, UPSERT_USER_LOCATION,
   GET_ALL_INFORM, GET_DUTY_NOTIFICATION_BY_USER, GET_UNDERLINE_DUTY_NOTIFICATION_BY_USER, GET_INFORM_BY_USER, UPSERT_INFORM, REMOVE_INFORMS,
-  GET_NEW_DUTY_NOTIFICATION_COUNT, GET_NEW_INFORM_COUNT, CHECK_SINGLE_NOTIFICATION, CHECK_SINGLE_INFORM } from './mutation_types'
+  GET_NEW_DUTY_NOTIFICATION_COUNT, GET_NEW_INFORM_COUNT, CHECK_SINGLE_NOTIFICATION, CHECK_SINGLE_INFORM, REMOVE_USER_NOTIFICATIONS, REMOVE_USER_INFORMS,
+  PRINT } from './mutation_types'
 // import dateUtil from '../utils/DateUtil'
 import state from './state'
 import dateUtil from '../utils/DateUtil'
@@ -494,6 +495,30 @@ const actions = {
       param.isNew = false
     })
       .catch(handleError)
+  },
+  [ REMOVE_USER_INFORMS ]: function (store, param) {
+    axios.post('/inform/remove_user_inform', param)
+      .then(function (response) {
+        store.dispatch(GET_INFORM_BY_USER, {pageNum: 0})
+      })
+  },
+  [ REMOVE_USER_NOTIFICATIONS ]: function (store, param) {
+    axios.post('/inform/remove_user_notification', param)
+      .then(function (response) {
+        store.dispatch(GET_DUTY_NOTIFICATION_BY_USER, {pageNum: 0})
+      })
+  },
+  // common utility
+  [ PRINT ]: function (store, param) {
+    console.log('print:', param)
+    let newWindow = window.open('about:blank', '打印预览')
+    newWindow.document.write('<!DOCTYPE html>' + '<html>' + param.all + '</html>')   // 向文档写入HTML表达式或者JavaScript代码
+    newWindow.document.close()
+    newWindow.onload = function () {
+      newWindow.document.body.innerHTML = param.print
+      newWindow.print()
+      newWindow.close()
+    }
   }
 }
 export default actions
