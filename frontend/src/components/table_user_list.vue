@@ -1,7 +1,7 @@
 <template>
-  <div id="print_area">
+  <div>
     <h2>幼儿园员工列表</h2>
-    <div align="left" class="no-print">
+    <div align="left">
       <el-button size="large" class="horizontal-btn"
                  @click="handleCreate()" type="success">
         添加新员工
@@ -74,7 +74,6 @@
         </template>
       </el-table-column>
       <el-table-column
-        class="no-print"
         type="selection"
         width="55">
       </el-table-column>
@@ -85,11 +84,38 @@
       <span>总员工数：{{ this.allUser.length }}</span>
     </div>
     <br/>
-    <div align="left" class="no-print">
+    <div align="left">
       <el-button size="large" class="horizontal-btn"
                  @click="handlePrint" type="success">
         打印
       </el-button>
+    </div>
+    <div id="print_area" class="no-screen">
+      <div id="print">
+        <h1>幼儿园员工列表</h1>
+        <table>
+          <thead>
+          <tr>
+            <th> 员工编号 </th>
+            <th> 姓名 </th>
+            <th> 手机号 </th>
+            <th> 性别 </th>
+            <th> 岗位 </th>
+            <th> 年龄 </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="data in users">
+            <td> {{data._id}} </td>
+            <td> {{data.name}} </td>
+            <td> {{data.cellphone}} </td>
+            <td> {{data.sex_name}} </td>
+            <td> {{data.role_name}} </td>
+            <td> {{data.age}} </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </template>

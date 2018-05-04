@@ -55,7 +55,7 @@ class KinderApplication(tornado.web.Application):
             "base_path": os.path.dirname(__file__),
             "static_path": os.path.join(os.path.dirname(__file__), "static"),
             "template_path": os.path.join(os.path.dirname(__file__), "backend/template"),
-            "img_upload_path": os.path.join(os.path.dirname(__file__), 'static', 'upload'),
+            "img_upload_path": os.path.join(os.path.dirname(__file__), 'upload'),
             "cookie_secret": "4K1sh0zAQi6PxgfQpDys7UHnVXTX205Xmvp347o33Lc=",
         # base64.b64encode(uuid.uuid4().bytes + uuid.uuid4().bytes),
             "xsrf_cookies": False,

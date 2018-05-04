@@ -1,7 +1,7 @@
 <template>
-  <div id="print_area">
+  <div>
     <h2>幼儿园安保统计报表</h2>
-    <div style="width: 100%; text-align: left" class="no-print">
+    <div style="width: 100%; text-align: left">
       <el-date-picker
         v-model="dateRange"
         type="daterange"
@@ -11,15 +11,13 @@
         :picker-options="datePickerOption">
       </el-date-picker>
     </div>
-    <div align="left" class="no-screen">
-      <el-tag>{{time_range}}</el-tag>
-    </div>
     <br/>
     <el-table
       :data="all_statistic_data"
       style="width: 100%"
       :default-sort = "{prop: 'userid', order: 'ascending'}"
-      :row-class-name="tableRowClassName">
+      :row-class-name="tableRowClassName"
+      class="print-table">
       <el-table-column
         prop="userid"
         label="编号"
@@ -45,7 +43,6 @@
         sortable>
       </el-table-column>
       <el-table-column
-        class="no-print"
         label="操作"
         align="center">
         <template scope="scope">
@@ -58,6 +55,30 @@
       </el-table-column>
     </el-table>
     <br/>
+    <div id="print_area" class="no-screen">
+      <div id="print">
+        <h1>幼儿园安保统计报表</h1>
+        <h3>{{time_range}}</h3>
+        <table>
+          <thead>
+          <tr>
+            <th> 编号 </th>
+            <th> 姓名 </th>
+            <th> 岗位 </th>
+            <th> 职责未完成项数 </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="data in all_statistic_data">
+            <td> {{data.userid}} </td>
+            <td> {{data.username}} </td>
+            <td> {{data.role}} </td>
+            <td> {{data.unfinish_count}} </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
     <div align="left" class="no-print">
       <el-button size="large" class="horizontal-btn"
                  @click="handlePrint" type="success">
@@ -82,6 +103,7 @@
   import dateUtil from '../utils/DateUtil'
   import { DATETYPE_DAY, DATETYPE_MONTH } from '../store/common_defs'
   import Moment from 'moment'
+  import printJS from 'print-js'
 
   export default {
     name: 'table_manage_unfinished_data',

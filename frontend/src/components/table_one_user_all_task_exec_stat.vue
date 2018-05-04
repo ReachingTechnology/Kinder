@@ -1,6 +1,6 @@
 <template>
   <div>
-      <div id="print_area">
+      <div>
         <h2 style="margin-top: 0px">用户任务统计</h2>
         <h3>用户姓名 {{ queryUser }}</h3>
         <div align="left">
@@ -30,7 +30,6 @@
           >
           </el-table-column>
           <el-table-column
-            class="no-print"
             label="操作"
             align="center">
             <template scope="scope">
@@ -51,6 +50,30 @@
           </el-button>
         </div>
       </div>
+
+    <div id="print_area" class="no-screen">
+      <div id="print">
+        <h1>用户任务统计</h1>
+        <h3>用户姓名 {{ queryUser }}</h3>
+        <h3>{{time_range}}</h3>
+        <table>
+          <thead>
+          <tr>
+            <th> 序号 </th>
+            <th> 职责 </th>
+            <th> 任务未完成次数 </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="data in userDaterangeTask">
+            <td> {{data.seq}} </td>
+            <td> {{data.taskname}} </td>
+            <td> {{data.unfinish_count}} </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </template>
 <style>

@@ -1,10 +1,5 @@
 <template>
   <div>
-    <br/>
-    <div align="left">
-    <el-button @click="getLocation">获取当前定位</el-button>
-    </div>
-    <br/>
     <!--<baidu-map class="map" :center="{lng: 116.3086, lat: 39.935846}" :zoom="18">-->
     <!--<baidu-map class="map" :center="{lng: longitude, lat: latitude}" :zoom="18">-->
       <!--&lt;!&ndash;<bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true" @locationSuccess="onLocationReady"></bm-geolocation>&ndash;&gt;-->
@@ -41,44 +36,55 @@
         console.log(point)
         this.longitude = point.lng
         this.latitude = point.lat
+      },
+      showMap () {
+        var map = new BMap.Map('allmap')
+        var point = new BMap.Point(this.lng, this.lat)
+        console.log('$$$$$', this.lng, this.lat)
+        map.setCurrentCity('北京')
+        map.centerAndZoom(point, 14)
+        var mk = new BMap.Marker(point)
+        map.addOverlay(mk)
+        map.panTo(point)
+        map.enableScrollWheelZoom(true)
       }
     },
-    created: function () {
-      // 百度地图API功能
-      var map = new BMap.Map("allmap");
-      map.centerAndZoom(new BMap.Point(116.404, 39.915), 11);
-      // 添加带有定位的导航控件
-      var navigationControl = new BMap.NavigationControl({
-        // 靠左上角位置
-        anchor: BMAP_ANCHOR_TOP_LEFT,
-        // LARGE类型
-        type: BMAP_NAVIGATION_CONTROL_LARGE,
-        // 启用显示定位
-        enableGeolocation: true
-      });
-      map.addControl(navigationControl);
-      // 添加定位控件
-      var geolocationControl = new BMap.GeolocationControl();
-      geolocationControl.addEventListener("locationSuccess", function(e){
-        // 定位成功事件
-        var address = '';
-        address += e.addressComponent.province;
-        address += e.addressComponent.city;
-        address += e.addressComponent.district;
-        address += e.addressComponent.street;
-        address += e.addressComponent.streetNumber;
-        alert("当前定位地址为：" + address);
-      });
-      geolocationControl.addEventListener("locationError",function(e){
-        // 定位失败事件
-        alert(e.message);
-      });
-      map.addControl(geolocationControl);
+    mounted: function () {
+//      // 添加带有定位的导航控件
+//      var navigationControl = new BMap.NavigationControl({
+//        // 靠左上角位置
+//        anchor: BMAP_ANCHOR_TOP_LEFT,
+//        // LARGE类型
+//        type: BMAP_NAVIGATION_CONTROL_LARGE,
+//        // 启用显示定位
+//        enableGeolocation: true
+//      });
+//      map.addControl(navigationControl);
+//      // 添加定位控件
+//      var geolocationControl = new BMap.GeolocationControl();
+//      geolocationControl.addEventListener("locationSuccess", function(e){
+//        // 定位成功事件
+//        var address = '';
+//        address += e.addressComponent.province;
+//        address += e.addressComponent.city;
+//        address += e.addressComponent.district;
+//        address += e.addressComponent.street;
+//        address += e.addressComponent.streetNumber;
+//        alert("当前定位地址为：" + address);
+//      });
+//      geolocationControl.addEventListener("locationError",function(e){
+//        // 定位失败事件
+//        alert(e.message);
+//      });
+//      map.addControl(geolocationControl);
+    },
+    beforeRouteEnter: function (to, from, next) {
+      next(vm => { vm.showMap() })
     },
     data () {
       return {
-        longitude: 116.3086,
-        latitude: 39.935846,
+        lng: this.$route.params.lng,
+        lat: this.$route.params.lat,
         getLocationClicked: false
       }
     }
@@ -86,7 +92,7 @@
 </script>
 <style>
   /* The container of BaiduMap must be set width & height. */
-  .map {
+  #allmap {
     width: 100%;
     height: 400px;
   }

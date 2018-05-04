@@ -110,7 +110,7 @@
           'notifyPriority': '',
           'sendTime': dateUtil.getNow(),
           'informUserList': [],
-          'sender': ''
+          'sender': this.user._id
         }
         this.showEdit = true
       },
@@ -127,7 +127,7 @@
       ...mapActions([GET_ALL_INFORM, REMOVE_INFORMS])
     },
     computed: {
-      ...mapGetters(['allInform']),
+      ...mapGetters(['allInform', 'user']),
       informs () {
         var data = []
         for (var i = 0, len = this.allInform.length; i < len; i++) {

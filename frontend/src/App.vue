@@ -13,7 +13,7 @@
   import UserLogin from './components/user_login.vue'
   import NavMenu from './components/nav_menu.vue'
   import { mapGetters, mapActions } from 'vuex'
-  import { GET_CURRENT_USER, GET_ALL_USER_ACCOUNT, GET_ALL_ROLE, GET_ALL_DUTY, GET_ALL_PERMISSION, GET_ALL_PERMISSION_ROLE, GET_ALL_USER_TASK_EXEC_DATA, USER_LOGOUT, GET_NEW_INFORM_COUNT, GET_NEW_DUTY_NOTIFICATION_COUNT } from './store/mutation_types'
+  import { GET_LOCATION_CENTER, GET_CURRENT_USER, GET_ALL_USER_ACCOUNT, GET_ALL_ROLE, GET_ALL_DUTY, GET_ALL_PERMISSION, GET_ALL_PERMISSION_ROLE, GET_ALL_USER_TASK_EXEC_DATA, USER_LOGOUT, GET_NEW_INFORM_COUNT, GET_NEW_DUTY_NOTIFICATION_COUNT } from './store/mutation_types'
   import WarningDialog from './components/warning_dialog.vue'
   export default {
     name: 'app',
@@ -38,6 +38,7 @@
     watch: {
       user: function () {
         if (this.user._id !== '') {
+          this.GET_LOCATION_CENTER()
           this.GET_ALL_PERMISSION_ROLE()
           this.GET_ALL_PERMISSION()
           this.GET_ALL_USER_ACCOUNT()
@@ -49,7 +50,7 @@
       }
     },
     methods: {
-      ...mapActions([GET_CURRENT_USER, GET_ALL_USER_ACCOUNT, GET_ALL_ROLE, GET_ALL_DUTY, GET_ALL_PERMISSION, GET_ALL_PERMISSION_ROLE, GET_ALL_USER_TASK_EXEC_DATA, USER_LOGOUT, GET_NEW_INFORM_COUNT, GET_NEW_DUTY_NOTIFICATION_COUNT]),
+      ...mapActions([GET_LOCATION_CENTER, GET_CURRENT_USER, GET_ALL_USER_ACCOUNT, GET_ALL_ROLE, GET_ALL_DUTY, GET_ALL_PERMISSION, GET_ALL_PERMISSION_ROLE, GET_ALL_USER_TASK_EXEC_DATA, USER_LOGOUT, GET_NEW_INFORM_COUNT, GET_NEW_DUTY_NOTIFICATION_COUNT]),
       menuSelected: function (key) {
         console.log('menu selected:' + key)
         this.menuKey = key
@@ -91,8 +92,11 @@
     .no-print {
       display: none;
     }
+
     @page
-    { size: landscape; }
+    { size: 21cm 29.7cm;
+      margin: 15mm 5mm 15mm 5mm; }
+
   }
 
   @media screen {
@@ -100,5 +104,14 @@
       display: none
     }
   }
+
+
+  #print_area {text-align: center;}
+  #print_area table { width: 100%; margin:10px; border:2px solid #000; border-collapse:collapse; margin:5px auto }
+  #print_area th { border:1px solid #000; border-collapse:collapse; padding:3px 5px; text-align: center }
+  #print_area td { border:1px solid #000; border-collapse:collapse; padding:3px 5px; text-align: center }
+  #print_area h1 { font-size:24px; text-align: center; width: 100%}
+  #print_area h2 { font-size:20px; text-align: center }
+  #print_area h3 { font-size:16px; text-align: center }
 
 </style>

@@ -16,9 +16,11 @@ import AllUserTaskExecStat from '../components/table_all_user_task_exec_stat.vue
 import OneUserAllTaskExecStat from '../components/table_one_user_all_task_exec_stat.vue'
 import OneUserOneTaskExecStat from '../components/table_one_user_one_task_exec_stat.vue'
 import AllUserLocation from '../components/table_user_location_list.vue'
+import BaiduMap from '../components/baidumap.vue'
 import InformList from '../components/table_inform_list.vue'
 import UserDutyNotificationList from '../components/table_user_duty_notification_list.vue'
 import UserInformList from '../components/table_user_inform_list.vue'
+import DocumentList from '../components/table_document_list.vue'
 
 Vue.use(Router)
 
@@ -107,6 +109,14 @@ const router = new Router({
       }
     },
     {
+      path: '/show_location/:lat/:lng',
+      name: 'ShowLocation',
+      component: BaiduMap,
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
       path: '/inform',
       name: 'InformList',
       component: InformList,
@@ -134,6 +144,14 @@ const router = new Router({
       path: '/user_inform',
       name: 'UserInformList',
       component: UserInformList,
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: '/documentList/:level',
+      name: 'DocumentList',
+      component: DocumentList,
       meta: {
         keepAlive: false
       }

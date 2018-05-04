@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="print_area">
+    <div>
       <h2 style="margin-top: 0px">用户任务 {{ selectedData.taskname }} 统计</h2>
       <h3>用户姓名 {{ queryUser }}</h3>
       <div align="left">
@@ -39,7 +39,6 @@
         <el-table-column
           label="操作"
           align="center"
-          class="no-print"
         >
           <template scope="scope">
             <el-button
@@ -56,6 +55,31 @@
                    @click="handlePrint" type="success">
           打印
         </el-button>
+      </div>
+    </div>
+    <div id="print_area" class="no-screen">
+      <div id="print">
+        <h1>用户单项任务统计</h1>
+        <h3>用户姓名: {{queryUser}}  | 任务: {{selectedData.taskname}}</h3>
+        <h3>{{time_range}}</h3>
+        <table>
+          <thead>
+          <tr>
+            <th> 日期 </th>
+            <th> 实际完成时间 </th>
+            <th> 备注 </th>
+            <th> 完成状态 </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="data in tasks">
+            <td> {{data.startofdayDisplay}} </td>
+            <td> {{data.realendtimeDisplay}} </td>
+            <td> {{data.comment}} </td>
+            <td> {{data.finish_status_display}} </td>
+          </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   <edit-panel-user-day-task @showEdit="showEditOver" :dialogVisible="showEdit" :edited_task="selectedTask" :selectedDay="selectedDay"></edit-panel-user-day-task>

@@ -25,7 +25,7 @@
     <el-submenu index="5" v-show="Util.hasPermission('PERMISSION_TASK_QUERY_ALL')">
       <template slot="title">信息管理</template>
       <el-menu-item index="5-1">信息统计</el-menu-item>
-      <el-menu-item index="5-2">工作审批</el-menu-item>
+      <!--<el-menu-item index="5-2">工作审批</el-menu-item>-->
     </el-submenu>
     <el-submenu index="6">
       <template slot="title">安全秘书</template>
@@ -36,7 +36,9 @@
     </el-submenu>
     <el-submenu index="7">
       <template slot="title">文件管理</template>
-      <el-menu-item index="7-1">文件列表</el-menu-item>
+      <el-menu-item index="7-1">国家政策文件</el-menu-item>
+      <el-menu-item index="7-2">省市指导文件</el-menu-item>
+      <el-menu-item index="7-3">园区工作文件</el-menu-item>
     </el-submenu>
     <el-submenu index="8">
       <template slot="title">个人中心</template>
@@ -126,6 +128,15 @@
           case '6-4':
             this.$router.push({name: 'InformList'})
             break
+          case '7-1':
+            this.$router.push({name: 'DocumentList', params: {level: 'COUNTRY'}})
+            break
+          case '7-2':
+            this.$router.push({name: 'DocumentList', params: {level: 'PROV&CITY'}})
+            break
+          case '7-3':
+            this.$router.push({name: 'DocumentList', params: {level: 'KINDERGARTEN'}})
+            break
           case '8-1':
             this.$router.push({name: 'ChangePass'})
             break
@@ -163,7 +174,7 @@
         if (val._id !== oldVal._id) {
           if (this.active_menu === '4-1' && this.user._id !== '') {
             this.$router.push({name: 'UserDayTaskList', params: {'timeType': DUTY_TIME_TYPE_ROUTINE}})
-            SET_ACTIVE_MENU({'active_menu': this.active_menu})
+            this.SET_ACTIVE_MENU({'active_menu': this.active_menu})
           }
         }
       }

@@ -9,23 +9,23 @@
         <el-form-item label="通知内容" :label-width="formLabelWidth">
           <el-input v-model="current_inform.descr" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item align="left">
-          <div>
-            <div style="display: inline-block">
-              <el-button @click="editInformer">选择通知发送人</el-button>
-            </div>
-            <div style="display: inline-block">
-              <span>  {{ current_inform.senderName }}</span>
-            </div>
-          </div>
-        </el-form-item>
-        <el-form-item align="left" label="通知方式">
-          <el-select v-model="current_inform.notifyType">
-            <el-option :label="NOTIFY_TYPE['message_queue']" value="message_queue"/>
-            <el-option :label="NOTIFY_TYPE['system_alarm']" value="system_alarm"/>
-            <el-option :label="NOTIFY_TYPE['short_message']" value="short_message"/>
-          </el-select>
-        </el-form-item>
+        <!--<el-form-item align="left">-->
+          <!--<div>-->
+            <!--<div style="display: inline-block">-->
+              <!--<el-button @click="editInformer">选择通知发送人</el-button>-->
+            <!--</div>-->
+            <!--<div style="display: inline-block">-->
+              <!--<span>  {{ current_inform.senderName }}</span>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item align="left" label="通知方式">-->
+          <!--<el-select v-model="current_inform.notifyType">-->
+            <!--<el-option :label="NOTIFY_TYPE['message_queue']" value="message_queue"/>-->
+            <!--<el-option :label="NOTIFY_TYPE['system_alarm']" value="system_alarm"/>-->
+            <!--<el-option :label="NOTIFY_TYPE['short_message']" value="short_message"/>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
         <el-form-item align="left" label="提醒等级">
           <el-select v-model="current_inform.notifyPriority">
             <el-option :label="NOTIFY_PRIORITY['high']" value="high"/>
@@ -57,7 +57,7 @@
       </span>
     </el-dialog>
     <tree-user-select @selectedUser="selectInformeeOver" @showEdit="showInformeeEditOver" title="选择被通知人" :dialogVisible="showInformeeEdit" :selectedUser="current_inform.informUserList"></tree-user-select>
-    <tree-user-select @selectedUser="selectInformerOver" @showEdit="showInformerEditOver" title="选择通知发送人" :dialogVisible="showInformerEdit" :selectedUser="informerList"></tree-user-select>
+    <!--<tree-user-select @selectedUser="selectInformerOver" @showEdit="showInformerEditOver" title="选择通知发送人" :dialogVisible="showInformerEdit" :selectedUser="informerList"></tree-user-select>-->
   </div>
 </template>
 <script>
@@ -130,6 +130,9 @@
       informeeList () {
         var data = []
         var idList = this.current_inform.informUserList
+        if (idList === undefined) {
+          return ''
+        }
         for (var i = 0, len = idList.length; i < len; i++) {
           data.push(Util.getUserName(idList[i]))
         }

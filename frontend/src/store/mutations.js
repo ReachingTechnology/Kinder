@@ -231,6 +231,10 @@ const mutations = {
   },
   SET_NEW_INFORM_COUNT (state, data) {
     state.newInformCount = data.count
+  },
+  SET_DOCUMENT_LIST (state, data) {
+    state.allDocument = {}
+    state.allDocument[data.level] = data.data
   }
 }
 export default mutations

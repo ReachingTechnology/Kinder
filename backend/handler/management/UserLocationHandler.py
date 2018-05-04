@@ -16,9 +16,16 @@ class UserLocationHandler(AsynchronousHandler):
         self._user_location_info_coll = self.settings['kinder_mongo_pool'].get_collection('kinder', "user_location_info")
         self._user_info_coll = self.settings['kinder_mongo_pool'].get_collection('kinder',"user_info")
         self._task_exec_data_coll = self.settings['kinder_mongo_pool'].get_collection('kinder', "task_exec_data")
+        self._location_center_info_coll = self.settings['kinder_mongo_pool'].get_collection('kinder', "location_center_info")
 
     def process_request(self):
-        if self._op == 'query_all_user_location':
+        if self._op == 'get_location_center':
+            info = self._location_center_info_coll.find_one({'_id': 'LOC_CENTER_INFO'})
+            if info != None:
+                self.json_result = info
+            else:
+                self.json_result = {'status', -1}
+        elif self._op == 'query_all_user_location':
             print 'query all user location!'
             # result = self._user_location_info_coll.find()
             result = []

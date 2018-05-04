@@ -18,10 +18,12 @@ from backend.handler.commit.TaskExecActionHandler import TaskExecActionHandler
 from backend.handler.management.UserLocationHandler import UserLocationHandler
 from backend.handler.management.InformHandler import InformHandler
 from backend.handler.util.UploadImage import UploadImage
+from backend.handler.management.DocumentHandler import DocumentHandler
 
 URLS = [
     # (r"/user/login", LoginHandler, {'op':'login'}),
     # (r"/login", UserLogin),
+    (r"/management/get_location_center", UserLocationHandler, {'op':'get_location_center'}),
     (r"/user/get_current_user", LoginHandler, {'op':'get_current_user'}),
     (r"/user/user_login", LoginHandler, {'op':'login'}),
     (r"/user/user_logout", LogoutHandler, {'op':'logout'}),
@@ -82,6 +84,12 @@ URLS = [
     (r"/inform/get_new_inform_count", InformHandler, {'op':'get_new_inform_count'}),
     (r"/inform/remove_user_inform", InformHandler, {'op':'remove_user_inform'}),
     (r"/inform/remove_user_notification", InformHandler, {'op':'remove_user_notification'}),
+
+    (r"/document/get_document_list", DocumentHandler, {'op':'get_document_list'}),
+    (r"/document/upload_document_country", DocumentHandler, {'op':'upload_document_country'}),
+    (r"/document/upload_document_city", DocumentHandler, {'op': 'upload_document_city'}),
+    (r"/document/upload_document_kindergarten", DocumentHandler, {'op': 'upload_document_kindergarten'}),
+    (r"/document/remove_document", DocumentHandler, {'op':'remove_document'}),
 
     (r"/util/uploadimage", UploadImage)
 ]

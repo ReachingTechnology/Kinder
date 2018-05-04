@@ -7,6 +7,9 @@ import ArrayUtil from '../utils/ArrayUtil'
 
 function _Util () {
 }
+
+_Util.prototype.map = new BMap.Map("map")
+
 _Util.prototype.getUserName = function (userId) {
   for (var i = 0, len = state.allUser.length; i < len; i++) {
     if (state.allUser[i]._id === userId) {
@@ -154,8 +157,22 @@ _Util.prototype.hasCategoryPermission = function (categoryname) {
   // console.log('return false:' + categoryname)
   return false
 }
-_Util.prototype.getLocationDisplay = function (locationX, locationY) {
-  return '园内'
+_Util.prototype.getLocationDisplay = function (locationLat, locationLng) {
+  console.log('^^^^^^^^^^^^^^^^compute location distance')
+  console.log('lat:', locationLat)
+  console.log('lng:', locationLng)
+  console.log('loc center:', state.locationCenter)
+  if (locationLat === 0 && locationLng === 0 || state.locationCenterPoint === undefined) {
+    return '未知'
+  }
+  var point = new BMap.Point(locationLng,locationLat)
+  var distance = this.map.getDistance(state.locationCenterPoint, point)
+  console.log('distance:', distance)
+  if (distance <= state.locationCenter.distance) {
+    return '园内'
+  } else {
+    return '园外'
+  }
 }
 var Util = new _Util()
 export default Util

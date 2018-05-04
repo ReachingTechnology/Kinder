@@ -2,7 +2,7 @@
  * Created by HOZ on 28/08/2017.
  */
 import axios from 'axios'
-import { SET_ACTIVE_MENU, GET_ALL_USER_TASK_EXEC_DATA, GET_ALL_USER_TASK_EXEC_DATA_BY_DATERANGE, GET_CURRENT_USER, USER_LOGIN, USER_LOGOUT, USER_CHANGE_PASS,
+import { GET_LOCATION_CENTER, SET_ACTIVE_MENU, GET_ALL_USER_TASK_EXEC_DATA, GET_ALL_USER_TASK_EXEC_DATA_BY_DATERANGE, GET_CURRENT_USER, USER_LOGIN, USER_LOGOUT, USER_CHANGE_PASS,
   GET_DUTY_BY_USER, UPSERT_USER_ACCOUNT, GET_ALL_USER_ACCOUNT, REMOVE_USERS,
   GET_ALL_USER_GROUP, UPSERT_USER_GROUP, REMOVE_USER_GROUPS,
   GET_ALL_ROLE, UPSERT_ROLE, REMOVE_ROLES,
@@ -12,11 +12,12 @@ import { SET_ACTIVE_MENU, GET_ALL_USER_TASK_EXEC_DATA, GET_ALL_USER_TASK_EXEC_DA
   GET_ALL_USER_LOCATION, UPSERT_USER_LOCATION,
   GET_ALL_INFORM, GET_DUTY_NOTIFICATION_BY_USER, GET_UNDERLINE_DUTY_NOTIFICATION_BY_USER, GET_INFORM_BY_USER, UPSERT_INFORM, REMOVE_INFORMS,
   GET_NEW_DUTY_NOTIFICATION_COUNT, GET_NEW_INFORM_COUNT, CHECK_SINGLE_NOTIFICATION, CHECK_SINGLE_INFORM, REMOVE_USER_NOTIFICATIONS, REMOVE_USER_INFORMS,
-  PRINT } from './mutation_types'
+  GET_ALL_DOCUMENT, REMOVE_DOCUMENT, PRINT } from './mutation_types'
 // import dateUtil from '../utils/DateUtil'
 import state from './state'
 import dateUtil from '../utils/DateUtil'
 import store from './store'
+import printJS from 'print-js'
 
 axios.defaults.baseURL = state.backend_uri
 // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN
@@ -41,6 +42,16 @@ const actions = {
           store.commit('SET_USER', response.data)
         })
         .catch(handleError)
+  },
+  [ GET_LOCATION_CENTER ]: function (store, param) {
+    axios.get('/management/get_location_center')
+      .then(function (response) {
+        console.log('get_location_center:')
+        console.log(response.data)
+        store.state.locationCenter = response.data
+        store.state.locationCenterPoint = new BMap.Point(store.state.locationCenter.lng, store.state.locationCenter.lat)
+      })
+      .catch(handleError)
   },
   /*
    Login/logout
@@ -508,6 +519,23 @@ const actions = {
         store.dispatch(GET_DUTY_NOTIFICATION_BY_USER, {pageNum: 0})
       })
   },
+
+  [ GET_ALL_DOCUMENT ]: function (store, _level) {
+    var param = {level: _level}
+    axios.post('/document/get_document_list', param)
+      .then(function (response) {
+        var data = {level: _level, data: response.data}
+        store.commit('SET_DOCUMENT_LIST', data)
+      })
+  },
+
+  [ REMOVE_DOCUMENT ]: function (store, param) {
+    axios.post('/document/remove_document', param)
+      .then(function (response) {
+        store.dispatch(GET_ALL_DOCUMENT, param.level)
+      })
+  },
+
   // common utility
   [ PRINT ]: function (store, param) {
     console.log('print:', param)
@@ -516,7 +544,7 @@ const actions = {
     newWindow.document.close()
     newWindow.onload = function () {
       newWindow.document.body.innerHTML = param.print
-      newWindow.print()
+      printJS('print', 'html')
       newWindow.close()
     }
   }

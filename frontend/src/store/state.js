@@ -8,6 +8,8 @@ const state = {
   user: {
     _id: ''
   },
+  locationCenter: {lat: 40.03193924147, lng: 0, distance: 300},
+  locationCenterPoint: undefined,
   active_menu: '',
   allUser: [],
   allUserGroup: [],
@@ -19,6 +21,7 @@ const state = {
   allDuty: [],
   allDutyCategory: [],
   dutyForRoles: {},
+  allDocument: {},
   allInform: [],
   userInform: [],
   userDutyNotification: [],
@@ -26,8 +29,10 @@ const state = {
   newInformCount: 0,
   newDutyNotificationCount: 0,
   // 后端服务器地址
-  backend_uri: 'https://47.94.192.237:7070',
-  // backend_uri: 'https://127.0.0.1:7070',
+  // backend_uri: 'https://47.94.192.237:7070',
+  backend_uri: 'https://127.0.0.1:7070',
+  // upload_document_base_uri: 'https://47.94.192.237:7070/util/uploadimage',
+  upload_document_base_uri: 'https://127.0.0.1:7070/document/',
   all_statistic_data: [], // 所有用户的所有任务在一个时间段内执行的情况
   userDayTask: [], // 用户的所有任务在某一天执行的情况
   userDaterangeTask: [], // 用户的所有任务在一个时间段里执行的情况

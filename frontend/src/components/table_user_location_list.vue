@@ -33,6 +33,7 @@
           <div>
             <el-button
               size="small"
+              :disabled="scope.row.locationLat === 0 && scope.row.locationLng === 0"
               @click="handleShowInMap(scope.$index, scope.row)" type="success">地图中查看</el-button>
           </div>
         </template>
@@ -66,6 +67,7 @@
         this.multipleSelection = val
       },
       handleShowInMap (index, row) {
+        this.$router.push({name: 'ShowLocation', params: {lat: row.locationLat, lng: row.locationLng}})
       },
       ...mapActions([GET_ALL_USER_LOCATION])
     },
@@ -75,12 +77,12 @@
         var data = []
         for (var i = 0, len = this.allUser.length; i < len; i++) {
           var user = this.allUser[i]
-          var location = {user_id: user._id, user_name: user.name, location_display: '未知', update_time: 0, locationX: 0, locationY: 0}
+          var location = {user_id: user._id, user_name: user.name, location_display: '未知', update_time: 0, locationLat: 0, locationLng: 0}
           for (var j = 0, len2 = this.allUserLocation.length; j < len2; j++) {
             if (this.allUserLocation[j].user_id === location.user_id) {
-              location.location_display = Util.getLocationDisplay(this.allUserLocation[j].locationX, this.allUserLocation[j].locationY)
-              location.locationX = this.allUserLocation[j].locationX
-              location.locationY = this.allUserLocation[j].locationY
+              location.location_display = Util.getLocationDisplay(this.allUserLocation[j].locationLat, this.allUserLocation[j].locationLng)
+              location.locationLat = this.allUserLocation[j].locationLat
+              location.locationLng = this.allUserLocation[j].locationLng
               location.update_time = this.allUserLocation[j].update_time
               if(location.update_time > 0) {
                 location.update_time_display = Moment(location.update_time * 1000).format('MM-DD H:mm')
