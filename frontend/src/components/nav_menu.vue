@@ -9,7 +9,7 @@
       <el-menu-item index="1-2" v-show="Util.hasCategoryPermission('PERMISSION_CATEGORY_ROLE')">岗位管理</el-menu-item>
       <el-menu-item index="1-3" v-show="Util.hasCategoryPermission('PERMISSION_CATEGORY_PERMISSIONROLE')">角色权限管理</el-menu-item>
     </el-submenu>
-    <el-submenu index="2">
+    <el-submenu index="2" v-show="Util.hasPermission('PERMISSION_TASK_EDIT_USER_TASK')">
       <template slot="title">职责管理</template>
       <el-menu-item index="2-1" v-show="Util.hasPermission('PERMISSION_TASK_EDIT_USER_TASK')">职责类别列表</el-menu-item>
       <el-menu-item index="2-2" v-show="Util.hasPermission('PERMISSION_TASK_EDIT_USER_TASK')">岗位职责列表</el-menu-item>
@@ -17,10 +17,10 @@
     <el-menu-item index="3" v-show="Util.hasPermission('PERMISSION_TASK_QUERY_USER_LOCATION')">员工定位</el-menu-item>
     <el-submenu index="4">
       <template slot="title">职责列表</template>
-      <el-menu-item index="4-1" v-show="Util.hasPermission('PERMISSION_TASK_EDIT_USER_TASK')">日常职责</el-menu-item>
-      <el-menu-item index="4-2" v-show="Util.hasPermission('PERMISSION_TASK_EDIT_USER_TASK')">定期职责</el-menu-item>
-      <el-menu-item index="4-3" v-show="Util.hasPermission('PERMISSION_TASK_EDIT_USER_TASK')">特定时间职责</el-menu-item>
-      <el-menu-item index="4-4" v-show="Util.hasPermission('PERMISSION_TASK_EDIT_USER_TASK')">小组职责</el-menu-item>
+      <el-menu-item index="4-1">日常职责</el-menu-item>
+      <el-menu-item index="4-2">定期职责</el-menu-item>
+      <el-menu-item index="4-3">特定时间职责</el-menu-item>
+      <el-menu-item index="4-4">小组职责</el-menu-item>
     </el-submenu>
     <el-submenu index="5" v-show="Util.hasPermission('PERMISSION_TASK_QUERY_ALL')">
       <template slot="title">信息管理</template>
