@@ -106,6 +106,10 @@
     beforeRouteEnter: function (to, from, next) {
       next(vm => { vm.GET_ALL_USER_LOCATION() })
     },
+    beforeRouteLeave: function (to, from, next) {
+      this.$destroy()
+      next()
+    },
     data: () => {
       return {
         showEdit: false,

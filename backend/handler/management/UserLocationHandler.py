@@ -7,6 +7,7 @@ import ujson
 
 from backend.handler.async_handler import AsynchronousHandler
 from backend.handler.util.DateUtil import DateUtil
+import logging
 
 class UserLocationHandler(AsynchronousHandler):
     QUERY_FIELDS = {"_id": 1, "description": 1}
@@ -46,6 +47,7 @@ class UserLocationHandler(AsynchronousHandler):
             self.json_result = result
         elif self._op == 'upsert_user_location':
             arguments = ujson.loads(self.request.body)
+            logging.getLogger().info('upsert user location! userid: %s, lat: %f, lng: %f, time: %d', arguments['user_id'], arguments['locationLat'], arguments['locationLng'], DateUtil.get_current_time())
             existLocation = self._user_location_info_coll.find_one({'user_id': arguments['user_id']})
             item = {}
             if existLocation:

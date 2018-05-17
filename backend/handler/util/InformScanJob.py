@@ -66,7 +66,6 @@ class InformScanJob(object):
         self.scanUserInform(allUsers)
 
     def scanUserNotification(self, allUsers):
-        print 'scan user notification!'
         scanInfo = self._scheduler_scan_time.find_one({'_id': 'user_notification_scan'})
         lastScanTime = 0
         if scanInfo != None:
@@ -135,7 +134,6 @@ class InformScanJob(object):
         self._scheduler_scan_time.save(scanInfo)
 
     def scanUserInform(self, allUsers):
-        print 'scan user inform!'
         scanInfo = self._scheduler_scan_time.find_one({'_id': 'user_inform_scan'})
         lastScanTime = 0
         if scanInfo != None:
@@ -167,7 +165,7 @@ class InformScanJob(object):
             scanInfo['lastScanTime'] = queryTime
             self._scheduler_scan_time.save(scanInfo)
         except:
-            # exc_type, exc_value, exc_traceback = sys.exc_info()
+            exc_type, exc_value, exc_traceback = sys.exc_info()
             # traceback.print_exception(exc_type, exc_value, exc_traceback)
-            traceback.print_exc()
-            logging.getLogger().critical(traceback.format_exc())
+            # traceback.print_exc()
+            # logging.getLogger().critical(traceback.format_exc())

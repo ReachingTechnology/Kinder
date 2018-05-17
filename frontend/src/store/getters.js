@@ -6,6 +6,7 @@ const getters = {
   sessionToken: state => { return state.sessionToken },
   user: state => { return state.user },
   backend_uri: state => { return state.backend_uri },
+  upload_image_uri: state => { return state.upload_image_uri },
   upload_document_base_uri: state => { return state.upload_document_base_uri },
   allUser: state => { return state.allUser },
   allUserGroup: state => { return state.allUserGroup },

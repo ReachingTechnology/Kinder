@@ -37,7 +37,12 @@ class UploadImage(AsynchronousHandler):
             data = {}
             if self.request.files:
                 # file_para = self.get_arguments('input_name', [])[0]
-                f = self.request.files['blob'][0]
+                if 'blob' in self.request.files:
+                    f = self.request.files['blob'][0]
+                elif 'file' in self.request.files:
+                    f = self.request.files['file'][0]
+                else:
+                    f = None
                 try:
                     resp = {}
                     filename = f["filename"]

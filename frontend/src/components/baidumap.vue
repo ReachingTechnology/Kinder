@@ -38,15 +38,16 @@
         this.latitude = point.lat
       },
       showMap () {
-        var map = new BMap.Map('allmap')
+        this.map = undefined
+        this.map = new BMap.Map('allmap')
         var point = new BMap.Point(this.lng, this.lat)
         console.log('$$$$$', this.lng, this.lat)
-        map.setCurrentCity('北京')
-        map.centerAndZoom(point, 14)
+        this.map.setCurrentCity('北京')
+        this.map.centerAndZoom(point, 14)
         var mk = new BMap.Marker(point)
-        map.addOverlay(mk)
-        map.panTo(point)
-        map.enableScrollWheelZoom(true)
+        this.map.addOverlay(mk)
+        this.map.panTo(point)
+        this.map.enableScrollWheelZoom(true)
       }
     },
     mounted: function () {
@@ -81,11 +82,16 @@
     beforeRouteEnter: function (to, from, next) {
       next(vm => { vm.showMap() })
     },
+    beforeRouteLeave: function (to, from, next) {
+      this.$destroy()
+      next()
+    },
     data () {
       return {
         lng: this.$route.params.lng,
         lat: this.$route.params.lat,
-        getLocationClicked: false
+        getLocationClicked: false,
+        map: undefined
       }
     }
   }
