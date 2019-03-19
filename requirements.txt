@@ -1,6 +1,6 @@
 MySQL-python
 pymongo
-tornado==2.4.1
+tornado
 msgpack-python
 Flop
 redis
@@ -8,3 +8,4 @@ ujson
 mmhash
 requests
 paramiko
+ujson

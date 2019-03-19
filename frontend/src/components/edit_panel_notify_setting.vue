@@ -15,7 +15,7 @@
       </el-form-item>
       <el-form-item align="left" label="具体时间" :label-width="formLabelWidth" v-show="current_notify.timeType === 'specific'">
         <el-time-picker
-          v-model="current_notify.timePoint"
+          v-model="current_notify.timePointDatetime"
           placeholder="选择时间">
         </el-time-picker>
       </el-form-item>
@@ -68,6 +68,11 @@
       dialogVisible: function (val, oldval) {
         if (val === true) {
           this.current_notify = ObjUtil.clone(this.edited_notify)
+          if (this.current_notify.timePoint === ''){
+            this.current_notify.timePointDatetime = new Date()
+          } else {
+            this.current_notify.timePointDatetime = new Date(this.current_notify.timePoint * 1000)
+          }
         }
       }
     },

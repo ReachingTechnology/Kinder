@@ -60,7 +60,7 @@ class KinderApplication(tornado.web.Application):
         # base64.b64encode(uuid.uuid4().bytes + uuid.uuid4().bytes),
             "xsrf_cookies": False,
             "login_url": "/login",
-            "system_name": "",
+            "system_name": "�׶�԰��������ϵͳ",
             "debug": SystemConfig.debug,  # changeTo False if online
             "listen_info": ConfigSettings['listen_info'],
             "redis_proxy": ConfigSettings['redis_proxy'],
@@ -216,8 +216,8 @@ def main():
         "certfile": os.path.join(os.path.dirname(__file__), "backend/secure/server.crt"),
         "keyfile": os.path.join(os.path.dirname(__file__), "backend/secure/server.key"),
     })
-    http_server.listen(options.port)
-    # http_server.listen(options.port, address='0.0.0.0')
+    # http_server.listen(options.port)
+    http_server.listen(options.port, address='192.168.1.6')
     ConfigSettings['http_server'] = http_server
     # add signal handler
     signal.signal(signal.SIGTERM, sig_handler)

@@ -130,7 +130,7 @@
       settingCommited (val) {
         val.timeTypeDisplay = this.NOTIFY_TIME_TYPE[val.timeType]
         val.notifyTypeDisplay = this.NOTIFY_TYPE[val.notifyType]
-        val.timePoint = dateUtil.getDatetimeSeconds(val.timePoint)
+        val.timePoint = dateUtil.getDatetimeSeconds(val.timePointDatetime)
         if (val.timeType === 'specific') {
           val.timeDisplay = Moment(val.timePoint * 1000).format('H:mm')
         } else {
@@ -154,7 +154,7 @@
             this.notifySettings[i].timeTypeDisplay = this.NOTIFY_TIME_TYPE[this.notifySettings[i].timeType]
             this.notifySettings[i].notifyTypeDisplay = this.NOTIFY_TYPE[this.notifySettings[i].notifyType]
             if (this.notifySettings[i].timeType === 'specific') {
-              this.notifySettings[i].timeDisplay = this.notifySettings[i].timePoint
+              this.notifySettings[i].timeDisplay = Moment(this.notifySettings[i].timePoint * 1000).format('H:mm')
             } else {
               this.notifySettings[i].timeDisplay = this.notifySettings[i].timeLength + ' 分钟'
             }

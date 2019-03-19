@@ -41,7 +41,7 @@ class TaskExecActionHandler(AsynchronousHandler):
                 # 计算startofday 是一个月的第几天
                 return self.matchMonthDay(date.day, duty['periodDate'])
         elif duty['timeType'] == Const.DUTY_TIME_TYPE_SPECIFIC:
-            if duty['starttime'] <= startofday and duty['endtime'] > startofday:
+            if duty['starttime'] <= startofday and duty['endtime'] >= startofday:
                 return True
         return False
 
